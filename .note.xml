@@ -1,0 +1,7 @@
+<note title="Discussion Venues" removeInRFC="true">
+<t>Discussion of this document takes place on the
+  CBOR Working Group mailing list (cbor@ietf.org),
+  which is archived at <eref target="https://mailarchive.ietf.org/arch/browse/cbor/"/>.</t>
+<t>Source for this draft and an issue tracker can be found at
+  <eref target="https://github.com/cbor-wg/cbor-packed"/>.</t>
+</note>
