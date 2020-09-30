@@ -2,7 +2,7 @@
 
 This is the working area for the IETF [CBOR Working Group](https://datatracker.ietf.org/wg/cbor/documents/) Internet-Draft, "Packed CBOR".
 
-* [Editor's Copy](https://cbor-wg.github.io/cbor-packed/#go.draft-ietf-cbor-packed.html)
+* [Editor's Copy](https://cbor-wg.github.io/cbor-packed/#go.draft-ietf-cbor-packed.html)  [![Build Status](https://travis-ci.com/cbor-wg/cbor-packed.svg?branch=main)](https://travis-ci.com/cbor-wg/cbor-packed)
 * [Working Group Draft](https://tools.ietf.org/html/draft-ietf-cbor-packed)
 * [Compare Editor's Copy to Working Group Draft](https://cbor-wg.github.io/cbor-packed/#go.draft-ietf-cbor-packed.diff)
 
