@@ -3,9 +3,11 @@ title: >
   Packed CBOR
 abbrev: Packed CBOR
 docname: draft-ietf-cbor-packed-latest
-# date: 2020-09-30
+# date: 2021-01-27
 
 stand_alone: true
+kramdown_options:
+  auto_id_prefix: sec-
 
 ipr: trust200902
 keyword: Internet-Draft
@@ -28,17 +30,18 @@ author:
 
 normative:
   RFC7049: orig
-  I-D.ietf-cbor-7049bis: bis
+  RFC8949: bis
   IANA.cbor-tags: tags
   IANA.cbor-simple-values: simple
   RFC8610: cddl
 
 informative:
   RFC8742: seq
+  RFC6920: ni
 
 --- abstract
 
-The Concise Binary Object Representation (CBOR, RFC 7049) is a data
+The Concise Binary Object Representation (CBOR, RFC 8949) is a data
 format whose design goals include the possibility of extremely small
 code size, fairly small message size, and extensibility without the
 need for version negotiation.
@@ -59,17 +62,11 @@ step is therefore often not required at the receiver.
 
 --- note_Note_to_Readers
 
-This is an individual submission to the CBOR working group of the
+This is a working-group draft of the CBOR working group of the
 IETF, <https://datatracker.ietf.org/wg/cbor/about/>.
-Discussion currently takes places on the github repository
-<https://github.com/cabo/cbor-packed>.
-If the CBOR WG believes this is a useful document, discussion is
-likely to move to the CBOR WG mailing list and a github repository at
-the CBOR WG github organization, <https://github.com/cbor-wg>.
-
-The current version is true work in progress; some of the sections
-haven't been filled in yet, and in particular, permission has not been
-obtained from tag definition authors to copy over their text.
+Discussion takes places on the github repository
+<https://github.com/cbor-wg/cbor-packed> and on the CBOR WG mailing
+list, <https://www.ietf.org/mailman/listinfo/cbor>.
 
 
 --- middle
@@ -87,24 +84,45 @@ effort they invest in arriving at a minimal packed form.
 
 Packed CBOR can employ two kinds of optimization:
 
-- structure sharing: substructures (data items) that occur repeatedly
+- item sharing: substructures (data items) that occur repeatedly
   in the original CBOR data item can be collapsed to a simple
   reference to a common representation of that data item.
   The processing required during consumption is limited to following
   that reference.
-- prefix sharing: strings that share a prefix can be replaced by a
-  reference to a common prefix plus the rest of the string.  The
+- affix sharing: data items (strings, containers) that share a prefix
+  or suffix (affix) can be replaced by a
+  reference to a common affix plus the rest of the data item.  For
+  strings, the
   processing required during consumption is similar to following the
-  prefix reference plus that for an indefinite-length string.
+  affix reference plus that for an indefinite-length string.
 
 A specific application protocol that employs Packed CBOR might allow
-both kinds of optimization or limit the representation to structure
+both kinds of optimization or limit the representation to item
 sharing only.
 
 Terminology         {#terms}
 ------------
 
 {::boilerplate bcp14}
+
+Packed reference:
+: A shared item reference or an affix reference
+
+Shared item reference:
+: A reference to a shared item as defined in {{sec-referencing-shared-items}}
+
+Affix reference:
+: A reference that combines an affix item as defined in {{sec-referencing-affix-items}}.
+
+Affix:
+: Prefix or suffix.
+
+Packing tables:
+: The triple of a shared item table, a prefix table, and a suffix table.
+
+Expansion:
+: The result of applying a packed reference in the context of given
+  Packing tables.
 
 The definitions of {{-bis}} apply.
 The term "byte" is used in its now customary sense as a synonym for
@@ -116,31 +134,29 @@ the operator "^" stands for exponentiation.
 
 # Packed CBOR
 
-Packed CBOR is defined in CDDL {{-cddl}} as in {{fig-cddl}}:
+Packed CBOR is defined in two parts: Referencing packing tables (this
+section) and setting up packing tables ({{sec-table-setup}}).
 
-~~~ cddl
-Packed-CBOR = #6.6([rump, [*prefix], *shared])
-rump = any
-prefix = any
-shared = any
-~~~
-{: #fig-cddl title="Packed CBOR in CDDL"}
+## Packing Tables
 
-(This assumes the allocation of tag number 6, which is motivated
-further below.
-Note that the semantics of Tag 6 depend on its content: An integer
-turns the tag into a shared reference, a string into a prefix
-reference, and an array into a complete Packed CBOR data item as
-described above.)
+At any point within a data item making use of Packed CBOR, there is a
+Current Set of packing tables that applies.
 
-The original CBOR data item can be reconstructed by recursively
-replacing shared and prefix references encountered in the rump by
-their defined values.
+There are three packing tables in a Current Set:
+
+* Shared item table
+* Prefix table
+* Suffix table
+
+Without any table setup, all these tables are empty arrays.
+Table setup can cause these arrays to be non-empty, where the elements are
+(potentially themselves packed) data items.
+In the abstract, each of the tables is indexed by an unsigned integer (starting
+from 0).
 
 ## Referencing Shared Items
 
-Shared items are stored in the third to last element of the array used
-as tag content for tag number 6, numbered starting by 2.
+Shared items are stored in the shared item table of the Current Set.
 
 The shared data items are referenced by using the data items in
 {{tab-shared}}.  When reconstructing the original data item, such a
@@ -148,39 +164,73 @@ reference is replaced by the referenced data item, which is then
 recursively unpacked.
 
 | reference                 | element number |
-| Simple value 0-15         | 2-17           |
-| Tag 6(unsigned integer N) | 18 + 2\*N      |
-| Tag 6(negative integer N) | 18 - 2\*N - 1  |
+| Simple value 0-15         | 0-15           |
+| Tag 6(unsigned integer N) | 16 + 2\*N      |
+| Tag 6(negative integer N) | 16 - 2\*N - 1  |
 {: #tab-shared title="Referencing Shared Values"}
 
-Taking into account the encoding, there are 16 one-byte references, 48
-two-byte references, 512 three-byte references, 131072 four-byte
-references, etc.  As integers can grow to very large (or small)
-values, there is no practical limit to how many shared items might be
-used in a Packed CBOR item.
+Taking into account the encoding of these referring data items, there
+are 16 one-byte references, 48 two-byte references, 512 three-byte
+references, 131072 four-byte references, etc.
+As integers can grow to very large (or small) values, there is no
+practical limit to how many shared items might be used in a Packed
+CBOR item.
 
-## Referencing Prefix Items
+Note that the semantics of Tag 6 depend on its content: An integer
+turns the tag into a shared item reference, a string or container (map
+or array) into a prefix reference (see {{tab-affix}}).
 
-Shared items are stored in an array that is the second element of the array used
-as tag content for tag number 6.  This array is indexed from 0.
 
-Prefix data items are referenced by using the data items in
-{{tab-prefix}}.  When reconstructing the original data item, such a
-reference is replaced by a string constructed from the referenced
-prefix data item (prefix, which might need to be recursively unpacked
-first) concatenated with the tag content (suffix, again possibly
-recursively unpacked).  The result gets the type of the suffix; this
-way a single prefix can be used to build both byte and text strings,
-depending on what type of suffix is being used.
+## Referencing Affix Items
 
-| reference                         | element number |
-| Tag 6(suffix)                     |              0 |
-| Tag 224-255(suffix)               |           1-32 |
-| Tag 28672-32767(suffix)           |        33-4128 |
-| Tag 1879048192-2147483647(suffix) | 4129-268439584 |
-{: #tab-prefix cols='l r' title="Referencing Prefix Values"}
+Prefix items are stored in the prefix table of the Current Set;
+suffix items are stored in the suffix table of the Current Set.
+We collectively call these items affix items; when referencing, which
+of the tables is actually used depends on whether a prefix or a suffix
+reference was used.
 
-Taking into account the encoding, there is one one-byte prefix
+| prefix reference                  | suffix reference | element number |
+| Tag 6(suffix)                     | —                |              0 |
+| Tag 224-255(suffix)               | TBD              |           1-32 |
+| Tag 28672-32767(suffix)           | TBD              |        33-4128 |
+| Tag 1879048192-2147483647(suffix) | TBD              | 4129-268439584 |
+{: #tab-affix cols='l l r' title="Referencing Affix Values"}
+
+Affix data items are referenced by using the data items in
+{{tab-affix}}.  Each of these implies the table used (prefix or
+suffix), a table index (an unsigned integer) and contains a "rump item".
+When reconstructing the original data item, such a
+reference is replaced by a data item constructed from the referenced
+affix data item (affix, which might need to be recursively unpacked
+first) "concatenated" with the tag content (rump, again possibly
+recursively unpacked).
+
+* For a rump of type array and map, the affix also needs to be an
+  array or a map.
+  For an array, the elements from the prefix are prepended, and the
+  elements from a suffix are appended to the rump array.
+  For a map, the entries in the affix are added to those of the rump;
+  prefix and suffix references differ in how entries with identical
+  keys are combined: for prefix references, an entry in the rump with
+  the same key as an entry in the affix overrides the one in the
+  affix, while for suffix references, an entry in the affix overrides
+  an entry in the rump that has the same key.
+
+<aside markdown="1">
+  ISSUE: Not sure that we want to use the efficiencies of overriding,
+  but having default values supplied out of a dictionary to be
+  overridden by a rump sounds rather handy.
+  Note that there is no way to remove a map entry from the table.
+</aside>
+
+* For a rump of one of the string types, the affix also needs to be one
+  of the string types; the bytes of the strings are concatenated as
+  specified (prefix + rump, rump + suffix).
+  The result of the concatenation gets the type of the rump; this way
+  a single affix can be used to build both byte and text strings,
+  depending on what type of rump is being used.
+
+Taking into account the encoding, there is one single-byte prefix
 reference, 32 two-byte references, 4096 three-byte references, and
 268435456 five-byte references.  268439585
 (2<sup>28</sup>+2<sup>12</sup>+2<sup>5</sup>+2<sup>0</sup>) is an
@@ -188,7 +238,16 @@ artificial limit, but should be
 high enough that there, again, is no practical limit to how many
 prefix items might be used in a Packed CBOR item.
 
-# Discussion
+<aside markdown="1">
+Issue: {{tab-affix}} assumes that the numbering system for prefixes
+and suffixes is the same, so the same sizes of allocations need to be made.
+However, experience suggests that prefix packing might be more likely
+than suffix packing.  Also for this reason, there is no intent to
+spend a 1+0 tag value for suffix matching.  This detail should be
+defined in the next version.
+</aside>
+
+## Discussion
 
 This specification uses up a large number of Simple Values and Tags,
 in particular one of the rare one-byte tags and half of the one-byte
@@ -203,7 +262,65 @@ loop.  A consumer/decompressor MUST protect against that.
 The current definition does nothing to help with packing CBOR
 sequences {{-seq}}; maybe it should.
 
-Nesting packed CBOR data items is not useful; maybe it should.
+# Table Setup
+
+The packing references described in {{sec-packed-cbor}} assume that
+packing tables have been set up.
+
+By default, all three tables are empty (zero-length arrays).
+
+Table setup can happen in one of two ways:
+
+* By the application environment, e.g., a media type.  These can
+  define tables that amount to a static dictionary that can be used in
+  a CBOR data item for this application environment.
+
+* By one or more tags enclosing the packed content.
+  These can be defined to add to the packing tables that already apply
+  to the tag.  Usually, the semantics of the tag will be to prepend
+  items to one of the tables.
+  Note that it may be useful to leave a particular efficiency tier
+  alone and only prepend to a higher tier; e.g., a tag could insert
+  shared items at table index 16 and shift anything that was already
+  there further down in the array while leaving index 0 to 15 alone.
+  Explicit additions by tag can combine with application-environment
+  supplied tables that apply to the entire CBOR data item.
+
+The present specification only defines a single tag for prepending
+to the (by default empty) tables.
+
+<aside markdown="1">
+We could also define a tag for dictionary referencing (or include that
+in the basic packed CBOR), but the details are likely to vary
+considerably between applications.  A URI-based reference would be
+easy to add, but might be too inefficient when used in the likely
+combination with an `ni:` URI {{-ni}}.
+</aside>
+
+## Basic Packed CBOR
+
+A predefined tag for packing table setup is defined in CDDL {{-cddl}} as in {{fig-cddl}}:
+
+~~~ cddl
+Basic-Packed-CBOR = #6.51([[*shared], [*prefix], [*suffix], rump])
+rump = any
+prefix = any
+suffix = any
+shared = any
+~~~
+{: #fig-cddl title="Packed CBOR in CDDL"}
+
+(This assumes the allocation of tag number 51.)
+
+The arrays given as the first, second, and third element of the
+content of the tag 51 are prepended to the tables for shared items,
+prefixes, and suffixes that apply to the entire tag (by default empty
+tables).
+
+The original CBOR data item can be reconstructed by recursively
+replacing shared, prefix, and suffix references encountered in the
+rump by their expansions.
+
 
 IANA Considerations
 ============
@@ -211,11 +328,12 @@ IANA Considerations
 In the registry {{-tags}},
 IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 
-|                   Tag | Data Item                                | Semantics                         | Reference                 |
-|                     6 | array, integer, text string, byte string | Packed CBOR: packed/shared/prefix | draft-bormann-cbor-packed |
-|               224–255 | text string or byte string               | Packed CBOR: prefix               | draft-bormann-cbor-packed |
-|           28672-32767 | text string or byte string               | Packed CBOR: prefix               | draft-bormann-cbor-packed |
-| 1879048192-<br/>2147483647 | text string or byte string               | Packed CBOR: prefix               | draft-bormann-cbor-packed ||                           |
+| Tag                        | Data Item                                     | Semantics                  | Reference              |
+| 6                          | integer, text string, byte string, array, map | Packed CBOR: shared/prefix | draft-ietf-cbor-packed |
+| 224–255                    | text string, byte string, array, map          | Packed CBOR: prefix        | draft-ietf-cbor-packed |
+| 28672-32767                | text string, byte string, array, map          | Packed CBOR: prefix        | draft-ietf-cbor-packed |
+| 1879048192-<br/>2147483647 | text string, byte string, array, map          | Packed CBOR: prefix        | draft-ietf-cbor-packed |
+| TBD                        | text string, byte string, array, map          | Packed CBOR: suffix        | draft-ietf-cbor-packed |
 {: #tab-tag-values cols='r l l' title="Values for Tag Numbers"}
 
 
@@ -223,16 +341,16 @@ In the registry {{-simple}},
 IANA is requested to allocate the simple values defined in {{tab-simple-values}}.
 
 | Value | Semantics           | Reference                 |
-|  0-15 | Packed CBOR: shared | draft-bormann-cbor-packed |
+|  0-15 | Packed CBOR: shared | draft-ietf-cbor-packed |
 {: #tab-simple-values cols='r l l' title="Simple Values"}
 
 Security Considerations
 ============
 
-The security considerations of RFC 7049 apply.
+The security considerations of {{-bis}} apply.
 
 Loops in the Packed CBOR can be used as a denial of service attack,
-see {{discussion}}.
+see {{sec-discussion}}.
 
 As the unpacking is deterministic, packed forms can be used as signing
 inputs.  (Note that if external dictionaries are added to cbor-packed,
@@ -246,12 +364,12 @@ Example
 
 The (JSON-compatible) CBOR data structure depicted in
 {{fig-example-in}}, 400 bytes of binary CBOR, could lead to a packed
-CBOR data item depicted in {{fig-example-out}}, 307 bytes.  Note that
-this example does not lend itself to prefix compression.
+CBOR data item depicted in {{fig-example-out}}, ~309 bytes.  Note that
+this particular example does not lend itself to prefix compression.
 
 ~~~json
 { "store": {
-    "book": [ 
+    "book": [
       { "category": "reference",
         "author": "Nigel Rees",
         "title": "Sayings of the Century",
@@ -285,7 +403,10 @@ this example does not lend itself to prefix compression.
 {: #fig-example-in title="Example original CBOR data item"}
 
 ~~~CBOR
-6([{"store": {
+51(["price", "category", "author", "title", "fiction", 8.95, "isbn"],
+   /  0          1         2         3         4       5      6   /
+   [], [],
+   [{"store": {
       "book": [
         {simple(1): "reference", simple(2): "Nigel Rees",
          simple(3): "Sayings of the Century", simple(0): simple(5)},
@@ -297,10 +418,7 @@ this example does not lend itself to prefix compression.
         {simple(1): simple(4), simple(2): "J. R. R. Tolkien",
          simple(3): "The Lord of the Rings",
          simple(6): "0-395-19395-8", simple(0): 22.99}],
-      "bicycle": {"color": "red", simple(0): 19.95}}},
-   [],
-   "price", "category", "author", "title", "fiction", 8.95, "isbn"])
-   /  0          1         2         3         4       5      6   /
+      "bicycle": {"color": "red", simple(0): 19.95}}}])
 ~~~
 {: #fig-example-out title="Example packed CBOR data item"}
 
@@ -312,13 +430,16 @@ Acknowledgements
 {: numbered="no"}
 
 CBOR packing was originally invented with the rest of CBOR, but did
-not make it into {{-orig}}.  Various attempts to come up with a
-specification over the years didn't proceed.  In 2017, <contact
-fullname="Sebastian Käbisch"/> proposed investigating compact
-representations of W3C Thing Descriptions, which prompted the author
-to come up with essentially the present design.
+not make it into {{-orig}}, the predecessor of {{-bis}}.
+Various attempts to come up with a specification over the years didn't
+proceed.
+In 2017, <contact fullname="Sebastian Käbisch"/> proposed
+investigating compact representations of W3C Thing Descriptions, which
+prompted the author to come up with essentially the present design.
 
 <!--  LocalWords:  CBOR extensibility IANA uint sint IEEE endian
  -->
-<!--  LocalWords:  signedness endianness
+<!--  LocalWords:  signedness endianness prepended decompressor
+ -->
+<!--  LocalWords:  prepend
  -->
