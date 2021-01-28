@@ -158,21 +158,28 @@ from 0).
 
 Shared items are stored in the shared item table of the Current Set.
 
-The shared data items are referenced by using the data items in
-{{tab-shared}}.  When reconstructing the original data item, such a
+The shared data items are referenced by using the reference data items
+in {{tab-shared}}.  When reconstructing the original data item, such a
 reference is replaced by the referenced data item, which is then
 recursively unpacked.
 
-| reference                 | element number |
-| Simple value 0-15         | 0-15           |
-| Tag 6(unsigned integer N) | 16 + 2\*N      |
-| Tag 6(negative integer N) | 16 - 2\*N - 1  |
+| reference                 | table index   |
+| Simple value 0-15         | 0-15          |
+| Tag 6(unsigned integer N) | 16 + 2\*N     |
+| Tag 6(negative integer N) | 16 - 2\*N - 1 |
 {: #tab-shared title="Referencing Shared Values"}
+
+As examples in CBOR diagnostic notation ({{Section 8 of RFC8949}}),
+the first 22 elements of the shared item table are referenced by
+`simple(0)`, `simple(1)`, ... `simple(15)`, `6(0)`, `6(-1)`, `6(1)`,
+`6(-2)`, `6(2)`, `6(-3)`.  (The alternation between unsigned and
+negative integers for even/odd table index values makes systematic use
+of shorter integer encodings first.)
 
 Taking into account the encoding of these referring data items, there
 are 16 one-byte references, 48 two-byte references, 512 three-byte
 references, 131072 four-byte references, etc.
-As integers can grow to very large (or small) values, there is no
+As integers can grow to very large (or negative) values, there is no
 practical limit to how many shared items might be used in a Packed
 CBOR item.
 
@@ -189,7 +196,7 @@ We collectively call these items affix items; when referencing, which
 of the tables is actually used depends on whether a prefix or a suffix
 reference was used.
 
-| prefix reference                  | suffix reference | element number |
+| prefix reference                  | suffix reference |    table index |
 | Tag 6(suffix)                     | —                |              0 |
 | Tag 224-255(suffix)               | TBD              |           1-32 |
 | Tag 28672-32767(suffix)           | TBD              |        33-4128 |
@@ -229,6 +236,11 @@ recursively unpacked).
   The result of the concatenation gets the type of the rump; this way
   a single affix can be used to build both byte and text strings,
   depending on what type of rump is being used.
+
+As a contrived (but short) example, if the prefix table is `["foobar",
+"foob", "fo"]`, the following prefix references will all unpack to
+`"foobart"`: `6("t")`, `224("art")`, `225("obart")` (the last example
+isn't really an optimization).
 
 Taking into account the encoding, there is one single-byte prefix
 reference, 32 two-byte references, 4096 three-byte references, and
