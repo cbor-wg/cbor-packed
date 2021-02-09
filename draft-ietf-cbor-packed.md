@@ -3,7 +3,7 @@ title: >
   Packed CBOR
 abbrev: Packed CBOR
 docname: draft-ietf-cbor-packed-latest
-# date: 2021-01-27
+# date: 2021-02-09
 
 stand_alone: true
 kramdown_options:
@@ -185,7 +185,7 @@ CBOR item.
 
 Note that the semantics of Tag 6 depend on its content: An integer
 turns the tag into a shared item reference, a string or container (map
-or array) into a prefix reference (see {{tab-affix}}).
+or array) into a prefix reference (see {{tab-prefix}}).
 
 
 ## Referencing Affix Items
@@ -196,15 +196,24 @@ We collectively call these items affix items; when referencing, which
 of the tables is actually used depends on whether a prefix or a suffix
 reference was used.
 
-| prefix reference                  | suffix reference |    table index |
-| Tag 6(suffix)                     | —                |              0 |
-| Tag 224-255(suffix)               | TBD              |           1-32 |
-| Tag 28672-32767(suffix)           | TBD              |        33-4128 |
-| Tag 1879048192-2147483647(suffix) | TBD              | 4129-268439584 |
-{: #tab-affix cols='l l r' title="Referencing Affix Values"}
+| prefix reference                  |    table index |
+|-----------------------------------|----------------|
+| Tag 6(suffix)                     |              0 |
+| Tag 225-255(suffix)               |           1-31 |
+| Tag 28704-32767(suffix)           |        32-4095 |
+| Tag 1879052288-2147483647(suffix) | 4096-268435455 |
+{: #tab-prefix cols='l r' title="Referencing Prefix Values"}
+
+| suffix reference                  |   table index |
+|-----------------------------------|---------------|
+| Tag 216-223(prefix)               |           0-7 |
+| Tag 27647-28671(prefix)           |        8-1023 |
+| Tag 1811940352-1879048191(prefix) | 1024-67108863 |
+{: #tab-suffix cols='l r' title="Referencing Suffix Values"}
 
 Affix data items are referenced by using the data items in
-{{tab-affix}}.  Each of these implies the table used (prefix or
+{{tab-prefix}} and {{tab-suffix}}.
+Each of these implies the table used (prefix or
 suffix), a table index (an unsigned integer) and contains a "rump item".
 When reconstructing the original data item, such a
 reference is replaced by a data item constructed from the referenced
@@ -242,21 +251,22 @@ As a contrived (but short) example, if the prefix table is `["foobar",
 `"foobart"`: `6("t")`, `224("art")`, `225("obart")` (the last example
 isn't really an optimization).
 
+<!-- 2<sup>28</sup>2<sup>12</sup>+2<sup>5</sup>+2<sup>0</sup> -->
+
 Taking into account the encoding, there is one single-byte prefix
-reference, 32 two-byte references, 4096 three-byte references, and
-268435456 five-byte references.  268439585
-(2<sup>28</sup>+2<sup>12</sup>+2<sup>5</sup>+2<sup>0</sup>) is an
-artificial limit, but should be
-high enough that there, again, is no practical limit to how many
-prefix items might be used in a Packed CBOR item.
+reference, 31 (2<sup>5</sup>-2<sup>0</sup>) two-byte references, 4064
+(2<sup>12</sup>-2<sup>5</sup>) three-byte references, and 26843160
+(2<sup>28</sup>-2<sup>12</sup>) five-byte references for prefixes.
+268435455 (2<sup>28</sup>) is an artificial limit, but should be high
+enough that there, again, is no practical limit to how many prefix
+items might be used in a Packed CBOR item.
+The numbers for suffix references are one quarter of those, except
+that there is no single-byte reference and 8 two-byte references.
 
 <aside markdown="1">
-Issue: {{tab-affix}} assumes that the numbering system for prefixes
-and suffixes is the same, so the same sizes of allocations need to be made.
-However, experience suggests that prefix packing might be more likely
-than suffix packing.  Also for this reason, there is no intent to
-spend a 1+0 tag value for suffix matching.  This detail should be
-defined in the next version.
+Rationale: Experience suggests that prefix packing might be more
+likely than suffix packing.  Also for this reason, there is no intent
+to spend a 1+0 tag value for suffix matching.
 </aside>
 
 ## Discussion
@@ -340,14 +350,15 @@ IANA Considerations
 In the registry {{-tags}},
 IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 
-| Tag                        | Data Item                                     | Semantics                  | Reference              |
-| 6                          | integer, text string, byte string, array, map | Packed CBOR: shared/prefix | draft-ietf-cbor-packed |
-| 224–255                    | text string, byte string, array, map          | Packed CBOR: prefix        | draft-ietf-cbor-packed |
-| 28672-32767                | text string, byte string, array, map          | Packed CBOR: prefix        | draft-ietf-cbor-packed |
-| 1879048192-<br/>2147483647 | text string, byte string, array, map          | Packed CBOR: prefix        | draft-ietf-cbor-packed |
-| TBD                        | text string, byte string, array, map          | Packed CBOR: suffix        | draft-ietf-cbor-packed |
+|                   Tag | Data Item                                     | Semantics                  | Reference              |
+|                     6 | integer, text string, byte string, array, map | Packed CBOR: shared/prefix | draft-ietf-cbor-packed |
+|               225-255 | text string, byte string, array, map          | Packed CBOR: prefix        | draft-ietf-cbor-packed |
+|           28704-32767 | text string, byte string, array, map          | Packed CBOR: prefix        | draft-ietf-cbor-packed |
+| 1879052288-2147483647 | text string, byte string, array, map          | Packed CBOR: prefix        | draft-ietf-cbor-packed |
+|               216-223 | text string, byte string, array, map          | Packed CBOR: suffix        | draft-ietf-cbor-packed |
+|           27647-28671 | text string, byte string, array, map          | Packed CBOR: suffix        | draft-ietf-cbor-packed |
+| 1811940352-1879048191 | text string, byte string, array, map          | Packed CBOR: suffix        | draft-ietf-cbor-packed |
 {: #tab-tag-values cols='r l l' title="Values for Tag Numbers"}
-
 
 In the registry {{-simple}},
 IANA is requested to allocate the simple values defined in {{tab-simple-values}}.
