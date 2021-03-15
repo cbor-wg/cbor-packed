@@ -302,6 +302,12 @@ Table setup can happen in one of two ways:
 * By the application environment, e.g., a media type.  These can
   define tables that amount to a static dictionary that can be used in
   a CBOR data item for this application environment.
+  Note that, without this information, a data item that uses such a
+  static dictionary can be decoded at the CBOR level, but not fully
+  unpacked.
+  The table setup mechanisms provided by this document are defined in
+  such a way that an unpacker can at least recognize if this is the
+  case.
 
 * By one or more tags enclosing the packed content.
   These can be defined to add to the packing tables that already apply
