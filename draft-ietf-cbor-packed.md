@@ -3,7 +3,7 @@ title: >
   Packed CBOR
 abbrev: Packed CBOR
 docname: draft-ietf-cbor-packed-latest
-# date: 2021-02-09
+# date: 2021-07-01
 
 stand_alone: true
 kramdown_options:
@@ -108,7 +108,7 @@ Packed CBOR is defined in two parts: Referencing packing tables
 Terminology         {#terms}
 ------------
 
-{::boilerplate bcp14}
+{::boilerplate bcp14-tagged}
 
 Packed reference:
 : A shared item reference or an affix reference
@@ -461,14 +461,15 @@ this particular example does not lend itself to prefix compression.
 The (JSON-compatible) CBOR data structure below has been packed with shared
 item and (partial) prefix compression only.
 
-~~~
+~~~ json
 {
   "name": "MyLED",
   "interactions": [
     {
       "links": [
         {
-          "href": "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueRed",
+          "href":
+           "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueRed",
           "mediaType": "application/json"
         }
       ],
@@ -486,7 +487,8 @@ item and (partial) prefix compression only.
     {
       "links": [
         {
-          "href": "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueGreen",
+          "href":
+           "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueGreen",
           "mediaType": "application/json"
         }
       ],
@@ -504,7 +506,8 @@ item and (partial) prefix compression only.
     {
       "links": [
         {
-          "href": "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueBlue",
+          "href":
+           "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueBlue",
           "mediaType": "application/json"
         }
       ],
@@ -522,7 +525,8 @@ item and (partial) prefix compression only.
     {
       "links": [
         {
-          "href": "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueWhite",
+          "href":
+           "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueWhite",
           "mediaType": "application/json"
         }
       ],
@@ -540,7 +544,8 @@ item and (partial) prefix compression only.
     {
       "links": [
         {
-          "href": "http://192.168.1.103:8445/wot/thing/MyLED/ledOnOff",
+          "href":
+           "http://192.168.1.103:8445/wot/thing/MyLED/ledOnOff",
           "mediaType": "application/json"
         }
       ],
@@ -558,7 +563,8 @@ item and (partial) prefix compression only.
     {
       "links": [
         {
-          "href": "http://192.168.1.103:8445/wot/thing/MyLED/colorTemperatureChanged",
+          "href":
+"http://192.168.1.103:8445/wot/thing/MyLED/colorTemperatureChanged",
           "mediaType": "application/json"
         }
       ],
@@ -576,7 +582,8 @@ item and (partial) prefix compression only.
   "@type": "Lamp",
   "id": "0",
   "base": "http://192.168.1.103:8445/wot/thing",
-  "@context": "http://192.168.1.102:8444/wot/w3c-wot-td-context.jsonld"
+  "@context":
+   "http://192.168.1.102:8444/wot/w3c-wot-td-context.jsonld"
 }
 ~~~
 {: #fig-example-in2 title="Example original CBOR data item"}
@@ -597,20 +604,20 @@ item and (partial) prefix compression only.
    /suffix/ [],
    /rump/ {simple(0): "MyLED",
            "interactions": [
-     229({simple(2): [{simple(3): 227("Red"), simple(4): simple(5)}],
-      simple(0): 228("Red")}),
-     229({simple(2): [{simple(3): 227("Green"), simple(4): simple(5)}],
-      simple(0): 228("Green")}),
-     229({simple(2): [{simple(3): 227("Blue"), simple(4): simple(5)}],
-      simple(0): 228("Blue")}),
-     229({simple(2): [{simple(3): 227("White"), simple(4): simple(5)}],
-      simple(0): "rgbValueWhite"}),
-     {simple(2): [{simple(3): 226("ledOnOff"), simple(4): simple(5)}],
-      simple(6): {simple(10): {simple(11): "boolean"}}, simple(0):
-      "ledOnOff", simple(9): true, simple(1): simple(8)},
-     {simple(2): [{simple(3): 226("colorTemperatureChanged"),
-      simple(4): simple(5)}], simple(6): simple(7), simple(0):
-      "colorTemperatureChanged", simple(1): ["Event"]}],
+   229({simple(2): [{simple(3): 227("Red"), simple(4): simple(5)}],
+    simple(0): 228("Red")}),
+   229({simple(2): [{simple(3): 227("Green"), simple(4): simple(5)}],
+    simple(0): 228("Green")}),
+   229({simple(2): [{simple(3): 227("Blue"), simple(4): simple(5)}],
+    simple(0): 228("Blue")}),
+   229({simple(2): [{simple(3): 227("White"), simple(4): simple(5)}],
+    simple(0): "rgbValueWhite"}),
+   {simple(2): [{simple(3): 226("ledOnOff"), simple(4): simple(5)}],
+    simple(6): {simple(10): {simple(11): "boolean"}}, simple(0):
+    "ledOnOff", simple(9): true, simple(1): simple(8)},
+   {simple(2): [{simple(3): 226("colorTemperatureChanged"),
+    simple(4): simple(5)}], simple(6): simple(7), simple(0):
+    "colorTemperatureChanged", simple(1): ["Event"]}],
      simple(1): "Lamp", "id": "0", "base": 225(""),
      "@context": 6("2:8444/wot/w3c-wot-td-context.jsonld")}])
 ~~~
