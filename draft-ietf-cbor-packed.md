@@ -336,15 +336,16 @@ combination with an `ni:` URI {{-ni}}.
 A predefined tag for packing table setup is defined in CDDL {{-cddl}} as in {{fig-cddl}}:
 
 ~~~ cddl
-Basic-Packed-CBOR = #6.51([[*shared], [*prefix], [*suffix], rump])
+Basic-Packed-CBOR = #6.51([[*shared-item], [*prefix-item],
+                           [*suffix-item], rump])
 rump = any
-prefix = any
-suffix = any
-shared = any
+prefix-item = any
+suffix-item = any
+shared-item = any
 ~~~
 {: #fig-cddl title="Packed CBOR in CDDL"}
 
-(This assumes the allocation of tag number 51.)
+(This assumes the allocation of tag number 51 for this tag.)
 
 The arrays given as the first, second, and third element of the
 content of the tag 51 are prepended to the tables for shared items,
