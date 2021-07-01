@@ -4,8 +4,8 @@
 
 Network Working Group                                         C. Bormann
 Internet-Draft                                    Universität Bremen TZI
-Intended status: Informational                             15 March 2021
-Expires: 16 September 2021
+Intended status: Informational                               1 July 2021
+Expires: 2 January 2022
 
 
                               Packed CBOR
@@ -53,9 +53,9 @@ Status of This Memo
 
 
 
-Bormann                 Expires 16 September 2021               [Page 1]
+Bormann                  Expires 2 January 2022                 [Page 1]
 
-Internet-Draft                 Packed CBOR                    March 2021
+Internet-Draft                 Packed CBOR                     July 2021
 
 
    Internet-Drafts are draft documents valid for a maximum of six months
@@ -63,7 +63,7 @@ Internet-Draft                 Packed CBOR                    March 2021
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 16 September 2021.
+   This Internet-Draft will expire on 2 January 2022.
 
 Copyright Notice
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Bormann                 Expires 16 September 2021               [Page 2]
+Bormann                  Expires 2 January 2022                 [Page 2]
 
-Internet-Draft                 Packed CBOR                    March 2021
+Internet-Draft                 Packed CBOR                     July 2021
 
 
    The specification defines a transformation from a Packed CBOR data
@@ -165,9 +165,9 @@ Internet-Draft                 Packed CBOR                    March 2021
 
 
 
-Bormann                 Expires 16 September 2021               [Page 3]
+Bormann                  Expires 2 January 2022                 [Page 3]
 
-Internet-Draft                 Packed CBOR                    March 2021
+Internet-Draft                 Packed CBOR                     July 2021
 
 
       of given Packing tables.
@@ -221,9 +221,9 @@ Internet-Draft                 Packed CBOR                    March 2021
 
 
 
-Bormann                 Expires 16 September 2021               [Page 4]
+Bormann                  Expires 2 January 2022                 [Page 4]
 
-Internet-Draft                 Packed CBOR                    March 2021
+Internet-Draft                 Packed CBOR                     July 2021
 
 
                +===========================+==============+
@@ -277,9 +277,9 @@ Internet-Draft                 Packed CBOR                    March 2021
 
 
 
-Bormann                 Expires 16 September 2021               [Page 5]
+Bormann                  Expires 2 January 2022                 [Page 5]
 
-Internet-Draft                 Packed CBOR                    March 2021
+Internet-Draft                 Packed CBOR                     July 2021
 
 
           +===================================+================+
@@ -333,9 +333,9 @@ Internet-Draft                 Packed CBOR                    March 2021
 
 
 
-Bormann                 Expires 16 September 2021               [Page 6]
+Bormann                  Expires 2 January 2022                 [Page 6]
 
-Internet-Draft                 Packed CBOR                    March 2021
+Internet-Draft                 Packed CBOR                     July 2021
 
 
       |  ISSUE: Not sure that we want to use the efficiencies of
@@ -356,13 +356,13 @@ Internet-Draft                 Packed CBOR                    March 2021
    last example isn't really an optimization).
 
    Taking into account the encoding, there is one single-byte prefix
-   reference, 31 (2^(5)-2^(0)) two-byte references, 4064 (2^(12)-2^(5))
-   three-byte references, and 26843160 (2^(28)-2^(12)) five-byte
-   references for prefixes. 268435455 (2^(28)) is an artificial limit,
-   but should be high enough that there, again, is no practical limit to
-   how many prefix items might be used in a Packed CBOR item.  The
-   numbers for suffix references are one quarter of those, except that
-   there is no single-byte reference and 8 two-byte references.
+   reference, 31 (2^5-2^0) two-byte references, 4064 (2^12-2^5) three-
+   byte references, and 26843160 (2^28-2^12) five-byte references for
+   prefixes. 268435455 (2^28) is an artificial limit, but should be high
+   enough that there, again, is no practical limit to how many prefix
+   items might be used in a Packed CBOR item.  The numbers for suffix
+   references are one quarter of those, except that there is no single-
+   byte reference and 8 two-byte references.
 
       |  Rationale: Experience suggests that prefix packing might be
       |  more likely than suffix packing.  Also for this reason, there
@@ -389,9 +389,9 @@ Internet-Draft                 Packed CBOR                    March 2021
 
 
 
-Bormann                 Expires 16 September 2021               [Page 7]
+Bormann                  Expires 2 January 2022                 [Page 7]
 
-Internet-Draft                 Packed CBOR                    March 2021
+Internet-Draft                 Packed CBOR                     July 2021
 
 
 3.  Table Setup
@@ -445,9 +445,9 @@ Internet-Draft                 Packed CBOR                    March 2021
 
 
 
-Bormann                 Expires 16 September 2021               [Page 8]
+Bormann                  Expires 2 January 2022                 [Page 8]
 
-Internet-Draft                 Packed CBOR                    March 2021
+Internet-Draft                 Packed CBOR                     July 2021
 
 
    Basic-Packed-CBOR = #6.51([[*shared], [*prefix], [*suffix], rump])
@@ -501,9 +501,9 @@ Internet-Draft                 Packed CBOR                    March 2021
 
 
 
-Bormann                 Expires 16 September 2021               [Page 9]
+Bormann                  Expires 2 January 2022                 [Page 9]
 
-Internet-Draft                 Packed CBOR                    March 2021
+Internet-Draft                 Packed CBOR                     July 2021
 
 
    |                       |map     |         |                        |
@@ -557,9 +557,9 @@ Internet-Draft                 Packed CBOR                    March 2021
 
 
 
-Bormann                 Expires 16 September 2021              [Page 10]
+Bormann                  Expires 2 January 2022                [Page 10]
 
-Internet-Draft                 Packed CBOR                    March 2021
+Internet-Draft                 Packed CBOR                     July 2021
 
 
    Loops in the Packed CBOR can be used as a denial of service attack,
@@ -613,9 +613,9 @@ Internet-Draft                 Packed CBOR                    March 2021
 
 
 
-Bormann                 Expires 16 September 2021              [Page 11]
+Bormann                  Expires 2 January 2022                [Page 11]
 
-Internet-Draft                 Packed CBOR                    March 2021
+Internet-Draft                 Packed CBOR                     July 2021
 
 
    [RFC6920]  Farrell, S., Kutscher, D., Dannewitz, C., Ohlman, B.,
@@ -669,9 +669,9 @@ Appendix A.  Examples
 
 
 
-Bormann                 Expires 16 September 2021              [Page 12]
+Bormann                  Expires 2 January 2022                [Page 12]
 
-Internet-Draft                 Packed CBOR                    March 2021
+Internet-Draft                 Packed CBOR                     July 2021
 
 
    { "store": {
@@ -725,9 +725,9 @@ Internet-Draft                 Packed CBOR                    March 2021
 
 
 
-Bormann                 Expires 16 September 2021              [Page 13]
+Bormann                  Expires 2 January 2022                [Page 13]
 
-Internet-Draft                 Packed CBOR                    March 2021
+Internet-Draft                 Packed CBOR                     July 2021
 
 
    51(["price", "category", "author", "title", "fiction", 8.95, "isbn"],
@@ -781,9 +781,9 @@ Internet-Draft                 Packed CBOR                    March 2021
 
 
 
-Bormann                 Expires 16 September 2021              [Page 14]
+Bormann                  Expires 2 January 2022                [Page 14]
 
-Internet-Draft                 Packed CBOR                    March 2021
+Internet-Draft                 Packed CBOR                     July 2021
 
 
         }
@@ -837,9 +837,9 @@ Internet-Draft                 Packed CBOR                    March 2021
 
 
 
-Bormann                 Expires 16 September 2021              [Page 15]
+Bormann                  Expires 2 January 2022                [Page 15]
 
-Internet-Draft                 Packed CBOR                    March 2021
+Internet-Draft                 Packed CBOR                     July 2021
 
 
     },
@@ -893,9 +893,9 @@ Internet-Draft                 Packed CBOR                    March 2021
 
 
 
-Bormann                 Expires 16 September 2021              [Page 16]
+Bormann                  Expires 2 January 2022                [Page 16]
 
-Internet-Draft                 Packed CBOR                    March 2021
+Internet-Draft                 Packed CBOR                     July 2021
 
 
    51([/shared/["name", "@type", "links", "href", "mediaType",
@@ -949,9 +949,9 @@ Author's Address
 
 
 
-Bormann                 Expires 16 September 2021              [Page 17]
+Bormann                  Expires 2 January 2022                [Page 17]
 
-Internet-Draft                 Packed CBOR                    March 2021
+Internet-Draft                 Packed CBOR                     July 2021
 
 
    D-28359 Bremen
@@ -1005,4 +1005,4 @@ Internet-Draft                 Packed CBOR                    March 2021
 
 
 
-Bormann                 Expires 16 September 2021              [Page 18]
+Bormann                  Expires 2 January 2022                [Page 18]
