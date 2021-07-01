@@ -89,15 +89,15 @@ Table of Contents
      2.3.  Referencing Affix Items . . . . . . . . . . . . . . . . .   5
      2.4.  Discussion  . . . . . . . . . . . . . . . . . . . . . . .   7
    3.  Table Setup . . . . . . . . . . . . . . . . . . . . . . . . .   8
-     3.1.  Basic Packed CBOR . . . . . . . . . . . . . . . . . . . .   8
-   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .   9
-   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  10
+     3.1.  Basic Packed CBOR . . . . . . . . . . . . . . . . . . . .   9
+   4.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  10
+   5.  Security Considerations . . . . . . . . . . . . . . . . . . .  11
    6.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  11
      6.1.  Normative References  . . . . . . . . . . . . . . . . . .  11
-     6.2.  Informative References  . . . . . . . . . . . . . . . . .  11
-   Appendix A.  Examples . . . . . . . . . . . . . . . . . . . . . .  12
+     6.2.  Informative References  . . . . . . . . . . . . . . . . .  12
+   Appendix A.  Examples . . . . . . . . . . . . . . . . . . . . . .  13
    Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  17
-   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  17
+   Author's Address  . . . . . . . . . . . . . . . . . . . . . . . .  18
 
 1.  Introduction
 
@@ -380,10 +380,10 @@ Internet-Draft                 Packed CBOR                     July 2021
    A maliciously crafted Packed CBOR data item might contain a reference
    loop.  A consumer/decompressor MUST protect against that.
 
-   The current definition does nothing to help with packing CBOR
-   sequences [RFC8742]; maybe it should.
-
-
+      |  Different strategies for decoding/consuming Packed CBOR are
+      |  available.
+      |  For example:
+      |  
 
 
 
@@ -393,6 +393,35 @@ Bormann                  Expires 2 January 2022                 [Page 7]
 
 Internet-Draft                 Packed CBOR                     July 2021
 
+
+      |     *  the decoder can decode and unpack the packed item,
+      |        presenting an unpacked data item to the application.  In
+      |        this case, the onus of dealing with loops is on the
+      |        decoder.  (This strategy generally has the highest memory
+      |        consumption, but also the simplest interface to the
+      |        application.)  Besides avoiding getting stuck in a
+      |        reference loop, the decoder will need to control its
+      |        resource allocation, as data items can "blow up" during
+      |        unpacking.
+      |  
+      |     *  the decoder can be oblivious of Packed CBOR.  In this
+      |        case, he onus of dealing with loops is on the
+      |        application, as is the entire onus of dealing with Packed
+      |        CBOR.
+      |  
+      |     *  hybrid models are possible, for instance: The decoder
+      |        builds a data item tree directly from the Packed CBOR as
+      |        if it were oblivious, but also provides accessors that
+      |        hide (resolve) the packing.  In this specific case, the
+      |        onus of dealing with loops is on the accessors.
+      |  
+      |  In general, loop detection can be handled in a similar way in
+      |  which loops of symbolic links are handled in a file system: A
+      |  system wide limit (often 31 or 40 indirections for symbolic
+      |  links) is applied to any reference chase.
+
+      |  ISSUE: The current definition does nothing to help with packing
+      |  CBOR sequences [RFC8742]; maybe it should.
 
 3.  Table Setup
 
@@ -412,6 +441,15 @@ Internet-Draft                 Packed CBOR                     July 2021
       are defined in such a way that an unpacker can at least recognize
       if this is the case.
 
+
+
+
+
+Bormann                  Expires 2 January 2022                 [Page 8]
+
+Internet-Draft                 Packed CBOR                     July 2021
+
+
    *  By one or more tags enclosing the packed content.  These can be
       defined to add to the packing tables that already apply to the
       tag.  Usually, the semantics of the tag will be to prepend items
@@ -427,38 +465,27 @@ Internet-Draft                 Packed CBOR                     July 2021
    the (by default empty) tables.
 
       |  We could also define a tag for dictionary referencing (or
-      |  include that in the basic packed CBOR), but the details are
-      |  likely to vary considerably between applications.  A URI-based
-      |  reference would be easy to add, but might be too inefficient
-      |  when used in the likely combination with an "ni:" URI
-      |  [RFC6920].
+      |  include that in the basic packed CBOR), but the desirable
+      |  details are likely to vary considerably between applications.
+      |  A URI-based reference would be easy to add, but might be too
+      |  inefficient when used in the likely combination with an "ni:"
+      |  URI [RFC6920].
 
 3.1.  Basic Packed CBOR
 
    A predefined tag for packing table setup is defined in CDDL [RFC8610]
    as in Figure 1:
 
-
-
-
-
-
-
-
-Bormann                  Expires 2 January 2022                 [Page 8]
-
-Internet-Draft                 Packed CBOR                     July 2021
-
-
-   Basic-Packed-CBOR = #6.51([[*shared], [*prefix], [*suffix], rump])
+   Basic-Packed-CBOR = #6.51([[*shared-item], [*prefix-item],
+                              [*suffix-item], rump])
    rump = any
-   prefix = any
-   suffix = any
-   shared = any
+   prefix-item = any
+   suffix-item = any
+   shared-item = any
 
                        Figure 1: Packed CBOR in CDDL
 
-   (This assumes the allocation of tag number 51.)
+   (This assumes the allocation of tag number 51 for this tag.)
 
    The arrays given as the first, second, and third element of the
    content of the tag 51 are prepended to the tables for shared items,
@@ -468,6 +495,22 @@ Internet-Draft                 Packed CBOR                     July 2021
    The original CBOR data item can be reconstructed by recursively
    replacing shared, prefix, and suffix references encountered in the
    rump by their expansions.
+
+
+
+
+
+
+Bormann                  Expires 2 January 2022                 [Page 9]
+
+Internet-Draft                 Packed CBOR                     July 2021
+
+
+   Packed item references in the newly constructed (low-numbered) parts
+   of the table need to be interpreted in the number space of that table
+   (which includes the, now higher-numbered inherited parts), while
+   references in any existing, inherited (higher-numbered) part continue
+   to use the (more limited) number space of the inherited table.
 
 4.  IANA Considerations
 
@@ -498,14 +541,6 @@ Internet-Draft                 Packed CBOR                     July 2021
    |                       |byte    |prefix   |                        |
    |                       |string, |         |                        |
    |                       |array,  |         |                        |
-
-
-
-Bormann                  Expires 2 January 2022                 [Page 9]
-
-Internet-Draft                 Packed CBOR                     July 2021
-
-
    |                       |map     |         |                        |
    +-----------------------+--------+---------+------------------------+
    | 1879052288-2147483647 |text    |Packed   | draft-ietf-cbor-packed |
@@ -519,6 +554,14 @@ Internet-Draft                 Packed CBOR                     July 2021
    |                       |string, |CBOR:    |                        |
    |                       |byte    |suffix   |                        |
    |                       |string, |         |                        |
+
+
+
+Bormann                  Expires 2 January 2022                [Page 10]
+
+Internet-Draft                 Packed CBOR                     July 2021
+
+
    |                       |array,  |         |                        |
    |                       |map     |         |                        |
    +-----------------------+--------+---------+------------------------+
@@ -554,14 +597,6 @@ Internet-Draft                 Packed CBOR                     July 2021
 
    The security considerations of [RFC8949] apply.
 
-
-
-
-Bormann                  Expires 2 January 2022                [Page 10]
-
-Internet-Draft                 Packed CBOR                     July 2021
-
-
    Loops in the Packed CBOR can be used as a denial of service attack,
    see Section 2.4.
 
@@ -572,6 +607,16 @@ Internet-Draft                 Packed CBOR                     July 2021
 6.  References
 
 6.1.  Normative References
+
+
+
+
+
+
+Bormann                  Expires 2 January 2022                [Page 11]
+
+Internet-Draft                 Packed CBOR                     July 2021
+
 
    [IANA.cbor-simple-values]
               IANA, "Concise Binary Object Representation (CBOR) Simple
@@ -608,16 +653,6 @@ Internet-Draft                 Packed CBOR                     July 2021
 
 6.2.  Informative References
 
-
-
-
-
-
-Bormann                  Expires 2 January 2022                [Page 11]
-
-Internet-Draft                 Packed CBOR                     July 2021
-
-
    [RFC6920]  Farrell, S., Kutscher, D., Dannewitz, C., Ohlman, B.,
               Keranen, A., and P. Hallam-Baker, "Naming Things with
               Hashes", RFC 6920, DOI 10.17487/RFC6920, April 2013,
@@ -631,41 +666,6 @@ Internet-Draft                 Packed CBOR                     July 2021
               Sequences", RFC 8742, DOI 10.17487/RFC8742, February 2020,
               <https://www.rfc-editor.org/info/rfc8742>.
 
-Appendix A.  Examples
-
-   The (JSON-compatible) CBOR data structure depicted in Figure 2, 400
-   bytes of binary CBOR, could lead to a packed CBOR data item depicted
-   in Figure 3, ~309 bytes.  Note that this particular example does not
-   lend itself to prefix compression.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -673,6 +673,13 @@ Bormann                  Expires 2 January 2022                [Page 12]
 
 Internet-Draft                 Packed CBOR                     July 2021
 
+
+Appendix A.  Examples
+
+   The (JSON-compatible) CBOR data structure depicted in Figure 2, 400
+   bytes of binary CBOR, could lead to a packed CBOR data item depicted
+   in Figure 3, ~309 bytes.  Note that this particular example does not
+   lend itself to prefix compression.
 
    { "store": {
        "book": [
@@ -718,13 +725,6 @@ Internet-Draft                 Packed CBOR                     July 2021
 
 
 
-
-
-
-
-
-
-
 Bormann                  Expires 2 January 2022                [Page 13]
 
 Internet-Draft                 Packed CBOR                     July 2021
@@ -752,32 +752,32 @@ Internet-Draft                 Packed CBOR                     July 2021
    The (JSON-compatible) CBOR data structure below has been packed with
    shared item and (partial) prefix compression only.
 
-{
-  "name": "MyLED",
-  "interactions": [
-    {
-      "links": [
-        {
-          "href": "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueRed",
-          "mediaType": "application/json"
-        }
-      ],
-      "outputData": {
-        "valueType": {
-          "type": "number"
-        }
-      },
-      "name": "rgbValueRed",
-      "writable": true,
-      "@type": [
-        "Property"
-      ]
-    },
-    {
-      "links": [
-        {
-          "href": "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueGreen",
-          "mediaType": "application/json"
+   {
+     "name": "MyLED",
+     "interactions": [
+       {
+         "links": [
+           {
+             "href":
+              "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueRed",
+             "mediaType": "application/json"
+           }
+         ],
+         "outputData": {
+           "valueType": {
+             "type": "number"
+           }
+         },
+         "name": "rgbValueRed",
+         "writable": true,
+         "@type": [
+           "Property"
+         ]
+       },
+       {
+         "links": [
+           {
+             "href":
 
 
 
@@ -786,54 +786,54 @@ Bormann                  Expires 2 January 2022                [Page 14]
 Internet-Draft                 Packed CBOR                     July 2021
 
 
-        }
-      ],
-      "outputData": {
-        "valueType": {
-          "type": "number"
-        }
-      },
-      "name": "rgbValueGreen",
-      "writable": true,
-      "@type": [
-        "Property"
-      ]
-    },
-    {
-      "links": [
-        {
-          "href": "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueBlue",
-          "mediaType": "application/json"
-        }
-      ],
-      "outputData": {
-        "valueType": {
-          "type": "number"
-        }
-      },
-      "name": "rgbValueBlue",
-      "writable": true,
-      "@type": [
-        "Property"
-      ]
-    },
-    {
-      "links": [
-        {
-          "href": "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueWhite",
-          "mediaType": "application/json"
-        }
-      ],
-      "outputData": {
-        "valueType": {
-          "type": "number"
-        }
-      },
-      "name": "rgbValueWhite",
-      "writable": true,
-      "@type": [
-        "Property"
-      ]
+              "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueGreen",
+             "mediaType": "application/json"
+           }
+         ],
+         "outputData": {
+           "valueType": {
+             "type": "number"
+           }
+         },
+         "name": "rgbValueGreen",
+         "writable": true,
+         "@type": [
+           "Property"
+         ]
+       },
+       {
+         "links": [
+           {
+             "href":
+              "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueBlue",
+             "mediaType": "application/json"
+           }
+         ],
+         "outputData": {
+           "valueType": {
+             "type": "number"
+           }
+         },
+         "name": "rgbValueBlue",
+         "writable": true,
+         "@type": [
+           "Property"
+         ]
+       },
+       {
+         "links": [
+           {
+             "href":
+              "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueWhite",
+             "mediaType": "application/json"
+           }
+         ],
+         "outputData": {
+           "valueType": {
+             "type": "number"
+           }
+         },
+         "name": "rgbValueWhite",
 
 
 
@@ -842,54 +842,54 @@ Bormann                  Expires 2 January 2022                [Page 15]
 Internet-Draft                 Packed CBOR                     July 2021
 
 
-    },
-    {
-      "links": [
-        {
-          "href": "http://192.168.1.103:8445/wot/thing/MyLED/ledOnOff",
-          "mediaType": "application/json"
-        }
-      ],
-      "outputData": {
-        "valueType": {
-          "type": "boolean"
-        }
-      },
-      "name": "ledOnOff",
-      "writable": true,
-      "@type": [
-        "Property"
-      ]
-    },
-    {
-      "links": [
-        {
-          "href": "http://192.168.1.103:8445/wot/thing/MyLED/colorTemperatureChanged",
-          "mediaType": "application/json"
-        }
-      ],
-      "outputData": {
-        "valueType": {
-          "type": "number"
-        }
-      },
-      "name": "colorTemperatureChanged",
-      "@type": [
-        "Event"
-      ]
-    }
-  ],
-  "@type": "Lamp",
-  "id": "0",
-  "base": "http://192.168.1.103:8445/wot/thing",
-  "@context": "http://192.168.1.102:8444/wot/w3c-wot-td-context.jsonld"
-}
-
-              Figure 4: Example original CBOR data item
-
-
-
-
+         "writable": true,
+         "@type": [
+           "Property"
+         ]
+       },
+       {
+         "links": [
+           {
+             "href":
+              "http://192.168.1.103:8445/wot/thing/MyLED/ledOnOff",
+             "mediaType": "application/json"
+           }
+         ],
+         "outputData": {
+           "valueType": {
+             "type": "boolean"
+           }
+         },
+         "name": "ledOnOff",
+         "writable": true,
+         "@type": [
+           "Property"
+         ]
+       },
+       {
+         "links": [
+           {
+             "href":
+   "http://192.168.1.103:8445/wot/thing/MyLED/colorTemperatureChanged",
+             "mediaType": "application/json"
+           }
+         ],
+         "outputData": {
+           "valueType": {
+             "type": "number"
+           }
+         },
+         "name": "colorTemperatureChanged",
+         "@type": [
+           "Event"
+         ]
+       }
+     ],
+     "@type": "Lamp",
+     "id": "0",
+     "base": "http://192.168.1.103:8445/wot/thing",
+     "@context":
+      "http://192.168.1.102:8444/wot/w3c-wot-td-context.jsonld"
 
 
 
@@ -897,6 +897,10 @@ Bormann                  Expires 2 January 2022                [Page 16]
 
 Internet-Draft                 Packed CBOR                     July 2021
 
+
+   }
+
+                 Figure 4: Example original CBOR data item
 
    51([/shared/["name", "@type", "links", "href", "mediaType",
                /  0       1       2        3         4 /
@@ -913,20 +917,20 @@ Internet-Draft                 Packed CBOR                     July 2021
       /suffix/ [],
       /rump/ {simple(0): "MyLED",
               "interactions": [
-        229({simple(2): [{simple(3): 227("Red"), simple(4): simple(5)}],
-         simple(0): 228("Red")}),
-        229({simple(2): [{simple(3): 227("Green"), simple(4): simple(5)}],
-         simple(0): 228("Green")}),
-        229({simple(2): [{simple(3): 227("Blue"), simple(4): simple(5)}],
-         simple(0): 228("Blue")}),
-        229({simple(2): [{simple(3): 227("White"), simple(4): simple(5)}],
-         simple(0): "rgbValueWhite"}),
-        {simple(2): [{simple(3): 226("ledOnOff"), simple(4): simple(5)}],
-         simple(6): {simple(10): {simple(11): "boolean"}}, simple(0):
-         "ledOnOff", simple(9): true, simple(1): simple(8)},
-        {simple(2): [{simple(3): 226("colorTemperatureChanged"),
-         simple(4): simple(5)}], simple(6): simple(7), simple(0):
-         "colorTemperatureChanged", simple(1): ["Event"]}],
+      229({simple(2): [{simple(3): 227("Red"), simple(4): simple(5)}],
+       simple(0): 228("Red")}),
+      229({simple(2): [{simple(3): 227("Green"), simple(4): simple(5)}],
+       simple(0): 228("Green")}),
+      229({simple(2): [{simple(3): 227("Blue"), simple(4): simple(5)}],
+       simple(0): 228("Blue")}),
+      229({simple(2): [{simple(3): 227("White"), simple(4): simple(5)}],
+       simple(0): "rgbValueWhite"}),
+      {simple(2): [{simple(3): 226("ledOnOff"), simple(4): simple(5)}],
+       simple(6): {simple(10): {simple(11): "boolean"}}, simple(0):
+       "ledOnOff", simple(9): true, simple(1): simple(8)},
+      {simple(2): [{simple(3): 226("colorTemperatureChanged"),
+       simple(4): simple(5)}], simple(6): simple(7), simple(0):
+       "colorTemperatureChanged", simple(1): ["Event"]}],
         simple(1): "Lamp", "id": "0", "base": 225(""),
         "@context": 6("2:8444/wot/w3c-wot-td-context.jsonld")}])
 
@@ -941,11 +945,7 @@ Acknowledgements
    representations of W3C Thing Descriptions, which prompted the author
    to come up with essentially the present design.
 
-Author's Address
 
-   Carsten Bormann
-   Universität Bremen TZI
-   Postfach 330440
 
 
 
@@ -954,16 +954,16 @@ Bormann                  Expires 2 January 2022                [Page 17]
 Internet-Draft                 Packed CBOR                     July 2021
 
 
+Author's Address
+
+   Carsten Bormann
+   Universität Bremen TZI
+   Postfach 330440
    D-28359 Bremen
    Germany
 
    Phone: +49-421-218-63921
    Email: cabo@tzi.org
-
-
-
-
-
 
 
 
