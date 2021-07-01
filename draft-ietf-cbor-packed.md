@@ -3,7 +3,7 @@ title: >
   Packed CBOR
 abbrev: Packed CBOR
 docname: draft-ietf-cbor-packed-latest
-# date: 2021-02-09
+# date: 2021-07-01
 
 stand_alone: true
 kramdown_options:
@@ -108,7 +108,7 @@ Packed CBOR is defined in two parts: Referencing packing tables
 Terminology         {#terms}
 ------------
 
-{::boilerplate bcp14}
+{::boilerplate bcp14-tagged}
 
 Packed reference:
 : A shared item reference or an affix reference
@@ -287,8 +287,40 @@ simplicity in particular at the side of the consumer.
 A maliciously crafted Packed CBOR data item might contain a reference
 loop.  A consumer/decompressor MUST protect against that.
 
-The current definition does nothing to help with packing CBOR
+<aside markdown="1">
+Different strategies for decoding/consuming Packed CBOR are available.\\
+For example:
+
+* the decoder can decode and unpack the packed item, presenting an
+  unpacked data item to the application.  In this case, the onus of
+  dealing with loops is on the decoder.  (This strategy generally has
+  the highest memory consumption, but also the simplest interface to
+  the application.)  Besides avoiding getting stuck in a reference
+  loop, the decoder will need to control its resource allocation, as
+  data items can "blow up" during unpacking.
+
+* the decoder can be oblivious of Packed CBOR.  In this case, he onus
+  of dealing with loops is on the application, as is the entire onus
+  of dealing with Packed CBOR.
+
+* hybrid models are possible, for instance: The decoder builds a data
+  item tree directly from the Packed CBOR as if it were oblivious, but
+  also provides accessors that hide (resolve) the packing.  In this
+  specific case, the onus of dealing with loops is on the accessors.
+
+In general, loop detection can be handled in a similar way in which
+loops of symbolic links are handled in a file system: A system wide
+limit (often 31 or 40 indirections for symbolic links) is applied to
+any reference chase.
+
+</aside>
+
+
+
+<aside markdown="1">
+ISSUE: The current definition does nothing to help with packing CBOR
 sequences {{-seq}}; maybe it should.
+</aside>
 
 # Table Setup
 
@@ -325,7 +357,7 @@ to the (by default empty) tables.
 
 <aside markdown="1">
 We could also define a tag for dictionary referencing (or include that
-in the basic packed CBOR), but the details are likely to vary
+in the basic packed CBOR), but the desirable details are likely to vary
 considerably between applications.  A URI-based reference would be
 easy to add, but might be too inefficient when used in the likely
 combination with an `ni:` URI {{-ni}}.
@@ -336,15 +368,16 @@ combination with an `ni:` URI {{-ni}}.
 A predefined tag for packing table setup is defined in CDDL {{-cddl}} as in {{fig-cddl}}:
 
 ~~~ cddl
-Basic-Packed-CBOR = #6.51([[*shared], [*prefix], [*suffix], rump])
+Basic-Packed-CBOR = #6.51([[*shared-item], [*prefix-item],
+                           [*suffix-item], rump])
 rump = any
-prefix = any
-suffix = any
-shared = any
+prefix-item = any
+suffix-item = any
+shared-item = any
 ~~~
 {: #fig-cddl title="Packed CBOR in CDDL"}
 
-(This assumes the allocation of tag number 51.)
+(This assumes the allocation of tag number 51 for this tag.)
 
 The arrays given as the first, second, and third element of the
 content of the tag 51 are prepended to the tables for shared items,
@@ -354,6 +387,12 @@ tables).
 The original CBOR data item can be reconstructed by recursively
 replacing shared, prefix, and suffix references encountered in the
 rump by their expansions.
+
+Packed item references in the newly constructed (low-numbered) parts
+of the table need to be interpreted in the number space of that table
+(which includes the, now higher-numbered inherited parts), while
+references in any existing, inherited (higher-numbered) part continue
+to use the (more limited) number space of the inherited table.
 
 
 IANA Considerations
@@ -461,14 +500,15 @@ this particular example does not lend itself to prefix compression.
 The (JSON-compatible) CBOR data structure below has been packed with shared
 item and (partial) prefix compression only.
 
-~~~
+~~~ json
 {
   "name": "MyLED",
   "interactions": [
     {
       "links": [
         {
-          "href": "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueRed",
+          "href":
+           "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueRed",
           "mediaType": "application/json"
         }
       ],
@@ -486,7 +526,8 @@ item and (partial) prefix compression only.
     {
       "links": [
         {
-          "href": "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueGreen",
+          "href":
+           "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueGreen",
           "mediaType": "application/json"
         }
       ],
@@ -504,7 +545,8 @@ item and (partial) prefix compression only.
     {
       "links": [
         {
-          "href": "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueBlue",
+          "href":
+           "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueBlue",
           "mediaType": "application/json"
         }
       ],
@@ -522,7 +564,8 @@ item and (partial) prefix compression only.
     {
       "links": [
         {
-          "href": "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueWhite",
+          "href":
+           "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueWhite",
           "mediaType": "application/json"
         }
       ],
@@ -540,7 +583,8 @@ item and (partial) prefix compression only.
     {
       "links": [
         {
-          "href": "http://192.168.1.103:8445/wot/thing/MyLED/ledOnOff",
+          "href":
+           "http://192.168.1.103:8445/wot/thing/MyLED/ledOnOff",
           "mediaType": "application/json"
         }
       ],
@@ -558,7 +602,8 @@ item and (partial) prefix compression only.
     {
       "links": [
         {
-          "href": "http://192.168.1.103:8445/wot/thing/MyLED/colorTemperatureChanged",
+          "href":
+"http://192.168.1.103:8445/wot/thing/MyLED/colorTemperatureChanged",
           "mediaType": "application/json"
         }
       ],
@@ -576,7 +621,8 @@ item and (partial) prefix compression only.
   "@type": "Lamp",
   "id": "0",
   "base": "http://192.168.1.103:8445/wot/thing",
-  "@context": "http://192.168.1.102:8444/wot/w3c-wot-td-context.jsonld"
+  "@context":
+   "http://192.168.1.102:8444/wot/w3c-wot-td-context.jsonld"
 }
 ~~~
 {: #fig-example-in2 title="Example original CBOR data item"}
@@ -597,20 +643,20 @@ item and (partial) prefix compression only.
    /suffix/ [],
    /rump/ {simple(0): "MyLED",
            "interactions": [
-     229({simple(2): [{simple(3): 227("Red"), simple(4): simple(5)}],
-      simple(0): 228("Red")}),
-     229({simple(2): [{simple(3): 227("Green"), simple(4): simple(5)}],
-      simple(0): 228("Green")}),
-     229({simple(2): [{simple(3): 227("Blue"), simple(4): simple(5)}],
-      simple(0): 228("Blue")}),
-     229({simple(2): [{simple(3): 227("White"), simple(4): simple(5)}],
-      simple(0): "rgbValueWhite"}),
-     {simple(2): [{simple(3): 226("ledOnOff"), simple(4): simple(5)}],
-      simple(6): {simple(10): {simple(11): "boolean"}}, simple(0):
-      "ledOnOff", simple(9): true, simple(1): simple(8)},
-     {simple(2): [{simple(3): 226("colorTemperatureChanged"),
-      simple(4): simple(5)}], simple(6): simple(7), simple(0):
-      "colorTemperatureChanged", simple(1): ["Event"]}],
+   229({simple(2): [{simple(3): 227("Red"), simple(4): simple(5)}],
+    simple(0): 228("Red")}),
+   229({simple(2): [{simple(3): 227("Green"), simple(4): simple(5)}],
+    simple(0): 228("Green")}),
+   229({simple(2): [{simple(3): 227("Blue"), simple(4): simple(5)}],
+    simple(0): 228("Blue")}),
+   229({simple(2): [{simple(3): 227("White"), simple(4): simple(5)}],
+    simple(0): "rgbValueWhite"}),
+   {simple(2): [{simple(3): 226("ledOnOff"), simple(4): simple(5)}],
+    simple(6): {simple(10): {simple(11): "boolean"}}, simple(0):
+    "ledOnOff", simple(9): true, simple(1): simple(8)},
+   {simple(2): [{simple(3): 226("colorTemperatureChanged"),
+    simple(4): simple(5)}], simple(6): simple(7), simple(0):
+    "colorTemperatureChanged", simple(1): ["Event"]}],
      simple(1): "Lamp", "id": "0", "base": 225(""),
      "@context": 6("2:8444/wot/w3c-wot-td-context.jsonld")}])
 ~~~
