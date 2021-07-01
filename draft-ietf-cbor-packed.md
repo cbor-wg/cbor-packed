@@ -100,6 +100,11 @@ A specific application protocol that employs Packed CBOR might allow
 both kinds of optimization or limit the representation to item
 sharing only.
 
+Packed CBOR is defined in two parts: Referencing packing tables
+({{sec-packed-cbor}}) and setting up packing tables
+({{sec-table-setup}}).
+
+
 Terminology         {#terms}
 ------------
 
@@ -134,8 +139,8 @@ the operator "^" stands for exponentiation.
 
 # Packed CBOR
 
-Packed CBOR is defined in two parts: Referencing packing tables (this
-section) and setting up packing tables ({{sec-table-setup}}).
+This section describes the packing tables, their structure, and how
+they are referenced.
 
 ## Packing Tables
 
@@ -151,8 +156,9 @@ There are three packing tables in a Current Set:
 Without any table setup, all these tables are empty arrays.
 Table setup can cause these arrays to be non-empty, where the elements are
 (potentially themselves packed) data items.
-In the abstract, each of the tables is indexed by an unsigned integer (starting
-from 0).
+Each of the tables is indexed by an unsigned integer (starting
+from 0), which may be computed from information in tags and their
+content as well as from CBOR simple values.
 
 ## Referencing Shared Items
 
@@ -296,6 +302,12 @@ Table setup can happen in one of two ways:
 * By the application environment, e.g., a media type.  These can
   define tables that amount to a static dictionary that can be used in
   a CBOR data item for this application environment.
+  Note that, without this information, a data item that uses such a
+  static dictionary can be decoded at the CBOR level, but not fully
+  unpacked.
+  The table setup mechanisms provided by this document are defined in
+  such a way that an unpacker can at least recognize if this is the
+  case.
 
 * By one or more tags enclosing the packed content.
   These can be defined to add to the packing tables that already apply
