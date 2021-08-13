@@ -398,7 +398,7 @@ to use the (more limited) number space of the inherited table.
 IANA Considerations
 ============
 
-In the registry {{-tags}},
+In the registry "{{cbor-tags (CBOR Tags)<IANA.cbor-tags}}" {{IANA.cbor-tags}},
 IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 
 |                   Tag | Data Item                                     | Semantics                  | Reference              |
@@ -411,7 +411,7 @@ IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 | 1811940352-1879048191 | text string, byte string, array, map          | Packed CBOR: suffix        | draft-ietf-cbor-packed |
 {: #tab-tag-values cols='r l l' title="Values for Tag Numbers"}
 
-In the registry {{-simple}},
+In the registry "{{simple (CBOR Simple Values)<IANA.cbor-simple-values}}" {{IANA.cbor-simple-values}},
 IANA is requested to allocate the simple values defined in {{tab-simple-values}}.
 
 | Value | Semantics           | Reference                 |
