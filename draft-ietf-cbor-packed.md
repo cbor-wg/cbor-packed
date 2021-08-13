@@ -299,7 +299,7 @@ For example:
   loop, the decoder will need to control its resource allocation, as
   data items can "blow up" during unpacking.
 
-* the decoder can be oblivious of Packed CBOR.  In this case, he onus
+* the decoder can be oblivious of Packed CBOR.  In this case, the onus
   of dealing with loops is on the application, as is the entire onus
   of dealing with Packed CBOR.
 
