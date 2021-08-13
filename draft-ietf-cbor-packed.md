@@ -238,12 +238,12 @@ recursively unpacked).
   affix, while for suffix references, an entry in the affix overrides
   an entry in the rump that has the same key.
 
-<aside markdown="1">
-  ISSUE: Not sure that we want to use the efficiencies of overriding,
+{:aside}
+> ISSUE:
+  Not sure that we want to use the efficiencies of overriding,
   but having default values supplied out of a dictionary to be
   overridden by a rump sounds rather handy.
   Note that there is no way to remove a map entry from the table.
-</aside>
 
 * For a rump of one of the string types, the affix also needs to be one
   of the string types; the bytes of the strings are concatenated as
@@ -269,11 +269,11 @@ items might be used in a Packed CBOR item.
 The numbers for suffix references are one quarter of those, except
 that there is no single-byte reference and 8 two-byte references.
 
-<aside markdown="1">
-Rationale: Experience suggests that prefix packing might be more
+{:aside}
+> Rationale:
+Experience suggests that prefix packing might be more
 likely than suffix packing.  Also for this reason, there is no intent
 to spend a 1+0 tag value for suffix matching.
-</aside>
 
 ## Discussion
 
@@ -315,12 +315,10 @@ any reference chase.
 
 </aside>
 
-
-
-<aside markdown="1">
-ISSUE: The current definition does nothing to help with packing CBOR
+{:aside}
+> ISSUE:
+The present specification does nothing to help with the packing of CBOR
 sequences {{-seq}}; maybe it should.
-</aside>
 
 # Table Setup
 
@@ -355,13 +353,14 @@ Table setup can happen in one of two ways:
 The present specification only defines a single tag for prepending
 to the (by default empty) tables.
 
-<aside markdown="1">
+{:aside}
+>
 We could also define a tag for dictionary referencing (or include that
 in the basic packed CBOR), but the desirable details are likely to vary
 considerably between applications.  A URI-based reference would be
 easy to add, but might be too inefficient when used in the likely
 combination with an `ni:` URI {{-ni}}.
-</aside>
+
 
 ## Basic Packed CBOR
 
