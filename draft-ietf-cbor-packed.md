@@ -135,7 +135,9 @@ The term "byte" is used in its now customary sense as a synonym for
 Where bit arithmetic is explained, this document uses the notation
 familiar from the programming language C (including C++14's 0bnnn
 binary literals), except that, in the plain text form of this document,
-the operator "^" stands for exponentiation.
+the operator "^" stands for exponentiation, and,
+in the HTML and PDF versions, subtraction and negation are rendered as
+a hyphen ("-", as are various dashes).
 
 # Packed CBOR
 
