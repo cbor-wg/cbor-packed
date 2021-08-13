@@ -402,7 +402,7 @@ In the registry "{{cbor-tags (CBOR Tags)<IANA.cbor-tags}}" {{IANA.cbor-tags}},
 IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 
 |                   Tag | Data Item                                     | Semantics                  | Reference              |
-|                     6 | integer, text string, byte string, array, map | Packed CBOR: shared/prefix | draft-ietf-cbor-packed |
+|                     6 | integer (for shared); text string, byte string, array, map (for prefix) | Packed CBOR: shared/prefix | draft-ietf-cbor-packed |
 |               225-255 | text string, byte string, array, map          | Packed CBOR: prefix        | draft-ietf-cbor-packed |
 |           28704-32767 | text string, byte string, array, map          | Packed CBOR: prefix        | draft-ietf-cbor-packed |
 | 1879052288-2147483647 | text string, byte string, array, map          | Packed CBOR: prefix        | draft-ietf-cbor-packed |
