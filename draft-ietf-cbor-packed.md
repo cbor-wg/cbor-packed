@@ -29,13 +29,13 @@ author:
 
 
 normative:
-  RFC7049: orig
   RFC8949: bis
   IANA.cbor-tags: tags
   IANA.cbor-simple-values: simple
   RFC8610: cddl
 
 informative:
+  RFC7049: orig
   RFC8742: seq
   RFC6920: ni
 
