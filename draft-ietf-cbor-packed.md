@@ -50,9 +50,9 @@ CBOR does not provide any forms of data compression.
 CBOR data items, in particular when generated from legacy data models
 often allow considerable gains in compactness when applying data
 compression.
-While traditional data compression techniques such as DEFLATE (RFC 1951) work
-well for CBOR, their disadvantage is that the receiver needs to unpack
-the compressed form to make use of data.
+While traditional data compression techniques such as DEFLATE (RFC
+1951) can work well for CBOR encoded data items, their disadvantage is
+that the receiver needs to unpack the compressed form to make use of data.
 
 This specification describes Packed CBOR, a simple transformation of a
 CBOR data item into another CBOR data item that is almost as easy to
@@ -255,7 +255,7 @@ recursively unpacked).
 As a contrived (but short) example, if the prefix table is `["foobar",
 "foob", "fo"]`, the following prefix references will all unpack to
 `"foobart"`: `6("t")`, `224("art")`, `225("obart")` (the last example
-isn't really an optimization).
+is not an optimization).
 
 <!-- 2<sup>28</sup>2<sup>12</sup>+2<sup>5</sup>+2<sup>0</sup> -->
 
@@ -350,8 +350,8 @@ Table setup can happen in one of two ways:
   Explicit additions by tag can combine with application-environment
   supplied tables that apply to the entire CBOR data item.
 
-The present specification only defines a single tag for prepending
-to the (by default empty) tables.
+For table setup, the present specification only defines a single tag,
+which operates by prepending to the (by default empty) tables.
 
 {:aside}
 >
