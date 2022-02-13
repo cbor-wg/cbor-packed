@@ -70,7 +70,7 @@ step is therefore often not required at the receiver.
 
 This is a working-group draft of the CBOR working group of the
 IETF, <https://datatracker.ietf.org/wg/cbor/about/>.
-Discussion takes places on the github repository
+Discussion takes places on the GitHub repository
 <https://github.com/cbor-wg/cbor-packed> and on the CBOR WG mailing
 list, <https://www.ietf.org/mailman/listinfo/cbor>.
 
@@ -117,10 +117,10 @@ Terminology         {#terms}
 {::boilerplate bcp14-tagged}
 
 Packed reference:
-: A shared item reference or an affix reference
+: A shared item reference or an affix reference.
 
 Shared item reference:
-: A reference to a shared item as defined in {{sec-referencing-shared-items}}
+: A reference to a shared item as defined in {{sec-referencing-shared-items}}.
 
 Affix reference:
 : A reference that combines an affix item as defined in {{sec-referencing-affix-items}}.
@@ -289,7 +289,7 @@ that there is no single-byte reference and 8 two-byte references.
 > Rationale:
 Experience suggests that prefix packing might be more
 likely than suffix packing.  Also for this reason, there is no intent
-to spend a 1+0 tag value for suffix matching.
+to spend a 1+0 tag value for suffix packing.
 
 ## Discussion
 
@@ -325,14 +325,14 @@ For example:
   specific case, the onus of dealing with loops is on the accessors.
 
 In general, loop detection can be handled in a similar way in which
-loops of symbolic links are handled in a file system: A system wide
+loops of symbolic links are handled in a file system: A system-wide
 limit (often 31 or 40 indirections for symbolic links) is applied to
 any reference chase.
 
 </aside>
 
 {:aside}
-> ISSUE:
+> NOTE:
 The present specification does nothing to help with the packing of CBOR
 sequences {{-seq}}; maybe it should.
 
