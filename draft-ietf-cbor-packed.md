@@ -172,7 +172,8 @@ Without any table setup, all these tables are empty arrays.
 Table setup can cause these arrays to be non-empty, where the elements are
 (potentially themselves packed) data items.
 Each of the tables is indexed by an unsigned integer (starting
-from 0), which may be computed from information in tags and their
+from 0).
+Such an index may be derived from information in tags and their
 content as well as from CBOR simple values.
 
 ## Referencing Shared Items
@@ -200,7 +201,7 @@ of shorter integer encodings first.)
 Taking into account the encoding of these referring data items, there
 are 16 one-byte references, 48 two-byte references, 512 three-byte
 references, 131072 four-byte references, etc.
-As integers can grow to very large (or negative) values, there is no
+As CBOR integers can grow to very large (or negative) values, there is no
 practical limit to how many shared items might be used in a Packed
 CBOR item.
 
@@ -254,7 +255,7 @@ recursively unpacked).
   an entry in the rump that has the same key.
 
 {:aside}
-> ISSUE:
+> NOTE:
   Not sure that we want to use the efficiencies of overriding,
   but having default values supplied out of a dictionary to be
   overridden by a rump sounds rather handy.
