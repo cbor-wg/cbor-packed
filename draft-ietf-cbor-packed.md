@@ -131,13 +131,20 @@ Affix:
 Packing tables:
 : The triple of a shared item table, a prefix table, and a suffix table.
 
+Current set:
+: The packing tables in effect at the data item under consideration.
+
 Expansion:
 : The result of applying a packed reference in the context of given
   Packing tables.
 
 The definitions of {{-bis}} apply.
-The term "byte" is used in its now customary sense as a synonym for
-"octet".
+Specifically: The term "byte" is used in its now customary sense as a synonym for
+"octet"; "byte strings" are CBOR data items carrying a sequence of
+zero or more (binary) bytes, while "text strings" are CBOR data items carrying a
+sequence of zero or more Unicode code points, encoded in UTF-8
+{{-utf8}}.
+
 Where bit arithmetic is explained, this document uses the notation
 familiar from the programming language C (including C++14's 0bnnn
 binary literals), except that, in the plain text form of this document,
