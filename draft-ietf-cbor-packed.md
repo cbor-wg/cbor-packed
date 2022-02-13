@@ -12,6 +12,7 @@ kramdown_options:
 ipr: trust200902
 keyword: Internet-Draft
 cat: info
+submissiontype: IETF
 
 pi: [toc, sortrefs, symrefs, compact, comments]
 
@@ -29,12 +30,17 @@ author:
 
 
 normative:
-  RFC8949: bis
+  STD94:
+    -: bis
+    =: RFC8949
   IANA.cbor-tags: tags
   IANA.cbor-simple-values: simple
   RFC8610: cddl
 
 informative:
+  STD63:
+    -: utf8
+    =: RFC3629
   RFC7049: orig
   RFC8742: seq
   RFC6920: ni
@@ -75,7 +81,7 @@ Introduction        {#intro}
 ============
 
 (TO DO, expand on text from abstract here; move references here and
-neuter them in the abstract as per Section 4.3 of {{?RFC7322}}.)
+neuter them in the abstract as per {{Section 4.3 of ?RFC7322}}.)
 
 The specification defines a transformation from a Packed CBOR data
 item to the original CBOR data item; it does not define an algorithm
@@ -177,7 +183,7 @@ recursively unpacked.
 | Tag 6(negative integer N) | 16 - 2\*N - 1 |
 {: #tab-shared title="Referencing Shared Values"}
 
-As examples in CBOR diagnostic notation ({{Section 8 of RFC8949}}),
+As examples in CBOR diagnostic notation ({{Section 8 of -bis}}),
 the first 22 elements of the shared item table are referenced by
 `simple(0)`, `simple(1)`, ... `simple(15)`, `6(0)`, `6(-1)`, `6(1)`,
 `6(-2)`, `6(2)`, `6(-3)`.  (The alternation between unsigned and
