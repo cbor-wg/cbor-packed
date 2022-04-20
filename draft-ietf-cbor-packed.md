@@ -456,7 +456,7 @@ The (JSON-compatible) CBOR data structure depicted in
 CBOR data item depicted in {{fig-example-out}}, ~309 bytes.  Note that
 this particular example does not lend itself to prefix compression.
 
-~~~json
+~~~ json
 { "store": {
     "book": [
       { "category": "reference",
@@ -491,7 +491,7 @@ this particular example does not lend itself to prefix compression.
 ~~~
 {: #fig-example-in title="Example original CBOR data item"}
 
-~~~CBORdiag
+~~~ cbor-diag
 51(["price", "category", "author", "title", "fiction", 8.95, "isbn"],
    /  0          1         2         3         4       5      6   /
    [], [],
@@ -642,7 +642,7 @@ item and (partial) prefix compression only.
 ~~~
 {: #fig-example-in2 title="Example original CBOR data item"}
 
-~~~CBORdiag
+~~~ cbordiag
 51([/shared/["name", "@type", "links", "href", "mediaType",
             /  0       1       2        3         4 /
     "application/json", "outputData", {"valueType": {"type":
