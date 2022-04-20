@@ -44,26 +44,37 @@ informative:
   RFC7049: orig
   RFC8742: seq
   RFC6920: ni
+  RFC1951: deflate
 
 --- abstract
 
-The Concise Binary Object Representation (CBOR, RFC 8949) is a data
-format whose design goals include the possibility of extremely small
-code size, fairly small message size, and extensibility without the
-need for version negotiation.
+[^abs1a-]: The Concise Binary Object Representation (CBOR,
 
-CBOR does not provide any forms of data compression.
-CBOR data items, in particular when generated from legacy data models
-often allow considerable gains in compactness when applying data
-compression.
-While traditional data compression techniques such as DEFLATE (RFC
-1951) can work well for CBOR encoded data items, their disadvantage is
-that the receiver needs to unpack the compressed form to make use of data.
+[^abs1a-] RFC 8949 == STD 94) [^abs1b-]
 
-This specification describes Packed CBOR, a simple transformation of a
-CBOR data item into another CBOR data item that is almost as easy to
-consume as the original CBOR data item.  A separate decompression
-step is therefore often not required at the receiver.
+[^abs1b-]: is a data
+    format whose design goals include the possibility of extremely small
+    code size, fairly small message size, and extensibility without the
+    need for version negotiation.
+
+[^abs2a-]: CBOR does not provide any forms of data compression.
+    CBOR data items, in particular when generated from legacy data models,
+    often allow considerable gains in compactness when applying data
+    compression.
+    While traditional data compression techniques such as DEFLATE
+
+[^abs2a-] (RFC 1951) [^abs2b-]
+
+[^abs2b-]: can work well for CBOR encoded data items, their disadvantage is
+    that the receiver needs to uncompress the compressed form to make
+    use of the data.
+
+[^abs3-]
+
+[^abs3-]: This specification describes Packed CBOR, a simple transformation of a
+    CBOR data item into another CBOR data item that is almost as easy to
+    consume as the original CBOR data item.  A separate decompression
+    step is therefore often not required at the receiver.
 
 
 --- note_Note_to_Readers
@@ -80,15 +91,20 @@ list, <https://www.ietf.org/mailman/listinfo/cbor>.
 Introduction        {#intro}
 ============
 
-(TO DO, expand on text from abstract here; move references here and
-neuter them in the abstract as per {{Section 4.3 of ?RFC7322}}.)
+[^abs1a-] {{STD94}}) [^abs1b-]
 
-The specification defines a transformation from a Packed CBOR data
-item to the original CBOR data item; it does not define an algorithm
-for an actual packer.  Different packers can differ in the amount of
-effort they invest in arriving at a minimal packed form.
+[^abs2a-] {{RFC1951}} [^abs2b-]
 
-Packed CBOR can employ two kinds of optimization:
+[^abs3-]
+
+This document defines the Packed CBOR format by specifying the
+transformation from a Packed CBOR data item to the original CBOR data
+item; it does not define an algorithm for a packer.
+Different packers can differ in the amount of effort they invest in
+arriving at a minimal packed form; often, they simply employ the
+sharing that is natural for a specific application.
+
+Packed CBOR can make use of two kinds of optimization:
 
 - item sharing: substructures (data items) that occur repeatedly
   in the original CBOR data item can be collapsed to a simple
