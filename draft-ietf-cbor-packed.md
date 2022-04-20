@@ -210,21 +210,24 @@ recursively unpacked.
 As examples in CBOR diagnostic notation ({{Section 8 of -bis}}),
 the first 22 elements of the shared item table are referenced by
 `simple(0)`, `simple(1)`, ... `simple(15)`, `6(0)`, `6(-1)`, `6(1)`,
-`6(-2)`, `6(2)`, `6(-3)`.  (The alternation between unsigned and
-negative integers for even/odd table index values makes systematic use
-of shorter integer encodings first.)
+`6(-2)`, `6(2)`, `6(-3)`.
+(The alternation between unsigned and negative integers for even/odd
+table index values — "zigzag encoding" — makes systematic use of
+shorter integer encodings first.)
 
 Taking into account the encoding of these referring data items, there
 are 16 one-byte references, 48 two-byte references, 512 three-byte
 references, 131072 four-byte references, etc.
-As CBOR integers can grow to very large (or negative) values, there is no
-practical limit to how many shared items might be used in a Packed
-CBOR item.
+As CBOR integers can grow to very large (or very negative) values,
+there is no practical limit to how many shared items might be used in
+a Packed CBOR item.
 
-Note that the semantics of Tag 6 depend on its content: An integer
-turns the tag into a shared item reference, a string or container (map
-or array) into a prefix reference (see {{tab-prefix}}).
-
+Note that the semantics of Tag 6 depend on its tag content: An integer
+turns the tag into a shared item reference, whereas a string or
+container (map or array) turns it into a prefix reference (see
+{{tab-prefix}}).
+Note also that the tag content of Tag 6 may itself be packed, so it
+may need to be unpacked to make this determination.
 
 ## Referencing Affix Items
 
@@ -251,8 +254,8 @@ reference was used.
 
 Affix data items are referenced by using the data items in
 {{tab-prefix}} and {{tab-suffix}}.
-Each of these implies the table used (prefix or
-suffix), a table index (an unsigned integer) and contains a "rump item".
+The tag number indicates the table used (prefix or suffix) and a table
+index (an unsigned integer); the tag content contains a "rump item".
 When reconstructing the original data item, such a
 reference is replaced by a data item constructed from the referenced
 affix data item (affix, which might need to be recursively unpacked
@@ -261,8 +264,8 @@ recursively unpacked).
 
 * For a rump of type array and map, the affix also needs to be an
   array or a map.
-  For an array, the elements from the prefix are prepended, and the
-  elements from a suffix are appended to the rump array.
+  For an array, the elements from the prefix are prepended to the rump
+  array, while the elements from a suffix are appended.
   For a map, the entries in the affix are added to those of the rump;
   prefix and suffix references differ in how entries with identical
   keys are combined: for prefix references, an entry in the rump with
@@ -272,10 +275,11 @@ recursively unpacked).
 
 {:aside}
 > NOTE:
-  Not sure that we want to use the efficiencies of overriding,
-  but having default values supplied out of a dictionary to be
-  overridden by a rump sounds rather handy.
-  Note that there is no way to remove a map entry from the table.
+  One application of the rule for prefix references is to supply
+  default values out of a dictionary, which can then be overridden by
+  the entries in the map supplied as the rump value.
+  Note that this pattern provides no way to remove a map entry from
+  the prefix table entry.
 
 * For a rump of one of the string types, the affix also needs to be one
   of the string types; the bytes of the strings are concatenated as
@@ -310,9 +314,9 @@ to spend a 1+0 tag value for suffix packing.
 ## Discussion
 
 This specification uses up a large number of Simple Values and Tags,
-in particular one of the rare one-byte tags and half of the one-byte
+in particular one of the rare one-byte tags and two thirds of the one-byte
 simple values.  Since the objective is compression, this is warranted
-if and only if there is consensus that this specific format could be
+only based on a consensus that this specific format could be
 useful for a wide area of applications, while maintaining reasonable
 simplicity in particular at the side of the consumer.
 
@@ -350,7 +354,7 @@ any reference chase.
 {:aside}
 > NOTE:
 The present specification does nothing to help with the packing of CBOR
-sequences {{-seq}}; maybe it should.
+sequences {{-seq}}; maybe such a specification should be added.
 
 # Table Setup
 
@@ -421,7 +425,7 @@ rump by their expansions.
 
 Packed item references in the newly constructed (low-numbered) parts
 of the table need to be interpreted in the number space of that table
-(which includes the, now higher-numbered inherited parts), while
+(which includes the, now higher-numbered, inherited parts), while
 references in any existing, inherited (higher-numbered) part continue
 to use the (more limited) number space of the inherited table.
 
