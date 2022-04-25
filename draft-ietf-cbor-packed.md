@@ -512,22 +512,22 @@ this particular example does not lend itself to prefix compression.
 {: #fig-example-in title="Example original CBOR data item"}
 
 ~~~ cbor-diag
-51(["price", "category", "author", "title", "fiction", 8.95, "isbn"],
-   /  0          1         2         3         4       5      6   /
-   [], [],
-   [{"store": {
-      "book": [
-        {simple(1): "reference", simple(2): "Nigel Rees",
-         simple(3): "Sayings of the Century", simple(0): simple(5)},
-        {simple(1): simple(4), simple(2): "Evelyn Waugh",
-         simple(3): "Sword of Honour", simple(0): 12.99},
-        {simple(1): simple(4), simple(2): "Herman Melville",
-         simple(3): "Moby Dick", simple(6): "0-553-21311-3",
-         simple(0): simple(5)},
-        {simple(1): simple(4), simple(2): "J. R. R. Tolkien",
-         simple(3): "The Lord of the Rings",
-         simple(6): "0-395-19395-8", simple(0): 22.99}],
-      "bicycle": {"color": "red", simple(0): 19.95}}}])
+51([["price", "category", "author", "title", "fiction", 8.95, "isbn"],
+    /  0          1         2         3         4       5      6   /
+    [], [],
+    [{"store": {
+       "book": [
+         {simple(1): "reference", simple(2): "Nigel Rees",
+          simple(3): "Sayings of the Century", simple(0): simple(5)},
+         {simple(1): simple(4), simple(2): "Evelyn Waugh",
+          simple(3): "Sword of Honour", simple(0): 12.99},
+         {simple(1): simple(4), simple(2): "Herman Melville",
+          simple(3): "Moby Dick", simple(6): "0-553-21311-3",
+          simple(0): simple(5)},
+         {simple(1): simple(4), simple(2): "J. R. R. Tolkien",
+          simple(3): "The Lord of the Rings",
+          simple(6): "0-395-19395-8", simple(0): 22.99}],
+       "bicycle": {"color": "red", simple(0): 19.95}}}]])
 ~~~
 {: #fig-example-out title="Example packed CBOR data item"}
 
