@@ -66,7 +66,7 @@ informative:
 [^abs2a-] (RFC 1951) [^abs2b-]
 
 [^abs2b-]: can work well for CBOR encoded data items, their disadvantage is
-    that the receiver needs to uncompress the compressed form to make
+    that the receiver needs to decompress the compressed form to make
     use of the data.
 
 [^abs3-]
