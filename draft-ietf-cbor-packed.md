@@ -706,7 +706,7 @@ CBOR packing was originally invented with the rest of CBOR, but did
 not make it into {{-orig}}, the predecessor of {{-bis}}.
 Various attempts to come up with a specification over the years didn't
 proceed.
-In 2017, <contact fullname="Sebastian Käbisch"/> proposed
+In 2017, {{{Sebastian Käbisch}}} proposed
 investigating compact representations of W3C Thing Descriptions, which
 prompted the author to come up with essentially the present design.
 
