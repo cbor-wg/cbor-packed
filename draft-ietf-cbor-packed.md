@@ -380,9 +380,9 @@ Table setup can happen in one of two ways:
   case.
 
 * By one or more tags enclosing the packed content.
-  Each tag is usually defined to add to the packing tables that
-  already apply to the tag and apply the resulting augmented table when
-  unpacking the tag content.
+  Each tag is usually defined to build an augmented table by adding to
+  the packing tables that already apply to the tag, and to apply the
+  resulting augmented table when unpacking the tag content.
   Usually, the semantics of the tag will be to prepend items to one or
   more of the tables.
   (The specific behavior of any such tag, in the presence of a table
