@@ -239,7 +239,7 @@ reference was used.
 | prefix reference                         |    table index |
 |------------------------------------------+----------------|
 | Tag 6(prefixed rump)                     |              0 |
-| Tag 225-255(prefixed rump)               |           1-31 |
+| Tag 224-255(prefixed rump)               |           0-31 |
 | Tag 28704-32767(prefixed rump)           |        32-4095 |
 | Tag 1879052288-2147483647(prefixed rump) | 4096-268435455 |
 {: #tab-prefix cols='l r' title="Referencing Prefix Values"}
@@ -296,9 +296,15 @@ h'666f6f62', "fo"]`, the following prefix references will all unpack to
 h'666f6f62' == 'foob' is concatenated into a text string, and the last
 example is not an optimization).
 
+Note that table index 0 can be referenced both with tag 6 and tag 224,
+however tag 6 with an integer content is used for shared item
+references (see {{tab-shared}}), so to combine index 0 with an integer
+rump, tag 224 needs to be used.
+
 <!-- 2<sup>28</sup>2<sup>12</sup>+2<sup>5</sup>+2<sup>0</sup> -->
 
-Taking into account the encoding, there is one single-byte prefix
+Taking into account the encoding and ignoring the less optimal tag
+224, there is one single-byte prefix
 reference, 31 (2<sup>5</sup>-2<sup>0</sup>) two-byte references, 4064
 (2<sup>12</sup>-2<sup>5</sup>) three-byte references, and 26843160
 (2<sup>28</sup>-2<sup>12</sup>) five-byte references for prefixes.
@@ -452,7 +458,7 @@ IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 |                   Tag | Data Item                                                               | Semantics                  | Reference              |
 |                     6 | integer (for shared); text string, byte string, array, map (for prefix) | Packed CBOR: shared/prefix | draft-ietf-cbor-packed |
 |                    51 | array (shared-items, prefix-items, suffix-items, rump)                  | Packed CBOR: table setup   | draft-ietf-cbor-packed |
-|               225-255 | text string, byte string, array, map                                    | Packed CBOR: prefix        | draft-ietf-cbor-packed |
+|               224-255 | text string, byte string, array, map                                    | Packed CBOR: prefix        | draft-ietf-cbor-packed |
 |           28704-32767 | text string, byte string, array, map                                    | Packed CBOR: prefix        | draft-ietf-cbor-packed |
 | 1879052288-2147483647 | text string, byte string, array, map                                    | Packed CBOR: prefix        | draft-ietf-cbor-packed |
 |               216-223 | text string, byte string, array, map                                    | Packed CBOR: suffix        | draft-ietf-cbor-packed |
