@@ -11,7 +11,8 @@ kramdown_options:
 
 ipr: trust200902
 keyword: Internet-Draft
-cat: info
+cat: std
+consensus: true
 submissiontype: IETF
 
 pi: [toc, sortrefs, symrefs, compact, comments]
@@ -237,19 +238,19 @@ We collectively call these items affix items; when referencing, which
 of the tables is actually used depends on whether a prefix or a suffix
 reference was used.
 
-| prefix reference                  |    table index |
-|-----------------------------------|----------------|
-| Tag 6(suffix)                     |              0 |
-| Tag 225-255(suffix)               |           1-31 |
-| Tag 28704-32767(suffix)           |        32-4095 |
-| Tag 1879052288-2147483647(suffix) | 4096-268435455 |
+| prefix reference                         |    table index |
+|------------------------------------------+----------------|
+| Tag 6(prefixed rump)                     |              0 |
+| Tag 225-255(prefixed rump)               |           1-31 |
+| Tag 28704-32767(prefixed rump)           |        32-4095 |
+| Tag 1879052288-2147483647(prefixed rump) | 4096-268435455 |
 {: #tab-prefix cols='l r' title="Referencing Prefix Values"}
 
-| suffix reference                  |   table index |
-|-----------------------------------|---------------|
-| Tag 216-223(prefix)               |           0-7 |
-| Tag 27647-28671(prefix)           |        8-1023 |
-| Tag 1811940352-1879048191(prefix) | 1024-67108863 |
+| suffix reference                         |   table index |
+|------------------------------------------+---------------|
+| Tag 216-223(suffixed rump)               |           0-7 |
+| Tag 27647-28671(suffixed rump)           |        8-1023 |
+| Tag 1811940352-1879048191(suffixed rump) | 1024-67108863 |
 {: #tab-suffix cols='l r' title="Referencing Suffix Values"}
 
 Affix data items are referenced by using the data items in
@@ -262,12 +263,15 @@ affix data item (affix, which might need to be recursively unpacked
 first) "concatenated" with the tag content (rump, again possibly
 recursively unpacked).
 
-* For a rump of type array and map, the affix also needs to be an
-  array or a map.
-  For an array, the elements from the prefix are prepended to the rump
-  array, while the elements from a suffix are appended.
-  For a map, the entries in the affix are added to those of the rump;
-  prefix and suffix references differ in how entries with identical
+* For a rump of type array, the affix also needs to be an
+  array.
+  The elements from a prefix are prepended to the elements in the rump
+  array, while the elements from a suffix are appended to those in the
+  rump.
+
+* For a rump of type map, the affix also needs to be a map.
+  The entries in the affix are added to those of the rump.
+  Prefix and suffix references differ in how entries with identical
   keys are combined: for prefix references, an entry in the rump with
   the same key as an entry in the affix overrides the one in the
   affix, while for suffix references, an entry in the affix overrides
@@ -289,9 +293,10 @@ recursively unpacked).
   depending on what type of rump is being used.
 
 As a contrived (but short) example, if the prefix table is `["foobar",
-"foob", "fo"]`, the following prefix references will all unpack to
-`"foobart"`: `6("t")`, `224("art")`, `225("obart")` (the last example
-is not an optimization).
+h'666f6f62', "fo"]`, the following prefix references will all unpack to
+`"foobart"`: `6("t")`, `225("art")`, `226("obart")` (the byte string
+h'666f6f62' == 'foob' is concatenated into a text string, and the last
+example is not an optimization).
 
 <!-- 2<sup>28</sup>2<sup>12</sup>+2<sup>5</sup>+2<sup>0</sup> -->
 
@@ -376,15 +381,26 @@ Table setup can happen in one of two ways:
   case.
 
 * By one or more tags enclosing the packed content.
-  These can be defined to add to the packing tables that already apply
-  to the tag.  Usually, the semantics of the tag will be to prepend
-  items to one of the tables.
+  Each tag is usually defined to build an augmented table by adding to
+  the packing tables that already apply to the tag, and to apply the
+  resulting augmented table when unpacking the tag content.
+  Usually, the semantics of the tag will be to prepend items to one or
+  more of the tables.
+  (The specific behavior of any such tag, in the presence of a table
+  applying to it, needs to be carefully specified.)
+
   Note that it may be useful to leave a particular efficiency tier
   alone and only prepend to a higher tier; e.g., a tag could insert
   shared items at table index 16 and shift anything that was already
   there further down in the array while leaving index 0 to 15 alone.
   Explicit additions by tag can combine with application-environment
   supplied tables that apply to the entire CBOR data item.
+
+  Packed item references in the newly constructed (low-numbered) parts
+  of the table are usually interpreted in the number space of that table
+  (which includes the, now higher-numbered, inherited parts), while
+  references in any existing, inherited (higher-numbered) part continue
+  to use the (more limited) number space of the inherited table.
 
 For table setup, the present specification only defines a single tag,
 which operates by prepending to the (by default empty) tables.
@@ -417,34 +433,37 @@ shared-item = any
 The arrays given as the first, second, and third element of the
 content of the tag 51 are prepended to the tables for shared items,
 prefixes, and suffixes that apply to the entire tag (by default empty
-tables).
+tables).  As discussed in the introduction to this section, references
+in the supplied new arrays use the new number space (where inherited
+items are shifted by the new items given), while the inherited items
+themselves use the inherited number space (so their semantics do not
+change by the mere action of inheritance).
 
 The original CBOR data item can be reconstructed by recursively
 replacing shared, prefix, and suffix references encountered in the
 rump by their expansions.
 
-Packed item references in the newly constructed (low-numbered) parts
-of the table need to be interpreted in the number space of that table
-(which includes the, now higher-numbered, inherited parts), while
-references in any existing, inherited (higher-numbered) part continue
-to use the (more limited) number space of the inherited table.
-
-
 IANA Considerations
 ============
+
+## CBOR Tags Registry
 
 In the registry "{{cbor-tags (CBOR Tags)<IANA.cbor-tags}}" {{IANA.cbor-tags}},
 IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 
-|                   Tag | Data Item                                     | Semantics                  | Reference              |
+|                   Tag | Data Item                                                               | Semantics                  | Reference              |
 |                     6 | integer (for shared); text string, byte string, array, map (for prefix) | Packed CBOR: shared/prefix | draft-ietf-cbor-packed |
-|               225-255 | text string, byte string, array, map          | Packed CBOR: prefix        | draft-ietf-cbor-packed |
-|           28704-32767 | text string, byte string, array, map          | Packed CBOR: prefix        | draft-ietf-cbor-packed |
-| 1879052288-2147483647 | text string, byte string, array, map          | Packed CBOR: prefix        | draft-ietf-cbor-packed |
-|               216-223 | text string, byte string, array, map          | Packed CBOR: suffix        | draft-ietf-cbor-packed |
-|           27647-28671 | text string, byte string, array, map          | Packed CBOR: suffix        | draft-ietf-cbor-packed |
-| 1811940352-1879048191 | text string, byte string, array, map          | Packed CBOR: suffix        | draft-ietf-cbor-packed |
+|                    51 | array (shared-items, prefix-items, suffix-items, rump)                  | Packed CBOR: table setup   | draft-ietf-cbor-packed |
+|               225-255 | text string, byte string, array, map                                    | Packed CBOR: prefix        | draft-ietf-cbor-packed |
+|           28704-32767 | text string, byte string, array, map                                    | Packed CBOR: prefix        | draft-ietf-cbor-packed |
+| 1879052288-2147483647 | text string, byte string, array, map                                    | Packed CBOR: prefix        | draft-ietf-cbor-packed |
+|               216-223 | text string, byte string, array, map                                    | Packed CBOR: suffix        | draft-ietf-cbor-packed |
+|           27647-28671 | text string, byte string, array, map                                    | Packed CBOR: suffix        | draft-ietf-cbor-packed |
+| 1811940352-1879048191 | text string, byte string, array, map                                    | Packed CBOR: suffix        | draft-ietf-cbor-packed |
 {: #tab-tag-values cols='r l l' title="Values for Tag Numbers"}
+
+
+## CBOR Simple Values Registry
 
 In the registry "{{simple (CBOR Simple Values)<IANA.cbor-simple-values}}" {{IANA.cbor-simple-values}},
 IANA is requested to allocate the simple values defined in {{tab-simple-values}}.
