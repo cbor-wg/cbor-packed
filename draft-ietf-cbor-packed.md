@@ -11,7 +11,8 @@ kramdown_options:
 
 ipr: trust200902
 keyword: Internet-Draft
-cat: info
+cat: std
+consensus: true
 submissiontype: IETF
 
 pi: [toc, sortrefs, symrefs, compact, comments]
