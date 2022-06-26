@@ -502,15 +502,16 @@ IANA Considerations
 In the registry "{{cbor-tags (CBOR Tags)<IANA.cbor-tags}}" {{IANA.cbor-tags}},
 IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 
-|                   Tag | Data Item                                                               | Semantics                  | Reference              |
-|                     6 | integer (for shared); text string, byte string, array, map (for prefix) | Packed CBOR: shared/prefix | draft-ietf-cbor-packed |
-|                    51 | array (shared-items, prefix-items, suffix-items, rump)                  | Packed CBOR: table setup   | draft-ietf-cbor-packed |
-|               224-255 | text string, byte string, array, map                                    | Packed CBOR: prefix        | draft-ietf-cbor-packed |
-|           28704-32767 | text string, byte string, array, map                                    | Packed CBOR: prefix        | draft-ietf-cbor-packed |
-| 1879052288-2147483647 | text string, byte string, array, map                                    | Packed CBOR: prefix        | draft-ietf-cbor-packed |
-|               216-223 | text string, byte string, array, map                                    | Packed CBOR: suffix        | draft-ietf-cbor-packed |
-|           27647-28671 | text string, byte string, array, map                                    | Packed CBOR: suffix        | draft-ietf-cbor-packed |
-| 1811940352-1879048191 | text string, byte string, array, map                                    | Packed CBOR: suffix        | draft-ietf-cbor-packed |
+|                   Tag | Data Item                                                                    | Semantics                    | Reference              |
+|                     6 | integer (for shared); text string, byte string, array, map, tag (for type-0) | Packed CBOR: shared/type-0   | draft-ietf-cbor-packed |
+|                   109 | text string, byte string, array, map                                         | Packed CBOR: midfix function | draft-ietf-cbor-packed |
+|                   113 | array (shared-items, argument-items, rump)                                   | Packed CBOR: table setup     | draft-ietf-cbor-packed |
+|               224-255 | text string, byte string, array, map, tag                                    | Packed CBOR: type-0          | draft-ietf-cbor-packed |
+|           28704-32767 | text string, byte string, array, map, tag                                    | Packed CBOR: type-0          | draft-ietf-cbor-packed |
+| 1879052288-2147483647 | text string, byte string, array, map, tag                                    | Packed CBOR: type-0          | draft-ietf-cbor-packed |
+|               216-223 | text string, byte string, array, map, tag                                    | Packed CBOR: type-1          | draft-ietf-cbor-packed |
+|           27647-28671 | text string, byte string, array, map, tag                                    | Packed CBOR: type-1          | draft-ietf-cbor-packed |
+| 1811940352-1879048191 | text string, byte string, array, map, tag                                    | Packed CBOR: type-1          | draft-ietf-cbor-packed |
 {: #tab-tag-values cols='r l l' title="Values for Tag Numbers"}
 
 
