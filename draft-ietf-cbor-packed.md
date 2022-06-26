@@ -447,6 +447,53 @@ The original CBOR data item can be reconstructed by recursively
 replacing shared, prefix, and suffix references encountered in the
 rump by their expansions.
 
+# Function Tags
+
+Function tags that occur in an argument or a rump supply the semantics
+for reconstructing a data item from their tag content and the
+non-dominating rump or argument, respectively.
+The present specification defines one function tag.
+
+## Midfix Function Tag
+
+Tag 109 ('m') defines the "midfix" unpacking function.
+
+For a type-0 reference, the argument (dominating tag) must have a data
+item that can be concatenated as tag content.
+For a type-1 reference, the rump (dominating tag) must have a data
+item that can be concatenated as tag content.
+
+For an example, we assume as an unpacked data item:
+
+~~~ cbor-diag
+["https://packed.example/foo.html",
+ "coap:://packed.example/bar.cbor",
+ "mailto:support@packed.example"]
+~~~
+
+A packed form using type-0 references could be:
+
+~~~
+113([ [],
+  [109("packed.example")],
+  [6(["https://", "/foo.html"]),
+   6(["coap://", "/bar.cbor"]),
+   6(["mailto:support@", ""])]
+])
+~~~
+
+A packed form using type-1 references could be:
+
+~~~
+113([ [],
+  ["packed.example"],
+  [216(109(["https://", "/foo.html"]),
+   216(109(["coap://", "/bar.cbor"]),
+   216("mailto:support@")]
+])
+~~~
+
+
 IANA Considerations
 ============
 
