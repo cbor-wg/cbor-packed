@@ -110,9 +110,11 @@ Packed CBOR can make use of two kinds of optimization:
   reference to a common representation of that data item.
   The processing required during consumption is limited to following
   that reference.
-- affix sharing: data items (strings, containers) that share a prefix
-  or suffix (affix) can be replaced by a
-  reference to a common affix plus the rest of the data item.  For
+- argument sharing: data items (strings, containers) that share a prefix
+  or suffix (affix), or more generally data items that can be
+  constructed from a function taking an argument and a rump data item,
+  can be replaced by a
+  reference to a common argument plus a rump data item.  For
   strings, the
   processing required during consumption is similar to following the
   affix reference plus that for an indefinite-length string.
@@ -137,14 +139,18 @@ Packed reference:
 Shared item reference:
 : A reference to a shared item as defined in {{sec-referencing-shared-items}}.
 
-Affix reference:
-: A reference that combines an affix item as defined in {{sec-referencing-affix-items}}.
+Argument reference:
+: A reference that combines an affix item as defined in {{sec-referencing-argument-items}}.
 
 Affix:
-: Prefix or suffix.
+: Prefix or suffix, used as an argument in an argument reference.
+
+Function reference:
+: An argument reference that uses a tag for argument, rump, or both,
+  causing the application of a function to reconstruct the data item.
 
 Packing tables:
-: The triple of a shared item table, a prefix table, and a suffix table.
+: The pair of a shared item table and an argument table.
 
 Current set:
 : The packing tables in effect at the data item under consideration.
@@ -177,13 +183,12 @@ they are referenced.
 At any point within a data item making use of Packed CBOR, there is a
 Current Set of packing tables that applies.
 
-There are three packing tables in a Current Set:
+There are two packing tables in a Current Set:
 
 * Shared item table
-* Prefix table
-* Suffix table
+* Argument table
 
-Without any table setup, all these tables are empty arrays.
+Without any table setup, these two tables are empty arrays.
 Table setup can cause these arrays to be non-empty, where the elements are
 (potentially themselves packed) data items.
 Each of the tables is indexed by an unsigned integer (starting
@@ -228,41 +233,56 @@ container (map or array) turns it into a prefix reference (see
 Note also that the tag content of Tag 6 may itself be packed, so it
 may need to be unpacked to make this determination.
 
-## Referencing Affix Items
+## Referencing Argument Items
 
-Prefix items are stored in the prefix table of the Current Set;
-suffix items are stored in the suffix table of the Current Set.
-We collectively call these items affix items; when referencing, which
-of the tables is actually used depends on whether a prefix or a suffix
-reference was used.
+The argument table serves as a common table that can be used for affix
+references as well as function references.
+When referencing an argument, a distinction is made between type-0
+references and type-1 references; a type-0 reference is either a
+prefix reference or a type-0 function reference, while a type-1
+reference is either a suffix reference or a type-1 function reference.
 
-| prefix reference                         |    table index |
-|------------------------------------------+----------------|
-| Tag 6(prefixed rump)                     |              0 |
-| Tag 224-255(prefixed rump)               |           0-31 |
-| Tag 28704-32767(prefixed rump)           |        32-4095 |
-| Tag 1879052288-2147483647(prefixed rump) | 4096-268435455 |
-{: #tab-prefix cols='l r' title="Referencing Prefix Values"}
+| type-0 reference                       |    table index |
+|----------------------------------------|----------------|
+| Tag 6(type-0 rump)                     |              0 |
+| Tag 224-255(type-0 rump)               |           0-31 |
+| Tag 28704-32767(type-0 rump)           |        32-4095 |
+| Tag 1879052288-2147483647(type-0 rump) | 4096-268435455 |
+{: #tab-prefix cols='l r' title="Type-0-Referencing (e.g., Prefix) Arguments"}
 
-| suffix reference                         |   table index |
-|------------------------------------------+---------------|
-| Tag 216-223(suffixed rump)               |           0-7 |
-| Tag 27647-28671(suffixed rump)           |        8-1023 |
-| Tag 1811940352-1879048191(suffixed rump) | 1024-67108863 |
-{: #tab-suffix cols='l r' title="Referencing Suffix Values"}
+| type-1 reference                       |   table index |
+|----------------------------------------|---------------|
+| Tag 216-223(type-1 rump)               |           0-7 |
+| Tag 27647-28671(type-1 rump)           |        8-1023 |
+| Tag 1811940352-1879048191(type-1 rump) | 1024-67108863 |
+{: #tab-suffix cols='l r' title="Type-1-Referencing (e.g., Suffix) Arguments"}
 
-Affix data items are referenced by using the data items in
-{{tab-prefix}} and {{tab-suffix}}.
-The tag number indicates the table used (prefix or suffix) and a table
-index (an unsigned integer); the tag content contains a "rump item".
-When reconstructing the original data item, such a
-reference is replaced by a data item constructed from the referenced
-affix data item (affix, which might need to be recursively unpacked
-first) "concatenated" with the tag content (rump, again possibly
-recursively unpacked).
+Argument data items are referenced by using the reference data items
+in {{tab-prefix}} and {{tab-suffix}}.
 
-* For a rump of type array, the affix also needs to be an
-  array.
+The tag number indicates a table index (an unsigned integer) leading
+to the "argument"; the tag content is the "rump item".
+
+When reconstructing the original data item, such a reference is
+replaced by a data item constructed from the argument data item found
+in the table (argument, which might need to be recursively unpacked
+first) and the rump data item (rump, again possibly recursively
+unpacked).
+
+For type-0 references with an argument that is a tag, or type-1
+references with a rump that is a tag, that respective tag is called the
+"dominating tag".  In this case, the reference is replaced by the
+result of applying the unpacking semantics defined for the dominating
+tag to its tag contents and the other item (rump and argument,
+respectively).  If no unpacking semantics is defined for a tag
+occurring in a dominating position, the packed CBOR data item is not
+valid.
+
+When there is no dominating tag, the reference is replaced by
+the argument data item interpreted as an affix, "concatenated" with
+the rump:
+
+* For a rump of type array, the affix also needs to be an array.
   The elements from a prefix are prepended to the elements in the rump
   array, while the elements from a suffix are appended to those in the
   rump.
@@ -291,7 +311,7 @@ recursively unpacked).
   depending on what type of rump is being used.
 
 As a contrived (but short) example, if the prefix table is `["foobar",
-h'666f6f62', "fo"]`, the following prefix references will all unpack to
+h'666f6f62', "fo"]`, the following type-0 (prefix) references will all unpack to
 `"foobart"`: `6("t")`, `225("art")`, `226("obart")` (the byte string
 h'666f6f62' == 'foob' is concatenated into a text string, and the last
 example is not an optimization).
@@ -304,14 +324,14 @@ rump, tag 224 needs to be used.
 <!-- 2<sup>28</sup>2<sup>12</sup>+2<sup>5</sup>+2<sup>0</sup> -->
 
 Taking into account the encoding and ignoring the less optimal tag
-224, there is one single-byte prefix
+224, there is one single-byte type-0 (prefix)
 reference, 31 (2<sup>5</sup>-2<sup>0</sup>) two-byte references, 4064
 (2<sup>12</sup>-2<sup>5</sup>) three-byte references, and 26843160
-(2<sup>28</sup>-2<sup>12</sup>) five-byte references for prefixes.
+(2<sup>28</sup>-2<sup>12</sup>) five-byte references for type-0 references.
 268435455 (2<sup>28</sup>) is an artificial limit, but should be high
 enough that there, again, is no practical limit to how many prefix
 items might be used in a Packed CBOR item.
-The numbers for suffix references are one quarter of those, except
+The numbers for type-1 (suffix) references are one quarter of those, except
 that there is no single-byte reference and 8 two-byte references.
 
 {:aside}
@@ -370,7 +390,7 @@ sequences {{-seq}}; maybe such a specification should be added.
 The packing references described in {{sec-packed-cbor}} assume that
 packing tables have been set up.
 
-By default, all three tables are empty (zero-length arrays).
+By default, both tables are empty (zero-length arrays).
 
 Table setup can happen in one of two ways:
 
@@ -423,20 +443,18 @@ combination with an `ni:` URI {{-ni}}.
 A predefined tag for packing table setup is defined in CDDL {{-cddl}} as in {{fig-cddl}}:
 
 ~~~ cddl
-Basic-Packed-CBOR = #6.51([[*shared-item], [*prefix-item],
-                           [*suffix-item], rump])
+Basic-Packed-CBOR = #6.113([[*shared-item], [*argument-item], rump])
 rump = any
-prefix-item = any
-suffix-item = any
+argument-item = any
 shared-item = any
 ~~~
 {: #fig-cddl title="Packed CBOR in CDDL"}
 
-(This assumes the allocation of tag number 51 for this tag.)
+(This assumes the allocation of tag number 113 ('q') for this tag.)
 
-The arrays given as the first, second, and third element of the
-content of the tag 51 are prepended to the tables for shared items,
-prefixes, and suffixes that apply to the entire tag (by default empty
+The arrays given as the first and second element of the
+content of the tag 113 are prepended to the tables for shared items
+and arguments that apply to the entire tag (by default empty
 tables).  As discussed in the introduction to this section, references
 in the supplied new arrays use the new number space (where inherited
 items are shifted by the new items given), while the inherited items
@@ -444,8 +462,8 @@ themselves use the inherited number space (so their semantics do not
 change by the mere action of inheritance).
 
 The original CBOR data item can be reconstructed by recursively
-replacing shared, prefix, and suffix references encountered in the
-rump by their expansions.
+replacing shared and argument references encountered in the rump by
+their expansions.
 
 # Function Tags
 
@@ -583,9 +601,9 @@ this particular example does not lend itself to prefix compression.
 {: #fig-example-in title="Example original CBOR data item"}
 
 ~~~ cbor-diag
-51([["price", "category", "author", "title", "fiction", 8.95, "isbn"],
+113([["price", "category", "author", "title", "fiction", 8.95, "isbn"],
     /  0          1         2         3         4       5      6   /
-    [], [],
+    [],
     [{"store": {
        "book": [
          {simple(1): "reference", simple(2): "Nigel Rees",
@@ -734,19 +752,18 @@ item and (partial) prefix compression only.
 {: #fig-example-in2 title="Example original CBOR data item"}
 
 ~~~ cbordiag
-51([/shared/["name", "@type", "links", "href", "mediaType",
+113([/shared/["name", "@type", "links", "href", "mediaType",
             /  0       1       2        3         4 /
     "application/json", "outputData", {"valueType": {"type":
          /  5               6               7 /
     "number"}}, ["Property"], "writable", "valueType", "type"],
                /   8            9           10           11 /
-   /prefix/ ["http://192.168.1.10", 6("3:8445/wot/thing"),
+   /argument/ ["http://192.168.1.10", 6("3:8445/wot/thing"),
               / 6                        225 /
    225("/MyLED/"), 226("rgbValue"), "rgbValue",
      / 226             227           228     /
    {simple(6): simple(7), simple(9): true, simple(1): simple(8)}],
      / 229 /
-   /suffix/ [],
    /rump/ {simple(0): "MyLED",
            "interactions": [
    229({simple(2): [{simple(3): 227("Red"), simple(4): simple(5)}],
