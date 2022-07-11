@@ -601,8 +601,9 @@ this particular example does not lend itself to prefix compression.
 {: #fig-example-in title="Example original CBOR data item"}
 
 ~~~ cbor-diag
-113([["price", "category", "author", "title", "fiction", 8.95, "isbn"],
-    /  0          1         2         3         4       5      6   /
+113([["price", "category", "author", "title", "fiction", 8.95,
+                                                             "isbn"],
+    /  0          1         2         3         4         5    6   /
     [],
     [{"store": {
        "book": [
