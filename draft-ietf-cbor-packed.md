@@ -15,6 +15,11 @@ cat: std
 consensus: true
 submissiontype: IETF
 
+venue:
+  group: CBOR
+  mail: cbor@ietf.org
+  github: cbor-wg/cbor-packed
+
 author:
   -
     ins: C. Bormann
@@ -86,13 +91,6 @@ informative:
     discussions, but need more eyeballs.
 
 
---- note_Note_to_Readers
-
-This is a working-group draft of the CBOR working group of the
-IETF, <https://datatracker.ietf.org/wg/cbor/about/>.
-Discussion takes places on the GitHub repository
-<https://github.com/cbor-wg/cbor-packed> and on the CBOR WG mailing
-list, <https://www.ietf.org/mailman/listinfo/cbor>.
 
 
 --- middle
