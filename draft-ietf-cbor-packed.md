@@ -177,8 +177,8 @@ The definitions of {{-bis}} apply.
 Specifically: The term "byte" is used in its now customary sense as a synonym for
 "octet"; "byte strings" are CBOR data items carrying a sequence of
 zero or more (binary) bytes, while "text strings" are CBOR data items carrying a
-sequence of zero or more Unicode code points, encoded in UTF-8
-{{-utf8}}.
+sequence of zero or more Unicode code points (more precisely: Unicode
+scalar values), encoded in UTF-8 {{-utf8}}.
 
 Where bit arithmetic is explained, this document uses the notation
 familiar from the programming language C (including C++14's 0bnnn
