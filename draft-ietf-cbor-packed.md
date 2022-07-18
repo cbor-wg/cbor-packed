@@ -1,21 +1,19 @@
 ---
+v: 3
+
 title: >
   Packed CBOR
 abbrev: Packed CBOR
 docname: draft-ietf-cbor-packed-latest
 # date: 2021-07-01
 
-stand_alone: true
 kramdown_options:
   auto_id_prefix: sec-
 
-ipr: trust200902
 keyword: Internet-Draft
 cat: std
 consensus: true
 submissiontype: IETF
-
-pi: [toc, sortrefs, symrefs, compact, comments]
 
 author:
   -
@@ -112,12 +110,16 @@ Packed CBOR can make use of two kinds of optimization:
   reference to a common representation of that data item.
   The processing required during consumption is limited to following
   that reference.
-- affix sharing: data items (strings, containers) that share a prefix
-  or suffix (affix) can be replaced by a
-  reference to a common affix plus the rest of the data item.  For
-  strings, the
-  processing required during consumption is similar to following the
-  affix reference plus that for an indefinite-length string.
+- argument sharing: application of a function with two arguments, one of which is shared.
+  Data items (strings, containers) that share a prefix
+  or suffix (affix), or more generally data items that can be
+  constructed from a function taking a shared argument and a rump data item,
+  can be replaced by a reference to the shared argument plus a rump data
+  item.
+  For strings and the default "concatenation" function, the processing
+  required during consumption is similar to
+  following the argument reference plus that for an indefinite-length
+  string.
 
 A specific application protocol that employs Packed CBOR might allow
 both kinds of optimization or limit the representation to item
@@ -134,19 +136,25 @@ Terminology         {#terms}
 {::boilerplate bcp14-tagged}
 
 Packed reference:
-: A shared item reference or an affix reference.
+: A shared item reference or an argument reference.
 
 Shared item reference:
 : A reference to a shared item as defined in {{sec-referencing-shared-items}}.
 
-Affix reference:
-: A reference that combines an affix item as defined in {{sec-referencing-affix-items}}.
+Argument reference:
+: A reference that combines a shared argument with a rump item as
+  defined in {{sec-referencing-argument-items}}.
 
 Affix:
-: Prefix or suffix.
+: Prefix or suffix, used as an argument in an argument reference
+  employing the default function "concatenation".
+
+Function reference:
+: An argument reference that uses a tag for argument, rump, or both,
+  causing the application of a function to reconstruct the data item.
 
 Packing tables:
-: The triple of a shared item table, a prefix table, and a suffix table.
+: The pair of a shared item table and an argument table.
 
 Current set:
 : The packing tables in effect at the data item under consideration.
@@ -179,13 +187,12 @@ they are referenced.
 At any point within a data item making use of Packed CBOR, there is a
 Current Set of packing tables that applies.
 
-There are three packing tables in a Current Set:
+There are two packing tables in a Current Set:
 
 * Shared item table
-* Prefix table
-* Suffix table
+* Argument table
 
-Without any table setup, all these tables are empty arrays.
+Without any table setup, these two tables are empty arrays.
 Table setup can cause these arrays to be non-empty, where the elements are
 (potentially themselves packed) data items.
 Each of the tables is indexed by an unsigned integer (starting
@@ -225,96 +232,148 @@ a Packed CBOR item.
 
 Note that the semantics of Tag 6 depend on its tag content: An integer
 turns the tag into a shared item reference, whereas a string or
-container (map or array) turns it into a prefix reference (see
-{{tab-prefix}}).
+container (map or array) turns it into a straight (prefix) reference (see
+{{tab-straight}}).
 Note also that the tag content of Tag 6 may itself be packed, so it
 may need to be unpacked to make this determination.
 
-## Referencing Affix Items
+## Referencing Argument Items
 
-Prefix items are stored in the prefix table of the Current Set;
-suffix items are stored in the suffix table of the Current Set.
-We collectively call these items affix items; when referencing, which
-of the tables is actually used depends on whether a prefix or a suffix
-reference was used.
+The argument table serves as a common table that can be used for argument
+references, i.e., for concatenation as well as references involving a
+function tag.
 
-| prefix reference                         |    table index |
-|------------------------------------------+----------------|
-| Tag 6(prefixed rump)                     |              0 |
-| Tag 225-255(prefixed rump)               |           1-31 |
-| Tag 28704-32767(prefixed rump)           |        32-4095 |
-| Tag 1879052288-2147483647(prefixed rump) | 4096-268435455 |
-{: #tab-prefix cols='l r' title="Referencing Prefix Values"}
+When referencing an argument, a distinction is made between straight
+and inverted references; if no function tag is involved, a straight
+reference combines a prefix out of the argument table with the rump
+data item, and an inverted reference combines a rump data item with a
+suffix out of the argument table.
 
-| suffix reference                         |   table index |
-|------------------------------------------+---------------|
-| Tag 216-223(suffixed rump)               |           0-7 |
-| Tag 27647-28671(suffixed rump)           |        8-1023 |
-| Tag 1811940352-1879048191(suffixed rump) | 1024-67108863 |
-{: #tab-suffix cols='l r' title="Referencing Suffix Values"}
+| straight reference                       |    table index |
+|------------------------------------------|----------------|
+| Tag 6(straight rump)                     |              0 |
+| Tag 224-255(straight rump)               |           0-31 |
+| Tag 28704-32767(straight rump)           |        32-4095 |
+| Tag 1879052288-2147483647(straight rump) | 4096-268435455 |
+{: #tab-straight cols='l r' title="Straight Referencing (e.g., Prefix) Arguments"}
 
-Affix data items are referenced by using the data items in
-{{tab-prefix}} and {{tab-suffix}}.
-The tag number indicates the table used (prefix or suffix) and a table
-index (an unsigned integer); the tag content contains a "rump item".
-When reconstructing the original data item, such a
-reference is replaced by a data item constructed from the referenced
-affix data item (affix, which might need to be recursively unpacked
-first) "concatenated" with the tag content (rump, again possibly
-recursively unpacked).
+| inverted reference                       |   table index |
+|------------------------------------------|---------------|
+| Tag 216-223(inverted rump)               |           0-7 |
+| Tag 27647-28671(inverted rump)           |        8-1023 |
+| Tag 1811940352-1879048191(inverted rump) | 1024-67108863 |
+{: #tab-inverted cols='l r' title="Inverted Referencing (e.g., Suffix) Arguments"}
 
-* For a rump of type array, the affix also needs to be an
-  array.
-  The elements from a prefix are prepended to the elements in the rump
-  array, while the elements from a suffix are appended to those in the
-  rump.
+Argument data items are referenced by using the reference data items
+in {{tab-straight}} and {{tab-inverted}}.
 
-* For a rump of type map, the affix also needs to be a map.
-  The entries in the affix are added to those of the rump.
-  Prefix and suffix references differ in how entries with identical
-  keys are combined: for prefix references, an entry in the rump with
-  the same key as an entry in the affix overrides the one in the
-  affix, while for suffix references, an entry in the affix overrides
-  an entry in the rump that has the same key.
+The tag number of the reference indicates a table index (an unsigned integer) leading
+to the "argument"; the tag content of the reference is the "rump item".
 
-{:aside}
-> NOTE:
-  One application of the rule for prefix references is to supply
-  default values out of a dictionary, which can then be overridden by
-  the entries in the map supplied as the rump value.
-  Note that this pattern provides no way to remove a map entry from
-  the prefix table entry.
+When reconstructing the original data item, such a reference is
+replaced by a data item constructed from the argument data item found
+in the table (argument, which might need to be recursively unpacked
+first) and the rump data item (rump, again possibly recursively
+unpacked).
 
-* For a rump of one of the string types, the affix also needs to be one
-  of the string types; the bytes of the strings are concatenated as
-  specified (prefix + rump, rump + suffix).
-  The result of the concatenation gets the type of the rump; this way
-  a single affix can be used to build both byte and text strings,
-  depending on what type of rump is being used.
+Separate from the tag used as a reference, a tag ("function tag") may
+be involved to supply a function to be used in resolving the
+reference.  It is crucial not to confuse reference tag and, if
+present, function tag.
 
-As a contrived (but short) example, if the prefix table is `["foobar",
-h'666f6f62', "fo"]`, the following prefix references will all unpack to
-`"foobart"`: `6("t")`, `225("art")`, `226("obart")` (the byte string
-h'666f6f62' == 'foob' is concatenated into a text string, and the last
-example is not an optimization).
+A straight reference uses the argument as the provisional left hand
+side and the rump data item as the right hand side.
+An inverted reference uses the rump data item as the provisional left
+hand side and the argument as the right hand side.
+
+In both cases, the provisional left hand side is examined.  If it is a
+tag ("function tag"), it is "unwrapped": The function tag's tag number
+is established as the function to be applied, and the tag content is
+kept as the unwrapped left hand side.
+If the provisional left hand side is not a tag, it is kept as the
+unwrapped left hand side, and the function to be applied is
+concatenation, as defined below.
+The right hand side is taken as is as the unwrapped right hand side.
+
+If a function tag was given, the reference is replaced by the result
+of applying the unpacking function to be computed to the left and
+right hand sides.
+The unpacking function is defined by the definition of the tag number
+supplied.
+If that definition does not define an unpacking function, the result
+of the unpacking is not valid.
+
+If no function tag was given, the reference is replaced by the left
+hand side "concatenated" with the right hand side, where concatenation
+is defined as in {{sec-concatenation}}.
+
+As a contrived (but short) example, if the argument table is
+`["foobar", h'666f6f62', "fo"]`, each of the following straight (prefix)
+references will unpack to `"foobart"`: `6("t")`, `225("art")`,
+`226("obart")` (the byte string h'666f6f62' == 'foob' is concatenated
+into a text string, and the last example is not an optimization).
+
+Note that table index 0 of the argument table can be referenced both
+with tag 6 and tag 224,
+however tag 6 with an integer content is used for shared item
+references (see {{tab-shared}}), so to combine index 0 with an integer
+rump, tag 224 needs to be used.
 
 <!-- 2<sup>28</sup>2<sup>12</sup>+2<sup>5</sup>+2<sup>0</sup> -->
 
-Taking into account the encoding, there is one single-byte prefix
+Taking into account the encoding and ignoring the less optimal tag
+224, there is one single-byte straight (prefix)
 reference, 31 (2<sup>5</sup>-2<sup>0</sup>) two-byte references, 4064
 (2<sup>12</sup>-2<sup>5</sup>) three-byte references, and 26843160
-(2<sup>28</sup>-2<sup>12</sup>) five-byte references for prefixes.
+(2<sup>28</sup>-2<sup>12</sup>) five-byte references for straight references.
 268435455 (2<sup>28</sup>) is an artificial limit, but should be high
 enough that there, again, is no practical limit to how many prefix
 items might be used in a Packed CBOR item.
-The numbers for suffix references are one quarter of those, except
+The numbers for inverted (suffix) references are one quarter of those, except
 that there is no single-byte reference and 8 two-byte references.
 
 {:aside}
 > Rationale:
-Experience suggests that prefix packing might be more
-likely than suffix packing.  Also for this reason, there is no intent
-to spend a 1+0 tag value for suffix packing.
+Experience suggests that straight (prefix) packing might be more
+likely than inverted (suffix) packing.  Also for this reason, there is no intent
+to spend a 1+0 tag value for inverted packing.
+
+## Concatenation
+
+The concatenation function is defined as follows:
+
+* If both left hand side and right hand side are arrays, the result of
+  the concatenation is an array with all elements of the
+  left-hand-side array followed by the elements of the right-hand side
+  array.
+
+* If both left hand side and right hand side are maps, the result of
+  the concatenation is a map that is initialized with a copy of the
+  left-hand-side map, and then filled in with the members of the
+  right-hand side map, replacing any existing members that have the
+  same key.
+
+{:aside}
+> NOTE:
+  One application of the rule for straight references is to supply
+  default values out of a dictionary, which can then be overridden by
+  the entries in the map supplied as the rump data item.
+  Note that this pattern provides no way to remove a map entry from
+  the prefix table entry.
+
+* If both left hand side and right hand side are one of the string
+  types (not necessarily the same), the bytes of the left hand side
+  are concatenated with the bytes of the right hand side.
+  Byte strings concatenated with text strings need to contain valid
+  UTF-8 data.
+  The result of the concatenation gets the type of the unwrapped rump
+  data item; this way a single argument table entry can be used to
+  build both byte and text strings, depending on what type of rump is
+  being used.
+
+* Other type combinations of left hand side and right hand side are
+  not valid.
+
 
 ## Discussion
 
@@ -366,7 +425,7 @@ sequences {{-seq}}; maybe such a specification should be added.
 The packing references described in {{sec-packed-cbor}} assume that
 packing tables have been set up.
 
-By default, all three tables are empty (zero-length arrays).
+By default, both tables are empty (zero-length arrays).
 
 Table setup can happen in one of two ways:
 
@@ -419,20 +478,18 @@ combination with an `ni:` URI {{-ni}}.
 A predefined tag for packing table setup is defined in CDDL {{-cddl}} as in {{fig-cddl}}:
 
 ~~~ cddl
-Basic-Packed-CBOR = #6.51([[*shared-item], [*prefix-item],
-                           [*suffix-item], rump])
+Basic-Packed-CBOR = #6.113([[*shared-item], [*argument-item], rump])
 rump = any
-prefix-item = any
-suffix-item = any
+argument-item = any
 shared-item = any
 ~~~
 {: #fig-cddl title="Packed CBOR in CDDL"}
 
-(This assumes the allocation of tag number 51 for this tag.)
+(This assumes the allocation of tag number 113 ('q') for this tag.)
 
-The arrays given as the first, second, and third element of the
-content of the tag 51 are prepended to the tables for shared items,
-prefixes, and suffixes that apply to the entire tag (by default empty
+The arrays given as the first and second element of the
+content of the tag 113 are prepended to the tables for shared items
+and arguments that apply to the entire tag (by default empty
 tables).  As discussed in the introduction to this section, references
 in the supplied new arrays use the new number space (where inherited
 items are shifted by the new items given), while the inherited items
@@ -440,8 +497,85 @@ themselves use the inherited number space (so their semantics do not
 change by the mere action of inheritance).
 
 The original CBOR data item can be reconstructed by recursively
-replacing shared, prefix, and suffix references encountered in the
-rump by their expansions.
+replacing shared and argument references encountered in the rump by
+their expansions.
+
+# Function Tags
+
+Function tags that occur in an argument or a rump supply the semantics
+for reconstructing a data item from their tag content and the
+non-dominating rump or argument, respectively.
+The present specification defines a pair of function tags.
+
+## Join Function Tags
+
+Tag 106 ('j') defines the "join" unpacking function, based on the
+concatenation function ({{sec-concatenation}}).
+
+The join function expects an item that can be concatenated as its left
+hand side, and an array of such items as its right hand side.
+Joining works by sequentially applying the concatenation function to
+the elements of the right-hand-side array, interspersing the left hand
+side as the "joiner".
+
+An example in functional notation: `join(", ", ["a", "b", "c"])`
+returns `"a, b, c"`.
+
+For a right hand side of one or more elements, the first element
+determines the type of the result when text strings and byte
+strings are mixed in the argument.
+For a right hand side of one element, the joiner is not used, and that
+element returned.
+For a right hand side of zero elements, a neutral element is generated
+based on the type of the joiner
+(empty text/byte string for a text/byte string, empty array for an array, empty map for a map).
+
+For an example, we assume this unpacked data item:
+
+~~~ cbor-diag
+["https://packed.example/foo.html",
+ "coap:://packed.example/bar.cbor",
+ "mailto:support@packed.example"]
+~~~
+
+A packed form of this using straight references could be:
+
+~~~
+113([ [],
+  [106("packed.example")],
+  [6(["https://", "/foo.html"]),
+   6(["coap://", "/bar.cbor"]),
+   6(["mailto:support@", ""])]
+])
+~~~
+
+Tag 105 ('i') defines the "ijoin" unpacking function, which is exactly
+like that of tag 106, except that the left hand side and right hand
+side are interchanged ('i').
+
+A packed form of the first example using inverted references and the ijoin tag could be:
+
+~~~
+113([ [],
+  ["packed.example"],
+  [216(105(["https://", "/foo.html"]),
+   216(105(["coap://", "/bar.cbor"]),
+   216("mailto:support@")]
+])
+~~~
+
+A packed form of an array with many URIs that reference SenML items
+from the same place could be:
+
+~~~
+113([ [],
+  [105(["coaps://[2001::db8::1]/s/", ".senml"])],
+  [6("temp-freezer"),
+   6("temp-fridge"),
+   6("temp-ambient")]
+])
+~~~
+
 
 IANA Considerations
 ============
@@ -451,15 +585,17 @@ IANA Considerations
 In the registry "{{cbor-tags (CBOR Tags)<IANA.cbor-tags}}" {{IANA.cbor-tags}},
 IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 
-|                   Tag | Data Item                                                               | Semantics                  | Reference              |
-|                     6 | integer (for shared); text string, byte string, array, map (for prefix) | Packed CBOR: shared/prefix | draft-ietf-cbor-packed |
-|                    51 | array (shared-items, prefix-items, suffix-items, rump)                  | Packed CBOR: table setup   | draft-ietf-cbor-packed |
-|               225-255 | text string, byte string, array, map                                    | Packed CBOR: prefix        | draft-ietf-cbor-packed |
-|           28704-32767 | text string, byte string, array, map                                    | Packed CBOR: prefix        | draft-ietf-cbor-packed |
-| 1879052288-2147483647 | text string, byte string, array, map                                    | Packed CBOR: prefix        | draft-ietf-cbor-packed |
-|               216-223 | text string, byte string, array, map                                    | Packed CBOR: suffix        | draft-ietf-cbor-packed |
-|           27647-28671 | text string, byte string, array, map                                    | Packed CBOR: suffix        | draft-ietf-cbor-packed |
-| 1811940352-1879048191 | text string, byte string, array, map                                    | Packed CBOR: suffix        | draft-ietf-cbor-packed |
+|                   Tag | Data Item                                                                      | Semantics                    | Reference              |
+|                     6 | integer (for shared); text string, byte string, array, map, tag (for straight) | Packed CBOR: shared/straight | draft-ietf-cbor-packed |
+|                   105 | text string, byte string, array, map, tag                                      | Packed CBOR: ijoin function  | draft-ietf-cbor-packed |
+|                   106 | text string, byte string, array, map, tag                                      | Packed CBOR: join function   | draft-ietf-cbor-packed |
+|                   113 | array (shared-items, argument-items, rump)                                     | Packed CBOR: table setup     | draft-ietf-cbor-packed |
+|               224-255 | text string, byte string, array, map, tag                                      | Packed CBOR: straight        | draft-ietf-cbor-packed |
+|           28704-32767 | text string, byte string, array, map, tag                                      | Packed CBOR: straight        | draft-ietf-cbor-packed |
+| 1879052288-2147483647 | text string, byte string, array, map, tag                                      | Packed CBOR: straight        | draft-ietf-cbor-packed |
+|               216-223 | text string, byte string, array, map, tag                                      | Packed CBOR: inverted        | draft-ietf-cbor-packed |
+|           27647-28671 | text string, byte string, array, map, tag                                      | Packed CBOR: inverted        | draft-ietf-cbor-packed |
+| 1811940352-1879048191 | text string, byte string, array, map, tag                                      | Packed CBOR: inverted        | draft-ietf-cbor-packed |
 {: #tab-tag-values cols='r l l' title="Values for Tag Numbers"}
 
 
@@ -531,9 +667,10 @@ this particular example does not lend itself to prefix compression.
 {: #fig-example-in title="Example original CBOR data item"}
 
 ~~~ cbor-diag
-51([["price", "category", "author", "title", "fiction", 8.95, "isbn"],
-    /  0          1         2         3         4       5      6   /
-    [], [],
+113([["price", "category", "author", "title", "fiction", 8.95,
+                                                             "isbn"],
+    /  0          1         2         3         4         5    6   /
+    [],
     [{"store": {
        "book": [
          {simple(1): "reference", simple(2): "Nigel Rees",
@@ -682,19 +819,18 @@ item and (partial) prefix compression only.
 {: #fig-example-in2 title="Example original CBOR data item"}
 
 ~~~ cbordiag
-51([/shared/["name", "@type", "links", "href", "mediaType",
+113([/shared/["name", "@type", "links", "href", "mediaType",
             /  0       1       2        3         4 /
     "application/json", "outputData", {"valueType": {"type":
          /  5               6               7 /
     "number"}}, ["Property"], "writable", "valueType", "type"],
                /   8            9           10           11 /
-   /prefix/ ["http://192.168.1.10", 6("3:8445/wot/thing"),
+   /argument/ ["http://192.168.1.10", 6("3:8445/wot/thing"),
               / 6                        225 /
    225("/MyLED/"), 226("rgbValue"), "rgbValue",
      / 226             227           228     /
    {simple(6): simple(7), simple(9): true, simple(1): simple(8)}],
      / 229 /
-   /suffix/ [],
    /rump/ {simple(0): "MyLED",
            "interactions": [
    229({simple(2): [{simple(3): 227("Red"), simple(4): simple(5)}],
@@ -727,7 +863,7 @@ Various attempts to come up with a specification over the years didn't
 proceed.
 In 2017, {{{Sebastian Käbisch}}} proposed
 investigating compact representations of W3C Thing Descriptions, which
-prompted the author to come up with essentially the present design.
+prompted the author to come up with what turned into the present design.
 
 <!--  LocalWords:  CBOR extensibility IANA uint sint IEEE endian
  -->
