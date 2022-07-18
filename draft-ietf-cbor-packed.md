@@ -76,6 +76,16 @@ informative:
     step is therefore often not required at the receiver.
 
 
+
+[^status]
+
+[^status]:
+    The present version (-06) includes changes that are intended
+    for discussion at the CBOR Interim meeting 12 in 2022.
+    These are intended to be the result of the WGLC handling
+    discussions, but need more eyeballs.
+
+
 --- note_Note_to_Readers
 
 This is a working-group draft of the CBOR working group of the
