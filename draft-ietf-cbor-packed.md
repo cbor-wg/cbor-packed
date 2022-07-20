@@ -379,6 +379,13 @@ The concatenation function is defined as follows:
   build both byte and text strings, depending on what type of rump is
   being used.
 
+* If one side is one of the string types, and the other side is an
+  array, the result of the concatenation is equivalent to the
+  application of the "join" function ({{join}}) to the string as the
+  left hand side and the array as the right hand side.
+  The original right hand side of the concatenation determines the
+  string type of the result.
+
 * Other type combinations of left hand side and right hand side are
   not valid.
 
@@ -515,7 +522,7 @@ for reconstructing a data item from their tag content and the
 non-dominating rump or argument, respectively.
 The present specification defines a pair of function tags.
 
-## Join Function Tags
+## Join Function Tags {#join}
 
 Tag 106 ('j') defines the "join" unpacking function, based on the
 concatenation function ({{sec-concatenation}}).
