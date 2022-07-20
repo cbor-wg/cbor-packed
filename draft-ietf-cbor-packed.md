@@ -475,7 +475,7 @@ which operates by prepending to the (by default empty) tables.
 {:aside}
 >
 We could also define a tag for dictionary referencing (or include that
-in the basic packed CBOR), but the desirable details are likely to vary
+in the basic Packed CBOR), but the desirable details are likely to vary
 considerably between applications.  A URI-based reference would be
 easy to add, but might be too inefficient when used in the likely
 combination with an `ni:` URI {{-ni}}.
