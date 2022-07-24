@@ -94,10 +94,9 @@ informative:
 [^status]
 
 [^status]:
-    The present version (-06) includes changes that are intended
-    for discussion at the CBOR Interim meeting 12 in 2022.
-    These are intended to be the result of the WGLC handling
-    discussions, but need more eyeballs.
+    The present version (-07) adds the concept of Tag Equivalence as
+    initially discussed at the CBOR Interim meeting 12 in 2022 and
+    further in PR #6, for discussion before and at IETF 114.
 
 
 
