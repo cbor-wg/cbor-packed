@@ -600,7 +600,7 @@ from the same place could be:
 ])
 ~~~
 
-Tag Validity: Equivalence Principle
+Tag Validity: Tag Equivalence Principle
 ===================================
 
 In {{Section 5.3.2 of -bis}}, the validity of tags is defined in terms
@@ -659,18 +659,56 @@ They could not simply declare that they are equivalent to tags 4 and 5
 as a tag requiring a fractional value may have no way to handle the
 extended range of tag 264 and 265.
 
-The registry "{{cbor-tags (CBOR Tags)<IANA.cbor-tags}}" {{IANA.cbor-tags}}
-currently does not have a way to record the any equivalence claimed
-for a tag.
+Tag Equivalence
+---------------
 
-Equivalence of Packed CBOR Tags
+A tag definition MAY declare Tag Equivalence to some existing
+structure for the tag, under some conditions defined by the new tag
+definition.
+This, in effect, extends all existing tag definitions that accept the
+named structure to accept the newly defined tag under the conditions
+given for the Tag Equivalence.
+
+A number of limitations apply to Tag Equivalence, which therefore
+should be applied deliberately and sparingly:
+
+* Tag Equivalence is a new concept, which may not be implemented by an
+  existing generic decoder.  A generic decoder not implementing tag
+  equivalence might raise tag validity errors where Tag Equivalence
+  says there should be none.
+
+* A CBOR protocol MAY specify the use of Tag Equivalence, effectively
+  limiting its full use to those generic encoders that implement it.
+  Existing CBOR protocols that do not address Tag Equivalence
+  implicitly have a new variant that allows Tag Equivalence
+  (e.g., to support Packed CBOR with an existing protocol).
+  A CBOR protocol that does address Tag Equivalence MAY be explicit
+  about what kinds of Tag Equivalence it supports (e.g., only the
+  reference tags employed by Packed CBOR and certain table setup tags).
+
+* There is currently no way to express Tag Equivalence in CDDL.
+  For Packed CBOR, CDDL would typically be used to describe the
+  unpacked CBOR represented by it; further restricting the Packed CBOR
+  is likely to lead to interoperability problems.
+  (Note that, by definition, there is no need to describe Tag
+  Equivalence on the receptacle side; only for the tag that declares
+  Tag Equivalence.)
+
+* The registry "{{cbor-tags (CBOR Tags)<IANA.cbor-tags}}" {{IANA.cbor-tags}}
+  currently does not have a way to record any equivalence claimed
+  for a tag.  A convention would be to alert to Tag Equivalence in the
+  "Semantics (short form)" field of the registry.[^todo]
+
+[^todo]: Needs to be done for the tag registrations here.
+
+Tag Equivalence of Packed CBOR Tags
 -------------------------------
 
 The reference tags in this specification declare their equivalence to
-the shared items or function results they represent.
+the unpacked shared items or function results they represent.
+
 The table setup tag 113 declares its equivalence to the unpacked CBOR
 data item represented by it.
-
 
 IANA Considerations
 ============
