@@ -302,31 +302,31 @@ be involved to supply a function to be used in resolving the
 reference.  It is crucial not to confuse reference tag and, if
 present, function tag.
 
-A straight reference uses the argument as the provisional left hand
-side and the rump data item as the right hand side.
-An inverted reference uses the rump data item as the provisional left
-hand side and the argument as the right hand side.
+A straight reference uses the argument as the provisional left-hand
+side and the rump data item as the right-hand side.
+An inverted reference uses the rump data item as the provisional
+left-hand side and the argument as the right-hand side.
 
-In both cases, the provisional left hand side is examined.  If it is a
+In both cases, the provisional left-hand side is examined.  If it is a
 tag ("function tag"), it is "unwrapped": The function tag's tag number
 is established as the function to be applied, and the tag content is
-kept as the unwrapped left hand side.
-If the provisional left hand side is not a tag, it is kept as the
-unwrapped left hand side, and the function to be applied is
+kept as the unwrapped left-hand side.
+If the provisional left-hand side is not a tag, it is kept as the
+unwrapped left-hand side, and the function to be applied is
 concatenation, as defined below.
-The right hand side is taken as is as the unwrapped right hand side.
+The right-hand side is taken as is as the unwrapped right-hand side.
 
 If a function tag was given, the reference is replaced by the result
 of applying the unpacking function to be computed to the left and
-right hand sides.
+right-hand sides.
 The unpacking function is defined by the definition of the tag number
 supplied.
 If that definition does not define an unpacking function, the result
 of the unpacking is not valid.
 
-If no function tag was given, the reference is replaced by the left
-hand side "concatenated" with the right hand side, where concatenation
-is defined as in {{sec-concatenation}}.
+If no function tag was given, the reference is replaced by the
+left-hand side "concatenated" with the right-hand side, where
+concatenation is defined as in {{sec-concatenation}}.
 
 As a contrived (but short) example, if the argument table is
 `["foobar", h'666f6f62', "fo"]`, each of the following straight (prefix)
@@ -363,12 +363,12 @@ to spend a 1+0 tag value for inverted packing.
 
 The concatenation function is defined as follows:
 
-* If both left hand side and right hand side are arrays, the result of
+* If both left-hand side and right-hand side are arrays, the result of
   the concatenation is an array with all elements of the
   left-hand-side array followed by the elements of the right-hand side
   array.
 
-* If both left hand side and right hand side are maps, the result of
+* If both left-hand side and right-hand side are maps, the result of
   the concatenation is a map that is initialized with a copy of the
   left-hand-side map, and then filled in with the members of the
   right-hand side map, replacing any existing members that have the
@@ -382,9 +382,9 @@ The concatenation function is defined as follows:
   Note that this pattern provides no way to remove a map entry from
   the prefix table entry.
 
-* If both left hand side and right hand side are one of the string
-  types (not necessarily the same), the bytes of the left hand side
-  are concatenated with the bytes of the right hand side.
+* If both left-hand side and right-hand side are one of the string
+  types (not necessarily the same), the bytes of the left-hand side
+  are concatenated with the bytes of the right-hand side.
   Byte strings concatenated with text strings need to contain valid
   UTF-8 data.
   The result of the concatenation gets the type of the unwrapped rump
@@ -395,11 +395,11 @@ The concatenation function is defined as follows:
 * If one side is one of the string types, and the other side is an
   array, the result of the concatenation is equivalent to the
   application of the "join" function ({{join}}) to the string as the
-  left hand side and the array as the right hand side.
-  The original right hand side of the concatenation determines the
+  left-hand side and the array as the right-hand side.
+  The original right-hand side of the concatenation determines the
   string type of the result.
 
-* Other type combinations of left hand side and right hand side are
+* Other type combinations of left-hand side and right-hand side are
   not valid.
 
 
@@ -541,21 +541,21 @@ The present specification defines a pair of function tags.
 Tag 106 ('j') defines the "join" unpacking function, based on the
 concatenation function ({{sec-concatenation}}).
 
-The join function expects an item that can be concatenated as its left
-hand side, and an array of such items as its right hand side.
+The join function expects an item that can be concatenated as its
+left-hand side, and an array of such items as its right-hand side.
 Joining works by sequentially applying the concatenation function to
-the elements of the right-hand-side array, interspersing the left hand
+the elements of the right-hand-side array, interspersing the left-hand
 side as the "joiner".
 
 An example in functional notation: `join(", ", ["a", "b", "c"])`
 returns `"a, b, c"`.
 
-For a right hand side of one or more elements, the first element
+For a right-hand side of one or more elements, the first element
 determines the type of the result when text strings and byte
 strings are mixed in the argument.
-For a right hand side of one element, the joiner is not used, and that
+For a right-hand side of one element, the joiner is not used, and that
 element returned.
-For a right hand side of zero elements, a neutral element is generated
+For a right-hand side of zero elements, a neutral element is generated
 based on the type of the joiner
 (empty text/byte string for a text/byte string, empty array for an array, empty map for a map).
 
@@ -579,7 +579,7 @@ A packed form of this using straight references could be:
 ~~~
 
 Tag 105 ('i') defines the "ijoin" unpacking function, which is exactly
-like that of tag 106, except that the left hand side and right hand
+like that of tag 106, except that the left-hand side and right-hand
 side are interchanged ('i').
 
 A packed form of the first example using inverted references and the ijoin tag could be:
