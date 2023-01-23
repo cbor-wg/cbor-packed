@@ -786,7 +786,7 @@ this particular example does not lend itself to prefix compression.
         "author": "Herman Melville",
         "title": "Moby Dick",
         "isbn": "0-553-21311-3",
-        "price": 8.99
+        "price": 8.95
       },
       { "category": "fiction",
         "author": "J. R. R. Tolkien",
