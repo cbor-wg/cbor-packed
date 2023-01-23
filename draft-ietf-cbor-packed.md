@@ -185,12 +185,18 @@ zero or more (binary) bytes, while "text strings" are CBOR data items carrying a
 sequence of zero or more Unicode code points (more precisely: Unicode
 scalar values), encoded in UTF-8 {{-utf8}}.
 
-Where bit arithmetic is explained, this document uses the notation
-familiar from the programming language C (including C++14's 0bnnn
-binary literals), except that, in the plain text form of this document,
-the operator "^" stands for exponentiation, and,
-in the HTML and PDF versions, subtraction and negation are rendered as
-a hyphen ("-", as are various dashes).
+Where arithmetic is explained, this document uses the notation
+familiar from the programming language C<!-- (including C++14's 0bnnn
+binary literals) -->, except that ".." denotes a range that includes
+both ends given, in the HTML and PDF versions, subtraction and
+negation are rendered as a hyphen ("-", as are various dashes), and
+superscript notation denotes exponentiation.
+For example, 2 to the power of 64 is notated: 2<sup>64</sup>.
+In the plain-text version of this specification, superscript notation
+is not available and therefore is rendered by a surrogate notation.
+That notation is not optimized for this RFC; it is unfortunately
+ambiguous with C's exclusive-or and requires circumspection
+from the reader of the plain-text version.
 
 # Packed CBOR
 
