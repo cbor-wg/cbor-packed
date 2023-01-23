@@ -635,7 +635,7 @@ For the other tags defined in this specification, which require some
 array structure of the tag content, a footnote was added:
 
 {:quote}
->  [...] The second element of the outer array in the data item is a
+>  \[...] The second element of the outer array in the data item is a
    native CBOR array (major type 4) or Typed Array (one of tag 64..87)
 
 The top-down approach to handle the "rendezvous" between the outer and
@@ -996,7 +996,7 @@ Acknowledgements
 
 CBOR packing was originally invented with the rest of CBOR, but did
 not make it into {{-orig}}, the predecessor of {{-bis}}.
-Various attempts to come up with a specification over the years didn't
+Various attempts to come up with a specification over the years did not
 proceed.
 In 2017, {{{Sebastian Käbisch}}} proposed
 investigating compact representations of W3C Thing Descriptions, which
