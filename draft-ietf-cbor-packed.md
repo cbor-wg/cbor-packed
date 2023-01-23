@@ -467,7 +467,7 @@ Table setup can happen in one of two ways:
   such a way that an unpacker can at least recognize if this is the
   case.
 
-* By one or more tags enclosing the packed content.
+* By one or more *table-building* tags enclosing the packed content.
   Each tag is usually defined to build an augmented table by adding to
   the packing tables that already apply to the tag, and to apply the
   resulting augmented table when unpacking the tag content.
@@ -489,7 +489,8 @@ Table setup can happen in one of two ways:
   references in any existing, inherited (higher-numbered) part continue
   to use the (more limited) number space of the inherited table.
 
-For table setup, the present specification only defines a single tag,
+For table setup, the present specification only defines a single
+table-building tag,
 which operates by prepending to the (by default empty) tables.
 
 {:aside}
