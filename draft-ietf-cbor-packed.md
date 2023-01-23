@@ -231,7 +231,7 @@ reference is replaced by the referenced data item, which is then
 recursively unpacked.
 
 | reference                 | table index   |
-| Simple value 0-15         | 0-15          |
+| Simple value 0..15        | 0..15         |
 | Tag 6(unsigned integer N) | 16 + 2\*N     |
 | Tag 6(negative integer N) | 16 - 2\*N - 1 |
 {: #tab-shared title="Referencing Shared Values"}
@@ -270,19 +270,19 @@ reference combines a prefix out of the argument table with the rump
 data item, and an inverted reference combines a rump data item with a
 suffix out of the argument table.
 
-| straight reference                       |    table index |
-|------------------------------------------|----------------|
-| Tag 6(straight rump)                     |              0 |
-| Tag 224-255(straight rump)               |           0-31 |
-| Tag 28704-32767(straight rump)           |        32-4095 |
-| Tag 1879052288-2147483647(straight rump) | 4096-268435455 |
+| straight reference                        |     table index |
+|-------------------------------------------|-----------------|
+| Tag 6(straight rump)                      |               0 |
+| Tag 224..255(straight rump)               |           0..31 |
+| Tag 28704..32767(straight rump)           |        32..4095 |
+| Tag 1879052288..2147483647(straight rump) | 4096..268435455 |
 {: #tab-straight cols='l r' title="Straight Referencing (e.g., Prefix) Arguments"}
 
-| inverted reference                       |   table index |
-|------------------------------------------|---------------|
-| Tag 216-223(inverted rump)               |           0-7 |
-| Tag 27647-28671(inverted rump)           |        8-1023 |
-| Tag 1811940352-1879048191(inverted rump) | 1024-67108863 |
+| inverted reference                        |    table index |
+|-------------------------------------------|----------------|
+| Tag 216..223(inverted rump)               |           0..7 |
+| Tag 27647..28671(inverted rump)           |        8..1023 |
+| Tag 1811940352..1879048191(inverted rump) | 1024..67108863 |
 {: #tab-inverted cols='l r' title="Inverted Referencing (e.g., Suffix) Arguments"}
 
 Argument data items are referenced by using the reference data items
@@ -727,12 +727,12 @@ IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 |                   105 | text string, byte string, array, map, tag                                      | Packed CBOR: ijoin function  | draft-ietf-cbor-packed |
 |                   106 | text string, byte string, array, map, tag                                      | Packed CBOR: join function   | draft-ietf-cbor-packed |
 |                   113 | array (shared-items, argument-items, rump)                                     | Packed CBOR: table setup     | draft-ietf-cbor-packed |
-|               224-255 | text string, byte string, array, map, tag                                      | Packed CBOR: straight        | draft-ietf-cbor-packed |
-|           28704-32767 | text string, byte string, array, map, tag                                      | Packed CBOR: straight        | draft-ietf-cbor-packed |
-| 1879052288-2147483647 | text string, byte string, array, map, tag                                      | Packed CBOR: straight        | draft-ietf-cbor-packed |
-|               216-223 | text string, byte string, array, map, tag                                      | Packed CBOR: inverted        | draft-ietf-cbor-packed |
-|           27647-28671 | text string, byte string, array, map, tag                                      | Packed CBOR: inverted        | draft-ietf-cbor-packed |
-| 1811940352-1879048191 | text string, byte string, array, map, tag                                      | Packed CBOR: inverted        | draft-ietf-cbor-packed |
+|               224..255 | text string, byte string, array, map, tag                                      | Packed CBOR: straight        | draft-ietf-cbor-packed |
+|           28704..32767 | text string, byte string, array, map, tag                                      | Packed CBOR: straight        | draft-ietf-cbor-packed |
+| 1879052288..2147483647 | text string, byte string, array, map, tag                                      | Packed CBOR: straight        | draft-ietf-cbor-packed |
+|               216..223 | text string, byte string, array, map, tag                                      | Packed CBOR: inverted        | draft-ietf-cbor-packed |
+|           27647..28671 | text string, byte string, array, map, tag                                      | Packed CBOR: inverted        | draft-ietf-cbor-packed |
+| 1811940352..1879048191 | text string, byte string, array, map, tag                                      | Packed CBOR: inverted        | draft-ietf-cbor-packed |
 {: #tab-tag-values cols='r l l' title="Values for Tag Numbers"}
 
 
@@ -741,8 +741,8 @@ IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 In the registry "{{simple (CBOR Simple Values)<IANA.cbor-simple-values}}" {{IANA.cbor-simple-values}},
 IANA is requested to allocate the simple values defined in {{tab-simple-values}}.
 
-| Value | Semantics           | Reference                 |
-|  0-15 | Packed CBOR: shared | draft-ietf-cbor-packed |
+| Value | Semantics           | Reference              |
+| 0..15 | Packed CBOR: shared | draft-ietf-cbor-packed |
 {: #tab-simple-values cols='r l l' title="Simple Values"}
 
 Security Considerations
