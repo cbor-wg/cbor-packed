@@ -5,7 +5,6 @@ title: >
   Packed CBOR
 abbrev: Packed CBOR
 docname: draft-ietf-cbor-packed-latest
-# date: 2021-07-01
 
 kramdown_options:
   auto_id_prefix: sec-
@@ -13,7 +12,7 @@ kramdown_options:
 keyword: Internet-Draft
 cat: std
 consensus: true
-submissiontype: IETF
+stream: IETF
 
 venue:
   group: CBOR
