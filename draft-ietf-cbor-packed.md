@@ -93,9 +93,9 @@ informative:
 [^status]
 
 [^status]:
-    The present version (-07) adds the concept of Tag Equivalence as
-    initially discussed at the CBOR Interim meeting 12 in 2022 and
-    further in PR #6, for discussion before and at IETF 114.
+    The present version (-08) is a refresh update to -07, which added
+    the concept of Tag Equivalence as initially discussed at the CBOR
+    Interim meeting 12 in 2022 and at IETF 114.
 
 
 
