@@ -49,6 +49,15 @@ informative:
   RFC8742: seq
   RFC6920: ni
   RFC1951: deflate
+  RFC8746: array
+  ARB-EXP:
+    -: arb
+    target: http://peteroupc.github.io/CBOR/bigfrac.html
+    date: false
+    title: Arbitrary-Exponent Numbers
+    author:
+      name: Peter Occil
+    rc: Specification for Registration of CBOR Tags 264 and 265
 
 --- abstract
 
@@ -85,10 +94,9 @@ informative:
 [^status]
 
 [^status]:
-    The present version (-06) includes changes that are intended
-    for discussion at the CBOR Interim meeting 12 in 2022.
-    These are intended to be the result of the WGLC handling
-    discussions, but need more eyeballs.
+    The present version (-07) adds the concept of Tag Equivalence as
+    initially discussed at the CBOR Interim meeting 12 in 2022 and
+    further in PR #6, for discussion before and at IETF 114.
 
 
 
@@ -379,6 +387,13 @@ The concatenation function is defined as follows:
   build both byte and text strings, depending on what type of rump is
   being used.
 
+* If one side is one of the string types, and the other side is an
+  array, the result of the concatenation is equivalent to the
+  application of the "join" function ({{join}}) to the string as the
+  left hand side and the array as the right hand side.
+  The original right hand side of the concatenation determines the
+  string type of the result.
+
 * Other type combinations of left hand side and right hand side are
   not valid.
 
@@ -475,7 +490,7 @@ which operates by prepending to the (by default empty) tables.
 {:aside}
 >
 We could also define a tag for dictionary referencing (or include that
-in the basic packed CBOR), but the desirable details are likely to vary
+in the basic Packed CBOR), but the desirable details are likely to vary
 considerably between applications.  A URI-based reference would be
 easy to add, but might be too inefficient when used in the likely
 combination with an `ni:` URI {{-ni}}.
@@ -515,7 +530,7 @@ for reconstructing a data item from their tag content and the
 non-dominating rump or argument, respectively.
 The present specification defines a pair of function tags.
 
-## Join Function Tags
+## Join Function Tags {#join}
 
 Tag 106 ('j') defines the "join" unpacking function, based on the
 concatenation function ({{sec-concatenation}}).
@@ -584,6 +599,115 @@ from the same place could be:
 ])
 ~~~
 
+Tag Validity: Tag Equivalence Principle
+===================================
+
+In {{Section 5.3.2 of -bis}}, the validity of tags is defined in terms
+of type and value of their tag content.
+The CBOR Tag registry {{IANA.cbor-tags}} {{Section 9.2 of -bis}} allows
+recording the "data item" for a registered tag, which is usually an
+abbreviated description of the top-level data type allowed for the tag
+content.
+
+In other words, in the registry, the validity of a tag of a given tag
+number is described in terms of the top-level structure of the data
+carried in the tag content.
+The description of a tag might add further constraints for the data
+item.
+But in any case, a tag definition can only specify validity based on
+the structure of its tag content.
+
+In Packed CBOR, a reference tag might be "standing in" for the actual
+tag content of an outer tag, or for a structural component of that.
+In this case, the formal structure of the outer tag's content before
+unpacking usually no longer fulfills the validity conditions of the
+outer tag.
+
+The underlying problem is not unique to Packed CBOR.
+For instance, {{-array}} describes tags 64..87 that "stand in" for CBOR
+arrays (the native form of which has major type 4).
+For the other tags defined in this specification, which require some
+array structure of the tag content, a footnote was added:
+
+{:quote}
+>  [...] The second element of the outer array in the data item is a
+   native CBOR array (major type 4) or Typed Array (one of tag 64..87)
+
+The top-down approach to handle the "rendezvous" between the outer and
+inner tags does not support extensibility: any further Typed Array
+tags being defined do not inherit the exception granted to tag number
+64..87; they would need to formally update all existing tag
+definitions that can accept typed arrays or be of limited use with
+these existing tags.
+
+Instead, the tag validity mechanism needs to be extended by a
+bottom-up component: A tag definition needs to be able to declare that
+the tag can "stand in" for, (is, in terms of tag validity, equivalent
+to) some structure.
+
+E.g., tag 64..87 could have declared their equivalence to the CBOR major
+type 4 arrays they stand in for.
+
+{:aside}
+>
+Note that not all domain extensions to tags can be addressed using
+the equivalence principle: E.g., on a data model level, numbers with
+arbitrary exponents ({{-arb}}, tags 264 and 265) are strictly a
+superset of CBOR's predefined fractional types, tags 4 and 5.
+They could not simply declare that they are equivalent to tags 4 and 5
+as a tag requiring a fractional value may have no way to handle the
+extended range of tag 264 and 265.
+
+Tag Equivalence
+---------------
+
+A tag definition MAY declare Tag Equivalence to some existing
+structure for the tag, under some conditions defined by the new tag
+definition.
+This, in effect, extends all existing tag definitions that accept the
+named structure to accept the newly defined tag under the conditions
+given for the Tag Equivalence.
+
+A number of limitations apply to Tag Equivalence, which therefore
+should be applied deliberately and sparingly:
+
+* Tag Equivalence is a new concept, which may not be implemented by an
+  existing generic decoder.  A generic decoder not implementing tag
+  equivalence might raise tag validity errors where Tag Equivalence
+  says there should be none.
+
+* A CBOR protocol MAY specify the use of Tag Equivalence, effectively
+  limiting its full use to those generic encoders that implement it.
+  Existing CBOR protocols that do not address Tag Equivalence
+  implicitly have a new variant that allows Tag Equivalence
+  (e.g., to support Packed CBOR with an existing protocol).
+  A CBOR protocol that does address Tag Equivalence MAY be explicit
+  about what kinds of Tag Equivalence it supports (e.g., only the
+  reference tags employed by Packed CBOR and certain table setup tags).
+
+* There is currently no way to express Tag Equivalence in CDDL.
+  For Packed CBOR, CDDL would typically be used to describe the
+  unpacked CBOR represented by it; further restricting the Packed CBOR
+  is likely to lead to interoperability problems.
+  (Note that, by definition, there is no need to describe Tag
+  Equivalence on the receptacle side; only for the tag that declares
+  Tag Equivalence.)
+
+* The registry "{{cbor-tags (CBOR Tags)<IANA.cbor-tags}}" {{IANA.cbor-tags}}
+  currently does not have a way to record any equivalence claimed
+  for a tag.  A convention would be to alert to Tag Equivalence in the
+  "Semantics (short form)" field of the registry.[^todo]
+
+[^todo]: Needs to be done for the tag registrations here.
+
+Tag Equivalence of Packed CBOR Tags
+-------------------------------
+
+The reference tags in this specification declare their equivalence to
+the unpacked shared items or function results they represent.
+
+The table setup tag 113 declares its equivalence to the unpacked CBOR
+data item represented by it.
 
 IANA Considerations
 ============
