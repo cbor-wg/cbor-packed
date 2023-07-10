@@ -515,11 +515,12 @@ combination with an `ni:` URI {{-ni}}.
 
 ## Basic Packed CBOR
 
-A predefined tag for packing table setup is defined in CDDL {{-cddl}} as in {{fig-cddl}}:
+Two tags are predefined by this specification for packing table setup.
+They are defined in CDDL {{-cddl}} as in {{fig-cddl}}:
 
 ~~~ cddl
 Basic-Packed-CBOR = #6.113([[*shared-and-argument-item], rump])
-Split-Packed-CBOR = #6.1113([[*shared-item], [*argument-item], rump])
+Split-Basic-Packed-CBOR = #6.1113([[*shared-item], [*argument-item], rump])
 rump = any
 shared-and-argument-item = any
 argument-item = any
@@ -527,15 +528,17 @@ shared-item = any
 ~~~
 {: #fig-cddl title="Packed CBOR in CDDL"}
 
-(This assumes the allocation of tag numbers 113 ('q') and 1113 for this tag.)
+(This assumes the allocation of tag numbers 113 ('q') and 1113 for
+these tags.)
 
-The array given as the first element of the content of tag 113 is
-prepended to both the tables for shared items and arguments that
-apply to the entire tag (by default empty tables).
-The arrays given as the first and second element of the
-content of the tag 1113 are prepended to the tables for shared items
-and arguments that apply to the entire tag (by default empty
-tables).  As discussed in the introduction to this section, references
+The array given as the first element of the content of tag 113
+("Basic-Packed-CBOR") is prepended to both the tables for shared items
+and arguments that apply to the entire tag (by default empty tables).
+The arrays given as the first and second element of the content of the
+tag 1113 ("Split-Basic-Packed-CBOR") are prepended to the tables for
+shared items and arguments that apply to the entire tag (by default
+empty tables).
+As discussed in the introduction to this section, references
 in the supplied new arrays use the new number space (where inherited
 items are shifted by the new items given), while the inherited items
 themselves use the inherited number space (so their semantics do not
