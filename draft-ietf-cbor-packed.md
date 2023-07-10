@@ -93,9 +93,9 @@ informative:
 [^status]
 
 [^status]:
-    The present version (-08) is a refresh update to -07, which added
-    the concept of Tag Equivalence as initially discussed at the CBOR
-    Interim meeting 12 in 2022 and at IETF 114.
+    The present version (-09) provides two table setup tags (common,
+    split setup) and discusses behavior in case of out-of-bound
+    references during unpacking.
 
 
 
@@ -220,6 +220,27 @@ Each of the tables is indexed by an unsigned integer (starting
 from 0).
 Such an index may be derived from information in tags and their
 content as well as from CBOR simple values.
+
+Table setup mechanisms (see {{sec-table-setup}}) may include all
+information needed for table setup within the packed CBOR data item, or
+they may refer external information.  This information may be
+immutable, or may be intended to potentially grow over time.
+This raises the question of how a reference to a new item should be
+handled when the unpacker uses an older version of the external
+information.
+
+If, during unpacking, an index is used that references an item that is
+unpopulated in (e.g., outside the size of) the table in use, this MAY be treated as an
+error by the unpacker and abort the unpacking.
+Alternatively, the unpacker MAY provide the special value
+`1112(undefined)` (the simple value >undefined< as per {{Section 5.7 of
+-bis}}, enclosed in the tag 1112) to the application and leave the
+error handling to the application.
+An unpacker SHOULD document which of these two alternatives has been
+chosen.
+CBOR based protocols that include the use of packed CBOR
+MAY require that unpacking errors are tolerated in some positions.
+
 
 ## Referencing Shared Items
 
@@ -489,37 +510,56 @@ Table setup can happen in one of two ways:
   references in any existing, inherited (higher-numbered) part continue
   to use the (more limited) number space of the inherited table.
 
-For table setup, the present specification only defines a single
-table-building tag,
-which operates by prepending to the (by default empty) tables.
+Where external information is used in a table setup mechanism that is
+not immutable, care needs to be taken so that, over time, references
+to existing table entries stay valid (i.e., the information is only
+extended)), and that a maximum size of this
+information is given.  This allows an unpacker to recognize references
+to items that are not yet defined in the version of the external
+reference that it uses, providing backward and possibly limited
+(degraded) forward compatibility.
+
+For table setup, the present specification only defines two simple
+table-building tags,
+which operate by prepending to the (by default empty) tables.
 
 {:aside}
 >
-We could also define a tag for dictionary referencing (or include that
-in the basic Packed CBOR), but the desirable details are likely to vary
-considerably between applications.  A URI-based reference would be
-easy to add, but might be too inefficient when used in the likely
+Additional tags can be defined for dictionary referencing (possible combining that
+with Basic Packed CBOR mechanisms).
+The desirable details are likely to vary
+considerably between applications.
+A URI-based reference would be
+easy to define, but might be too inefficient when used in the likely
 combination with an `ni:` URI {{-ni}}.
 
 
 ## Basic Packed CBOR
 
-A predefined tag for packing table setup is defined in CDDL {{-cddl}} as in {{fig-cddl}}:
+Two tags are predefined by this specification for packing table setup.
+They are defined in CDDL {{-cddl}} as in {{fig-cddl}}:
 
 ~~~ cddl
-Basic-Packed-CBOR = #6.113([[*shared-item], [*argument-item], rump])
+Basic-Packed-CBOR = #6.113([[*shared-and-argument-item], rump])
+Split-Basic-Packed-CBOR = #6.1113([[*shared-item], [*argument-item], rump])
 rump = any
+shared-and-argument-item = any
 argument-item = any
 shared-item = any
 ~~~
 {: #fig-cddl title="Packed CBOR in CDDL"}
 
-(This assumes the allocation of tag number 113 ('q') for this tag.)
+(This assumes the allocation of tag numbers 113 ('q') and 1113 for
+these tags.)
 
-The arrays given as the first and second element of the
-content of the tag 113 are prepended to the tables for shared items
-and arguments that apply to the entire tag (by default empty
-tables).  As discussed in the introduction to this section, references
+The array given as the first element of the content of tag 113
+("Basic-Packed-CBOR") is prepended to both the tables for shared items
+and arguments that apply to the entire tag (by default empty tables).
+The arrays given as the first and second element of the content of the
+tag 1113 ("Split-Basic-Packed-CBOR") are prepended to the tables for
+shared items and arguments that apply to the entire tag (by default
+empty tables).
+As discussed in the introduction to this section, references
 in the supplied new arrays use the new number space (where inherited
 items are shifted by the new items given), while the inherited items
 themselves use the inherited number space (so their semantics do not
@@ -570,8 +610,7 @@ For an example, we assume this unpacked data item:
 A packed form of this using straight references could be:
 
 ~~~
-113([ [],
-  [106("packed.example")],
+113([[106("packed.example")],
   [6(["https://", "/foo.html"]),
    6(["coap://", "/bar.cbor"]),
    6(["mailto:support@", ""])]
@@ -585,8 +624,7 @@ side are interchanged ('i').
 A packed form of the first example using inverted references and the ijoin tag could be:
 
 ~~~
-113([ [],
-  ["packed.example"],
+113([["packed.example"],
   [216(105(["https://", "/foo.html"]),
    216(105(["coap://", "/bar.cbor"]),
    216("mailto:support@")]
@@ -597,8 +635,7 @@ A packed form of an array with many URIs that reference SenML items
 from the same place could be:
 
 ~~~
-113([ [],
-  [105(["coaps://[2001::db8::1]/s/", ".senml"])],
+113([[105(["coaps://[2001::db8::1]/s/", ".senml"])],
   [6("temp-freezer"),
    6("temp-fridge"),
    6("temp-ambient")]
@@ -712,7 +749,7 @@ Tag Equivalence of Packed CBOR Tags
 The reference tags in this specification declare their equivalence to
 the unpacked shared items or function results they represent.
 
-The table setup tag 113 declares its equivalence to the unpacked CBOR
+The table setup tags 113 and 1113 declare its equivalence to the unpacked CBOR
 data item represented by it.
 
 IANA Considerations
@@ -723,12 +760,14 @@ IANA Considerations
 In the registry "{{cbor-tags (CBOR Tags)<IANA.cbor-tags}}" {{IANA.cbor-tags}},
 IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 
-|                   Tag | Data Item                                                                      | Semantics                    | Reference              |
-|                     6 | integer (for shared); text string, byte string, array, map, tag (for straight) | Packed CBOR: shared/straight | draft-ietf-cbor-packed |
-|                   105 | text string, byte string, array, map, tag                                      | Packed CBOR: ijoin function  | draft-ietf-cbor-packed |
-|                   106 | text string, byte string, array, map, tag                                      | Packed CBOR: join function   | draft-ietf-cbor-packed |
-|                   113 | array (shared-items, argument-items, rump)                                     | Packed CBOR: table setup     | draft-ietf-cbor-packed |
+|                    Tag | Data Item                                                                      | Semantics                    | Reference              |
+|                      6 | integer (for shared); text string, byte string, array, map, tag (for straight) | Packed CBOR: shared/straight | draft-ietf-cbor-packed |
+|                    105 | text string, byte string, array, map, tag                                      | Packed CBOR: ijoin function  | draft-ietf-cbor-packed |
+|                    106 | text string, byte string, array, map, tag                                      | Packed CBOR: join function   | draft-ietf-cbor-packed |
+|                    113 | array (shared-and-argument-items, rump)                                        | Packed CBOR: table setup     | draft-ietf-cbor-packed |
 |               224..255 | text string, byte string, array, map, tag                                      | Packed CBOR: straight        | draft-ietf-cbor-packed |
+|                   1112 | undefined (0xf7)                                                               | Packed CBOR: reference error | draft-ietf-cbor-packed |
+|                   1113 | array (shared-items, argument-items, rump)                                     | Packed CBOR: table setup     | draft-ietf-cbor-packed |
 |           28704..32767 | text string, byte string, array, map, tag                                      | Packed CBOR: straight        | draft-ietf-cbor-packed |
 | 1879052288..2147483647 | text string, byte string, array, map, tag                                      | Packed CBOR: straight        | draft-ietf-cbor-packed |
 |               216..223 | text string, byte string, array, map, tag                                      | Packed CBOR: inverted        | draft-ietf-cbor-packed |
@@ -767,7 +806,8 @@ Examples
 The (JSON-compatible) CBOR data structure depicted in
 {{fig-example-in}}, 400 bytes of binary CBOR, could lead to a packed
 CBOR data item depicted in {{fig-example-out}}, ~309 bytes.  Note that
-this particular example does not lend itself to prefix compression.
+this particular example does not lend itself to prefix compression, so
+it uses the simple common-table setup form (tag 113).
 
 ~~~ json
 { "store": {
@@ -808,7 +848,6 @@ this particular example does not lend itself to prefix compression.
 113([["price", "category", "author", "title", "fiction", 8.95,
                                                              "isbn"],
     /  0          1         2         3         4         5    6   /
-    [],
     [{"store": {
        "book": [
          {simple(1): "reference", simple(2): "Nigel Rees",
@@ -827,7 +866,8 @@ this particular example does not lend itself to prefix compression.
 
 
 The (JSON-compatible) CBOR data structure below has been packed with shared
-item and (partial) prefix compression only.
+item and (partial) prefix compression only and employs the split-table
+setup form (tag 1113).
 
 ~~~ json
 {
@@ -957,7 +997,7 @@ item and (partial) prefix compression only.
 {: #fig-example-in2 title="Example original CBOR data item"}
 
 ~~~ cbordiag
-113([/shared/["name", "@type", "links", "href", "mediaType",
+1113([/shared/["name", "@type", "links", "href", "mediaType",
             /  0       1       2        3         4 /
     "application/json", "outputData", {"valueType": {"type":
          /  5               6               7 /
@@ -995,7 +1035,7 @@ Acknowledgements
 ================
 {: numbered="no"}
 
-CBOR packing was originally invented with the rest of CBOR, but did
+CBOR packing was part of the original proposal that turned into CBOR, but did
 not make it into {{-orig}}, the predecessor of {{-bis}}.
 Various attempts to come up with a specification over the years did not
 proceed.
