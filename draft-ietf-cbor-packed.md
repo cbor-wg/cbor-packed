@@ -93,9 +93,9 @@ informative:
 [^status]
 
 [^status]:
-    The present version (-08) is a refresh update to -07, which added
-    the concept of Tag Equivalence as initially discussed at the CBOR
-    Interim meeting 12 in 2022 and at IETF 114.
+    The present version (-09) provides two table setup tags (common,
+    split setup) and discusses behavior in case of out-of-bound
+    references during unpacking.
 
 
 
@@ -221,7 +221,15 @@ from 0).
 Such an index may be derived from information in tags and their
 content as well as from CBOR simple values.
 
-If, during unpacking, an index is used that referencing an item
+Table setup mechanisms (see {{sec-table-setup}}) may include all
+information needed for table setup within the packed CBOR data item, or
+they may refer external information.  This information may be
+immutable, or may be intended to potentially grow over time.
+This raises the question of how a reference to a new item should be
+handled when the unpacker uses an older version of the external
+information.
+
+If, during unpacking, an index is used that references an item
 outside the size of the table in use, this MAY be treated as an
 error by the unpacker and abort the unpacking.
 Alternatively, the unpacker MAY provide the special value
@@ -500,16 +508,27 @@ Table setup can happen in one of two ways:
   references in any existing, inherited (higher-numbered) part continue
   to use the (more limited) number space of the inherited table.
 
-For table setup, the present specification only defines a single
-table-building tag,
-which operates by prepending to the (by default empty) tables.
+Where external information is used in a table setup mechanism that is
+not immutable, care needs to be taken so that, over time, references
+to existing table entries stay valid (i.e., the information is only
+extended)), and that a maximum size of this
+information is given.  This allows an unpacker to recognize references
+to items that are not yet defined in the version of the external
+reference that it uses, providing backward and possibly limited
+(degraded) forward compatibility.
+
+For table setup, the present specification only defines two simple
+table-building tags,
+which operate by prepending to the (by default empty) tables.
 
 {:aside}
 >
-We could also define a tag for dictionary referencing (or include that
-in the basic Packed CBOR), but the desirable details are likely to vary
-considerably between applications.  A URI-based reference would be
-easy to add, but might be too inefficient when used in the likely
+Additional tags can be defined for dictionary referencing (possible combining that
+with Basic Packed CBOR mechanisms).
+The desirable details are likely to vary
+considerably between applications.
+A URI-based reference would be
+easy to define, but might be too inefficient when used in the likely
 combination with an `ni:` URI {{-ni}}.
 
 
