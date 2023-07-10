@@ -238,6 +238,8 @@ Alternatively, the unpacker MAY provide the special value
 error handling to the application.
 An unpacker SHOULD document which of these two alternatives has been
 chosen.
+CBOR based protocols that include the use of packed CBOR
+MAY require that unpacking errors are tolerated in some positions.
 
 
 ## Referencing Shared Items
