@@ -229,12 +229,12 @@ This raises the question of how a reference to a new item should be
 handled when the unpacker uses an older version of the external
 information.
 
-If, during unpacking, an index is used that references an item
-outside the size of the table in use, this MAY be treated as an
+If, during unpacking, an index is used that references an item that is
+unpopulated in (e.g., outside the size of) the table in use, this MAY be treated as an
 error by the unpacker and abort the unpacking.
 Alternatively, the unpacker MAY provide the special value
-`1112(undefined)` (the simple value >undefined< as per Section 5.7 of
--cbor, enclosed in the tag 1112) to the application and leave the
+`1112(undefined)` (the simple value >undefined< as per {{Section 5.7 of
+-bis}}, enclosed in the tag 1112) to the application and leave the
 error handling to the application.
 An unpacker SHOULD document which of these two alternatives has been
 chosen.
