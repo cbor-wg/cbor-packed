@@ -541,7 +541,8 @@ They are defined in CDDL {{-cddl}} as in {{fig-cddl}}:
 
 ~~~ cddl
 Basic-Packed-CBOR = #6.113([[*shared-and-argument-item], rump])
-Split-Basic-Packed-CBOR = #6.1113([[*shared-item], [*argument-item], rump])
+Split-Basic-Packed-CBOR =
+                    #6.1113([[*shared-item], [*argument-item], rump])
 rump = any
 shared-and-argument-item = any
 argument-item = any
