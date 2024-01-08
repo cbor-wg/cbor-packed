@@ -94,8 +94,8 @@ informative:
 
 [^status]:
     The present version (-09) provides two table setup tags (common,
-    split setup) and discusses behavior in case of out-of-bound
-    references during unpacking.
+    split setup) and discusses behavior in case of references to
+    unpopulated table entries during unpacking.
 
 
 
