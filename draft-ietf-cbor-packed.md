@@ -92,9 +92,8 @@ informative:
 [^status]
 
 [^status]:
-    The present version (-09) provides two table setup tags (common,
-    split setup) and discusses behavior in case of references to
-    unpopulated table entries during unpacking.
+    The present version (-10) fixes references, an example, and
+    various nits and typos.
 
 
 
@@ -227,8 +226,8 @@ content as well as from CBOR simple values.
 
 Table setup mechanisms (see {{sec-table-setup}}) may include all
 information needed for table setup within the packed CBOR data item, or
-they may refer external information.  This information may be
-immutable, or may be intended to potentially grow over time.
+they may refer to external information.  This information may be
+immutable, or it may be intended to potentially grow over time.
 This raises the question of how a reference to a new item should be
 handled when the unpacker uses an older version of the external
 information.
@@ -313,7 +312,8 @@ suffix out of the argument table.
 Argument data items are referenced by using the reference data items
 in {{tab-straight}} and {{tab-inverted}}.
 
-The tag number of the reference indicates a table index (an unsigned integer) leading
+The tag number of the reference is used to derive a table index (an
+unsigned integer) leading
 to the "argument"; the tag content of the reference is the "rump item".
 
 When reconstructing the original data item, such a reference is
@@ -334,7 +334,7 @@ left-hand side and the argument as the right-hand side.
 
 In both cases, the provisional left-hand side is examined.  If it is a
 tag ("function tag"), it is "unwrapped": The function tag's tag number
-is established as the function to be applied, and the tag content is
+is used to indicate the function to be applied, and the tag content is
 kept as the unwrapped left-hand side.
 If the provisional left-hand side is not a tag, it is kept as the
 unwrapped left-hand side, and the function to be applied is
@@ -342,8 +342,8 @@ concatenation, as defined below.
 The right-hand side is taken as is as the unwrapped right-hand side.
 
 If a function tag was given, the reference is replaced by the result
-of applying the unpacking function to be computed to the left and
-right-hand sides.
+of applying the indicated unpacking function with the left-hand side
+as its first argument and the right-hand side as its second.
 The unpacking function is defined by the definition of the tag number
 supplied.
 If that definition does not define an unpacking function, the result
@@ -364,14 +364,15 @@ with tag 6 and tag 224,
 however tag 6 with an integer content is used for shared item
 references (see {{tab-shared}}), so to combine index 0 with an integer
 rump, tag 224 needs to be used.
+The preferred encoding uses tag 6 if that is not necessary.
 
 <!-- 2<sup>28</sup>2<sup>12</sup>+2<sup>5</sup>+2<sup>0</sup> -->
 
 Taking into account the encoding and ignoring the less optimal tag
 224, there is one single-byte straight (prefix)
-reference, 31 (2<sup>5</sup>-2<sup>0</sup>) two-byte references, 4064
-(2<sup>12</sup>-2<sup>5</sup>) three-byte references, and 26843160
-(2<sup>28</sup>-2<sup>12</sup>) five-byte references for straight references.
+reference, 31 (2<sup>5</sup>`-`2<sup>0</sup>) two-byte references, 4064
+(2<sup>12</sup>`-`2<sup>5</sup>) three-byte references, and 26843160
+(2<sup>28</sup>`-`2<sup>12</sup>) five-byte references for straight references.
 268435455 (2<sup>28</sup>) is an artificial limit, but should be high
 enough that there, again, is no practical limit to how many prefix
 items might be used in a Packed CBOR item.
@@ -463,7 +464,8 @@ For example:
 
 In general, loop detection can be handled in a similar way in which
 loops of symbolic links are handled in a file system: A system-wide
-limit (often 31 or 40 indirections for symbolic links) is applied to
+limit (often set to a value permitting some 20 to 40 indirections for
+symbolic links) is applied to
 any reference chase.
 
 </aside>
@@ -504,7 +506,7 @@ Table setup can happen in one of two ways:
   Note that it may be useful to leave a particular efficiency tier
   alone and only prepend to a higher tier; e.g., a tag could insert
   shared items at table index 16 and shift anything that was already
-  there further down in the array while leaving index 0 to 15 alone.
+  there further along in the array while leaving index 0 to 15 alone.
   Explicit additions by tag can combine with application-environment
   supplied tables that apply to the entire CBOR data item.
 
@@ -652,7 +654,8 @@ Tag Validity: Tag Equivalence Principle
 
 In {{Section 5.3.2 of RFC8949@-bis}}, the validity of tags is defined in terms
 of type and value of their tag content.
-The CBOR Tag registry {{IANA.cbor-tags}} {{Section 9.2 of RFC8949@-bis}} allows
+The CBOR Tag registry ({{IANA.cbor-tags}} as defined in {{Section 9.2 of
+RFC8949@-bis}}) allows
 recording the "data item" for a registered tag, which is usually an
 abbreviated description of the top-level data type allowed for the tag
 content.
