@@ -35,7 +35,7 @@ author:
 normative:
   STD94:
     -: bis
-    =: RFC8949
+#    =: RFC8949
   IANA.cbor-tags: tags
   IANA.cbor-simple-values: simple
   RFC8610: cddl
@@ -233,7 +233,7 @@ unpopulated in (e.g., outside the size of) the table in use, this MAY be treated
 error by the unpacker and abort the unpacking.
 Alternatively, the unpacker MAY provide the special value
 `1112(undefined)` (the simple value >undefined< as per {{Section 5.7 of
--bis}}, enclosed in the tag 1112) to the application and leave the
+RFC8949@-bis}}, enclosed in the tag 1112) to the application and leave the
 error handling to the application.
 An unpacker SHOULD document which of these two alternatives has been
 chosen.
@@ -256,7 +256,7 @@ recursively unpacked.
 | Tag 6(negative integer N) | 16 - 2\*N - 1 |
 {: #tab-shared title="Referencing Shared Values"}
 
-As examples in CBOR diagnostic notation ({{Section 8 of -bis}}),
+As examples in CBOR diagnostic notation ({{Section 8 of RFC8949@-bis}}),
 the first 22 elements of the shared item table are referenced by
 `simple(0)`, `simple(1)`, ... `simple(15)`, `6(0)`, `6(-1)`, `6(1)`,
 `6(-2)`, `6(2)`, `6(-3)`.
@@ -645,9 +645,9 @@ from the same place could be:
 Tag Validity: Tag Equivalence Principle
 ===================================
 
-In {{Section 5.3.2 of -bis}}, the validity of tags is defined in terms
+In {{Section 5.3.2 of RFC8949@-bis}}, the validity of tags is defined in terms
 of type and value of their tag content.
-The CBOR Tag registry {{IANA.cbor-tags}} {{Section 9.2 of -bis}} allows
+The CBOR Tag registry {{IANA.cbor-tags}} {{Section 9.2 of RFC8949@-bis}} allows
 recording the "data item" for a registered tag, which is usually an
 abbreviated description of the top-level data type allowed for the tag
 content.
@@ -1036,7 +1036,7 @@ Acknowledgements
 {: numbered="no"}
 
 CBOR packing was part of the original proposal that turned into CBOR, but did
-not make it into {{-orig}}, the predecessor of {{-bis}}.
+not make it into {{-orig}}, the predecessor of RFC 8949 {{-bis}}.
 Various attempts to come up with a specification over the years did not
 proceed.
 In 2017, {{{Sebastian Käbisch}}} proposed
