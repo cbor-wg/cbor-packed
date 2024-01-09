@@ -41,9 +41,8 @@ normative:
   RFC8610: cddl
 
 informative:
-  STD63:
-    -: utf8
-    =: RFC3629
+  STD63: utf8
+#    =: RFC3629
   RFC7049: orig
   RFC8742: seq
   RFC6920: ni
