@@ -1,0 +1,346 @@
+{
+  "magic": "E!vIA5L86J2I",
+  "timestamp": "2023-01-24T01:01:34.463882+00:00",
+  "repo": "cbor-wg/cbor-packed",
+  "labels": [
+    {
+      "name": "bug",
+      "description": "Something isn't working",
+      "color": "d73a4a"
+    },
+    {
+      "name": "documentation",
+      "description": "Improvements or additions to documentation",
+      "color": "0075ca"
+    },
+    {
+      "name": "duplicate",
+      "description": "This issue or pull request already exists",
+      "color": "cfd3d7"
+    },
+    {
+      "name": "enhancement",
+      "description": "New feature or request",
+      "color": "a2eeef"
+    },
+    {
+      "name": "good first issue",
+      "description": "Good for newcomers",
+      "color": "7057ff"
+    },
+    {
+      "name": "help wanted",
+      "description": "Extra attention is needed",
+      "color": "008672"
+    },
+    {
+      "name": "invalid",
+      "description": "This doesn't seem right",
+      "color": "e4e669"
+    },
+    {
+      "name": "question",
+      "description": "Further information is requested",
+      "color": "d876e3"
+    },
+    {
+      "name": "wontfix",
+      "description": "This will not be worked on",
+      "color": "ffffff"
+    }
+  ],
+  "issues": [
+    {
+      "number": 1,
+      "id": "MDU6SXNzdWU4MjQwMDQ3NTI=",
+      "title": "Circumfix packing?",
+      "url": "https://github.com/cbor-wg/cbor-packed/issues/1",
+      "state": "CLOSED",
+      "author": "cabo",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Now that we have prefix and suffix packing (in addition to straight item sharing), should we add circumfix packing?\r\nCompare draft-bormann-lpwan-cbor-template-02\r\n",
+      "createdAt": "2021-03-07T20:01:29Z",
+      "updatedAt": "2022-07-18T12:48:52Z",
+      "closedAt": "2022-07-18T12:48:52Z",
+      "comments": []
+    },
+    {
+      "number": 7,
+      "id": "I_kwDOEeCKP85cdqQT",
+      "title": "Example contains incorrect price",
+      "url": "https://github.com/cbor-wg/cbor-packed/issues/7",
+      "state": "CLOSED",
+      "author": "benrimmington",
+      "authorAssociation": "NONE",
+      "assignees": [],
+      "labels": [],
+      "body": "I think the price in `fig-example-in` should be:\r\n\r\n```diff\r\n       { \"category\": \"fiction\",\r\n         \"author\": \"Herman Melville\",\r\n         \"title\": \"Moby Dick\",\r\n         \"isbn\": \"0-553-21311-3\",\r\n-        \"price\": 8.99\r\n+        \"price\": 8.95\r\n       },\r\n```\r\n\r\nto match the `simple(0): simple(5)` output of `fig-example-out`.\r\n\r\n(Can the packed outputs be formatted to resemble the unpacked inputs?)",
+      "createdAt": "2023-01-20T18:26:23Z",
+      "updatedAt": "2023-01-23T18:18:06Z",
+      "closedAt": "2023-01-23T17:55:53Z",
+      "comments": [
+        {
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Can you give an example for how you would like the packed output to look like?",
+          "createdAt": "2023-01-23T17:56:27Z",
+          "updatedAt": "2023-01-23T17:56:27Z"
+        },
+        {
+          "author": "benrimmington",
+          "authorAssociation": "NONE",
+          "body": "> Can you give an example for how you would like the packed output to look like?\r\n\r\nLike the following, except the draft appears to nest the \"rump\" data item inside another array, which I didn't do here.\r\n\r\n```\r\n113([\r\n  /shared-items:/\r\n  /(0)      (1)         (2)       (3)      (4)        (5)   (6)   /\r\n  [\"price\", \"category\", \"author\", \"title\", \"fiction\", 8.95, \"isbn\"],\r\n\r\n  /argument-items:/\r\n  [],\r\n\r\n  { \"store\": {\r\n      \"book\": [\r\n        { simple(1): \"reference\",\r\n          simple(2): \"Nigel Rees\",\r\n          simple(3): \"Sayings of the Century\",\r\n          simple(0): simple(5)\r\n        },\r\n        { simple(1): simple(4),\r\n          simple(2): \"Evelyn Waugh\",\r\n          simple(3): \"Sword of Honour\",\r\n          simple(0): 12.99\r\n        },\r\n        { simple(1): simple(4),\r\n          simple(2): \"Herman Melville\",\r\n          simple(3): \"Moby Dick\",\r\n          simple(6): \"0-553-21311-3\",\r\n          simple(0): simple(5)\r\n        },\r\n        { simple(1): simple(4),\r\n          simple(2): \"J. R. R. Tolkien\",\r\n          simple(3): \"The Lord of the Rings\",\r\n          simple(6): \"0-395-19395-8\",\r\n          simple(0): 22.99\r\n        }\r\n      ],\r\n      \"bicycle\": {\r\n        \"color\": \"red\",\r\n        simple(0): 19.95\r\n      }\r\n    }\r\n  }\r\n])\r\n```",
+          "createdAt": "2023-01-23T18:18:05Z",
+          "updatedAt": "2023-01-23T18:18:05Z"
+        }
+      ]
+    }
+  ],
+  "pulls": [
+    {
+      "number": 2,
+      "id": "MDExOlB1bGxSZXF1ZXN0NTkzMjY1MjE4",
+      "title": "Address Russ's 2021-03-15 comments.",
+      "url": "https://github.com/cbor-wg/cbor-packed/pull/2",
+      "state": "MERGED",
+      "author": "cabo",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2021-03-15T17:35:12Z",
+      "updatedAt": "2021-07-01T14:26:40Z",
+      "baseRepository": "cbor-wg/cbor-packed",
+      "baseRefName": "main",
+      "baseRefOid": "ca20e2cd4242106d7e24cd10b757fbaab4c53ae9",
+      "headRepository": "cbor-wg/cbor-packed",
+      "headRefName": "review-russ",
+      "headRefOid": "3e25a9d28235454cb6046b76c6a15f1f0058a257",
+      "closedAt": "2021-07-01T14:26:40Z",
+      "mergedAt": "2021-07-01T14:26:40Z",
+      "mergedBy": "cabo",
+      "mergeCommit": {
+        "oid": "1040cfc7610eb2982b53ac3141d37097b8dc1cb9"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 3,
+      "id": "MDExOlB1bGxSZXF1ZXN0NjgyMDExMjM4",
+      "title": "Implementation considerations",
+      "url": "https://github.com/cbor-wg/cbor-packed/pull/3",
+      "state": "MERGED",
+      "author": "cabo",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "As discussed at 2021-06-30 interim.\r\n",
+      "createdAt": "2021-07-01T16:38:06Z",
+      "updatedAt": "2021-08-01T16:50:58Z",
+      "baseRepository": "cbor-wg/cbor-packed",
+      "baseRefName": "main",
+      "baseRefOid": "1040cfc7610eb2982b53ac3141d37097b8dc1cb9",
+      "headRepository": "cbor-wg/cbor-packed",
+      "headRefName": "implementation-considerations",
+      "headRefOid": "f9d624e06f4b51f23ebf574887b489bd7f6ef38c",
+      "closedAt": "2021-08-01T16:50:57Z",
+      "mergedAt": "2021-08-01T16:50:57Z",
+      "mergedBy": "cabo",
+      "mergeCommit": {
+        "oid": "798bf4777e8a4bf7729d6e1efaabbf354311575a"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 4,
+      "id": "PR_kwDOEeCKP843_PEP",
+      "title": "Address Marco Tiloca's comments",
+      "url": "https://github.com/cbor-wg/cbor-packed/pull/4",
+      "state": "MERGED",
+      "author": "cabo",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2022-05-17T22:22:03Z",
+      "updatedAt": "2022-06-02T10:27:26Z",
+      "baseRepository": "cbor-wg/cbor-packed",
+      "baseRefName": "main",
+      "baseRefOid": "2d98c4a63e80d797a5edc5d1d6164bd13f884753",
+      "headRepository": "cbor-wg/cbor-packed",
+      "headRefName": "wglc-marco",
+      "headRefOid": "1f82fed041f2528a76868707b56f30c6414fe65e",
+      "closedAt": "2022-06-02T10:27:26Z",
+      "mergedAt": "2022-06-02T10:27:26Z",
+      "mergedBy": "cabo",
+      "mergeCommit": {
+        "oid": "2ec47df5738ff894f8dc302a2e01f69803cb4e73"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEeCKP846OL1N",
+          "commit": {
+            "abbreviatedOid": "5e68b46"
+          },
+          "author": "marco-tiloca-sics",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-05-18T11:32:44Z",
+          "updatedAt": "2022-05-18T11:32:44Z",
+          "comments": [
+            {
+              "originalPosition": 76,
+              "body": "If I understand it right, this is equivalent to the slightly more verbose:\r\n\r\n\"Each tag is usually defined to add to the packing tables that already apply to the tag, and to apply the resulting augmented table when unpacking the tag content.\"\r\n\r\nCorrect?",
+              "createdAt": "2022-05-18T11:32:44Z",
+              "updatedAt": "2022-05-18T11:32:44Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP846OMUI",
+          "commit": {
+            "abbreviatedOid": "5e68b46"
+          },
+          "author": "marco-tiloca-sics",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-05-18T11:34:27Z",
+          "updatedAt": "2022-05-18T11:34:27Z",
+          "comments": [
+            {
+              "originalPosition": 48,
+              "body": "The CBOR-based protocol in question might be using some deterministic format (see Section 4.2 of RFC 8949). If that's the case, any deterministic restriction related to map keys (e.g., their encoding and sorting) also apply when adding these entries to the rump, right?",
+              "createdAt": "2022-05-18T11:34:27Z",
+              "updatedAt": "2022-05-18T11:34:27Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP846Oefh",
+          "commit": {
+            "abbreviatedOid": "5e68b46"
+          },
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-05-18T12:34:31Z",
+          "updatedAt": "2022-05-18T12:34:31Z",
+          "comments": [
+            {
+              "originalPosition": 76,
+              "body": "Thanks for the suggestion -- I made it even more explicit now.",
+              "createdAt": "2022-05-18T12:34:31Z",
+              "updatedAt": "2022-05-18T12:34:31Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP846OeoK",
+          "commit": {
+            "abbreviatedOid": "5e68b46"
+          },
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2022-05-18T12:34:55Z",
+          "updatedAt": "2022-05-18T12:34:56Z",
+          "comments": [
+            {
+              "originalPosition": 48,
+              "body": "That is a great question for the discussion in 80 minutes...",
+              "createdAt": "2022-05-18T12:34:55Z",
+              "updatedAt": "2022-05-18T12:34:56Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "id": "PR_kwDOEeCKP847N2Bt",
+      "title": "Input for Interim 12",
+      "url": "https://github.com/cbor-wg/cbor-packed/pull/5",
+      "state": "MERGED",
+      "author": "cabo",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "(close #1)",
+      "createdAt": "2022-07-11T19:43:20Z",
+      "updatedAt": "2022-07-18T12:48:52Z",
+      "baseRepository": "cbor-wg/cbor-packed",
+      "baseRefName": "main",
+      "baseRefOid": "2ec47df5738ff894f8dc302a2e01f69803cb4e73",
+      "headRepository": "cbor-wg/cbor-packed",
+      "headRefName": "interim-12",
+      "headRefOid": "5f0065bd0810b9370be258ac07bd396c89a7d0b5",
+      "closedAt": "2022-07-18T12:48:52Z",
+      "mergedAt": "2022-07-18T12:48:52Z",
+      "mergedBy": "cabo",
+      "mergeCommit": {
+        "oid": "0775cac134a3cf4bc90c48d34ed501f8e1130204"
+      },
+      "comments": [],
+      "reviews": []
+    },
+    {
+      "number": 6,
+      "id": "PR_kwDOEeCKP847x-vn",
+      "title": "Equivalence principle",
+      "url": "https://github.com/cbor-wg/cbor-packed/pull/6",
+      "state": "MERGED",
+      "author": "cabo",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Describe the equivalence principle, and claim it for reference tags.\r\n\r\nAdd a default \"join\" function for array/string combinations.\r\n",
+      "createdAt": "2022-07-20T21:05:13Z",
+      "updatedAt": "2023-01-23T16:00:03Z",
+      "baseRepository": "cbor-wg/cbor-packed",
+      "baseRefName": "main",
+      "baseRefOid": "9c50b9d2c1beb00a4584d01de244129d13a1a0c5",
+      "headRepository": "cbor-wg/cbor-packed",
+      "headRefName": "equivalence",
+      "headRefOid": "ab483aec6862227bccdd58b85f05439eab104301",
+      "closedAt": "2023-01-23T16:00:03Z",
+      "mergedAt": "2023-01-23T16:00:03Z",
+      "mergedBy": "cabo",
+      "mergeCommit": {
+        "oid": "d10ef9b49b5423e16802572e4ca633b246010b52"
+      },
+      "comments": [
+        {
+          "author": "chrysn",
+          "authorAssociation": "MEMBER",
+          "body": "If there is an implicit join, does it even still need its own tag?\r\n\r\nAd equivalence: If we go with this, we might not manage to close that box again, and tags could let themselves in to a lot of places.\r\n\r\nI think it's good to describe the principle, but also caution that it's still up to the CBOR protocol to decide which equivalences may be used in which places, going from an HTML style free-for-all (document authors are advised to keep compatibility in mind or rely on graceful fallback) to the-CDDL-is-the-law cases (maybe around COSE).\r\n\r\nSpeaking of CDDL: How would that equivalence be described on that side? Sure a protcol designer can already say `item = integer / #6`, but should there be a control for equivalence like `item = integer .or-equivalent \"any\"` or `item = integer .or-equivalent [2, 3]`? (where 2 and 3 might be explicitly admitted tags, ignoring the fact that `integer` already does include these from the onset).",
+          "createdAt": "2022-07-21T12:40:45Z",
+          "updatedAt": "2022-07-21T12:40:45Z"
+        },
+        {
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> If there is an implicit join, does it even still need its own tag?\r\n\r\nYes, because the implicit join only works for strings (and arrays of strings).",
+          "createdAt": "2022-07-21T13:01:19Z",
+          "updatedAt": "2022-07-21T13:01:19Z"
+        },
+        {
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I added some more text about limitations and usage considerations of the tag equivalence concept.\r\nI think this should be published as a -07 to get discussion going before the IETF 114 CBOR meeting.\r\n",
+          "createdAt": "2022-07-24T14:56:48Z",
+          "updatedAt": "2022-07-24T14:56:48Z"
+        }
+      ],
+      "reviews": []
+    }
+  ]
+}
