@@ -144,7 +144,7 @@ Packed CBOR is defined in two parts: Referencing packing tables
 ({{sec-table-setup}}).
 
 
-Terminology         {#terms}
+Terminology and Conventions        {#terms}
 ------------
 
 {::boilerplate bcp14-tagged}
@@ -196,6 +196,11 @@ is not available and therefore is rendered by a surrogate notation.
 That notation is not optimized for this RFC; it is unfortunately
 ambiguous with C's exclusive-or and requires circumspection
 from the reader of the plain-text version.
+
+Examples of CBOR data items are shown
+in CBOR Extended Diagnostic Notation ({{Section 8 of RFC8949@-bis}} in
+conjunction with {{Appendix G of -cddl}}).
+<!-- mention edn-literal here if that completes faster -->
 
 # Packed CBOR
 
@@ -256,7 +261,7 @@ recursively unpacked.
 | Tag 6(negative integer N) | 16 - 2\*N - 1 |
 {: #tab-shared title="Referencing Shared Values"}
 
-As examples in CBOR diagnostic notation ({{Section 8 of RFC8949@-bis}}),
+As examples,
 the first 22 elements of the shared item table are referenced by
 `simple(0)`, `simple(1)`, ... `simple(15)`, `6(0)`, `6(-1)`, `6(1)`,
 `6(-2)`, `6(2)`, `6(-3)`.
