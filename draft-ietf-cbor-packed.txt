@@ -4,8 +4,9 @@
 
 Network Working Group                                         C. Bormann
 Internet-Draft                                    Universität Bremen TZI
-Intended status: Standards Track                          9 January 2024
-Expires: 12 July 2024
+Intended status: Standards Track                             M. Gütschow
+Expires: 25 August 2024                                       TU Dresden
+                                                        22 February 2024
 
 
                               Packed CBOR
@@ -65,7 +66,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 12 July 2024.
+   This Internet-Draft will expire on 25 August 2024.
 
 Copyright Notice
 
@@ -107,7 +108,7 @@ Table of Contents
      8.2.  Informative References
    Appendix A.  Examples
    Acknowledgements
-   Author's Address
+   Authors' Addresses
 
 1.  Introduction
 
@@ -1156,7 +1157,10 @@ Acknowledgements
    which prompted the author to come up with what turned into the
    present design.
 
-Author's Address
+   This work was supported in part by the German Federal Ministry of
+   Education and Research (BMBF) within the project Concrete Contracts.
+
+Authors' Addresses
 
    Carsten Bormann
    Universität Bremen TZI
@@ -1165,3 +1169,11 @@ Author's Address
    Germany
    Phone: +49-421-218-63921
    Email: cabo@tzi.org
+
+
+   Mikolai Gütschow
+   TUD Dresden University of Technology
+   Helmholtzstr. 10
+   D-01069 Dresden
+   Germany
+   Email: mikolai.guetschow@tu-dresden.de
