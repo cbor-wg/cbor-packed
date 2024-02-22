@@ -525,7 +525,7 @@ Table setup can happen in one of two ways:
 Where external information is used in a table setup mechanism that is
 not immutable, care needs to be taken so that, over time, references
 to existing table entries stay valid (i.e., the information is only
-extended)), and that a maximum size of this
+extended), and that a maximum size of this
 information is given.  This allows an unpacker to recognize references
 to items that are not yet defined in the version of the external
 reference that it uses, providing backward and possibly limited
@@ -638,8 +638,8 @@ A packed form of the first example using inverted references and the ijoin tag c
 
 ~~~
 113([["packed.example"],
-  [216(105(["https://", "/foo.html"]),
-   216(105(["coap://", "/bar.cbor"]),
+  [216(105(["https://", "/foo.html"])),
+   216(105(["coap://", "/bar.cbor"])),
    216("mailto:support@")]
 ])
 ~~~
