@@ -20,9 +20,7 @@ venue:
   github: cbor-wg/cbor-packed
 
 author:
-  -
-    ins: C. Bormann
-    name: Carsten Bormann
+  - name: Carsten Bormann
     org: Universität Bremen TZI
     street: Postfach 330440
     city: Bremen
@@ -30,6 +28,14 @@ author:
     country: Germany
     phone: +49-421-218-63921
     email: cabo@tzi.org
+  - name: Mikolai Gütschow
+    org: TUD Dresden University of Technology
+    abbrev: TU Dresden
+    street: Helmholtzstr. 10
+    city: Dresden
+    code: D-01069
+    country: Germany
+    email: mikolai.guetschow@tu-dresden.de
 
 
 normative:
@@ -1050,6 +1056,11 @@ proceed.
 In 2017, {{{Sebastian Käbisch}}} proposed
 investigating compact representations of W3C Thing Descriptions, which
 prompted the author to come up with what turned into the present design.
+
+This work was supported in part by the German Federal Ministry of
+Education and Research (BMBF) within the project Concrete Contracts.
+
+
 
 <!--  LocalWords:  CBOR extensibility IANA uint sint IEEE endian
  -->
