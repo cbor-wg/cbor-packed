@@ -587,7 +587,7 @@ their expansions.
 Function tags that occur in an argument or a rump supply the semantics
 for reconstructing a data item from their tag content and the
 non-dominating rump or argument, respectively.
-The present specification defines a pair of function tags.
+The present specification defines three function tags.
 
 ## Join Function Tags {#join}
 
@@ -652,6 +652,52 @@ from the same place could be:
   [6("temp-freezer"),
    6("temp-fridge"),
    6("temp-ambient")]
+])
+~~~
+
+## Record Function Tag {#record}
+
+Tag 114 ('r') defines the "record" function, which combines
+an array of keys with an array of values into a map.
+
+The record function expects an array as its left-hand side,
+whose items are treated as key items for the resulting map,
+and an array of equal or shorter length as its right-hand side,
+whose items are treated as value items for the resulting map.
+
+The map is constructed by grouping key and value items
+with equal position in the provided arrays into pairs that constitute the resulting map.
+
+If the matching value item for a given key item is either >undefined< (simple value 23)
+or does not exist (because the value item array is shorter than the key item array),
+the resulting pair is not included in the resulting map.
+
+For an example, we assume this unpacked data item:
+
+~~~ cbor-diag
+[{"key0": false, "key1": "value 1", "key2": 2},
+ {"key0": true, "key1": "value -1", "key2": -2},
+ {"key1": "", "key2": 0}]
+~~~
+
+A straightforward packed form of this using the record function tag could be:
+
+~~~ cbor-diag
+113([[114(["key0", "key1", "key2"])],
+  [6([false, "value 1", 2]),
+   6([true, "value -1", -2]),
+   6([undefined, "", 0])]
+])
+~~~
+
+A slightly more concise packed form can be achieved by manipulating the key item order
+(recall that the order of key/value pairs in maps carries no semantics):
+
+~~~ cbor-diag
+113([[114(["key1", "key2", "key0"])],
+  [6(["value 1", 2, false]),
+   6(["value -1", -2, true]),
+   6(["", 0])]
 ])
 ~~~
 
@@ -779,6 +825,7 @@ IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 |                    105 | text string, byte string, array, map, tag                                      | Packed CBOR: ijoin function  | draft-ietf-cbor-packed |
 |                    106 | text string, byte string, array, map, tag                                      | Packed CBOR: join function   | draft-ietf-cbor-packed |
 |                    113 | array (shared-and-argument-items, rump)                                        | Packed CBOR: table setup     | draft-ietf-cbor-packed |
+|                    114 | array                                                                          | Packed CBOR: record function | draft-ietf-cbor-packed |
 |               224..255 | text string, byte string, array, map, tag                                      | Packed CBOR: straight        | draft-ietf-cbor-packed |
 |                   1112 | undefined (0xf7)                                                               | Packed CBOR: reference error | draft-ietf-cbor-packed |
 |                   1113 | array (shared-items, argument-items, rump)                                     | Packed CBOR: table setup     | draft-ietf-cbor-packed |
@@ -817,11 +864,13 @@ this requires additional consideration.)
 Examples
 ========
 
-The (JSON-compatible) CBOR data structure depicted in
-{{fig-example-in}}, 400 bytes of binary CBOR, could lead to a packed
-CBOR data item depicted in {{fig-example-out}}, ~309 bytes.  Note that
-this particular example does not lend itself to prefix compression, so
-it uses the simple common-table setup form (tag 113).
+The (JSON-compatible) CBOR data structure depicted in {{fig-example-in}},
+400 bytes of binary CBOR, could be packed into the CBOR data item depicted
+in {{fig-example-out}}, ~309 bytes, only employing item sharing.
+With support for argument sharing and the record function tag 114,
+the data item can be packed into 298 bytes as depicted in {{fig-example-out-record}}.
+Note that this particular example does not lend itself to prefix compression,
+so it uses the simple common-table setup form (tag 113).
 
 ~~~ json
 { "store": {
@@ -876,7 +925,27 @@ it uses the simple common-table setup form (tag 113).
           simple(6): "0-395-19395-8", simple(0): 22.99}],
        "bicycle": {"color": "red", simple(0): 19.95}}}])
 ~~~
-{: #fig-example-out title="Example packed CBOR data item"}
+{: #fig-example-out title="Example packed CBOR data item with item sharing only"}
+
+~~~ cbor-diag
+113([[114(["category", "author",
+           "title", simple(1), "isbn"]),
+    /  0                       /
+      "price", "fiction", 8.95],
+    /  1        2         3    /
+     {"store": {
+       "book": [
+           6(["reference", "Nigel Rees",
+              "Sayings of the Century", simple(3)]),
+           6([simple(2), "Evelyn Waugh",
+              "Sword of Honour", 12.99]),
+           6([simple(2), "Herman Melville",
+              "Moby Dick", simple(3), "0-553-21311-3"]),
+           6([simple(2), "J. R. R. Tolkien",
+               "The Lord of the Rings", 22.99, "0-395-19395-8"])],
+       "bicycle": {"color": "red", simple(0): 19.95}}}])
+~~~
+{: #fig-example-out-record title="Example packed CBOR data item with item and argument sharing"}
 
 
 The (JSON-compatible) CBOR data structure below has been packed with shared
