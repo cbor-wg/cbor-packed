@@ -405,14 +405,22 @@ The concatenation function is defined as follows:
   left-hand-side map, and then filled in with the members of the
   right-hand side map, replacing any existing members that have the
   same key.
+  In order to be able to remove a map entry from the left-hand-side
+  map, as a special case, any members to be replaced with a value of
+  `undefined` (0xf7) from the right-hand-side map are instead removed,
+  and right-hand-side members with the value `undefined` are never
+  filled in into the concatenated map.
 
 {:aside}
-> NOTE:
-  One application of the rule for straight references is to supply
+> NOTES:
+>
+> * One application of the rule for straight references is to supply
   default values out of a dictionary, which can then be overridden by
   the entries in the map supplied as the rump data item.
-  Note that this pattern provides no way to remove a map entry from
-  the prefix table entry.
+> * Special casing the member value `undefined` makes it impossible to
+  use this construct for updating maps by insertion of or
+  replacement with actual `undefined` member values; `undefined` as a
+  member value on the left-hand-side map stays untouched though.
 
 * If both left-hand side and right-hand side are one of the string
   types (not necessarily the same), the bytes of the left-hand side
