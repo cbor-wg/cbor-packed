@@ -50,6 +50,7 @@ informative:
   STD63: utf8
 #    =: RFC3629
   RFC7049: orig
+  RFC7396: merge
   RFC8742: seq
   RFC6920: ni
   RFC1951: deflate
@@ -421,6 +422,9 @@ The concatenation function is defined as follows:
   use this construct for updating maps by insertion of or
   replacement with actual `undefined` member values; `undefined` as a
   member value on the left-hand-side map stays untouched though.
+  This exception is similar to the one JSON Merge Patch {{-merge}} makes
+  for `null` values, which are however much more commonly used and
+  therefore more problematic.
 
 * If both left-hand side and right-hand side are one of the string
   types (not necessarily the same), the bytes of the left-hand side
