@@ -436,7 +436,10 @@ Table of Contents
       |        impossible to use this construct for updating maps by
       |        insertion of or replacement with actual undefined member
       |        values; undefined as a member value on the left-hand-side
-      |        map stays untouched though.
+      |        map stays untouched though.  This exception is similar to
+      |        the one JSON Merge Patch [RFC7396] makes for null values,
+      |        which are however much more commonly used and therefore
+      |        more problematic.
 
    *  If both left-hand side and right-hand side are one of the string
       types (not necessarily the same), the bytes of the left-hand side
@@ -919,6 +922,10 @@ Table of Contents
    [RFC7049]  Bormann, C. and P. Hoffman, "Concise Binary Object
               Representation (CBOR)", RFC 7049, DOI 10.17487/RFC7049,
               October 2013, <https://www.rfc-editor.org/rfc/rfc7049>.
+
+   [RFC7396]  Hoffman, P. and J. Snell, "JSON Merge Patch", RFC 7396,
+              DOI 10.17487/RFC7396, October 2014,
+              <https://www.rfc-editor.org/rfc/rfc7396>.
 
    [RFC8742]  Bormann, C., "Concise Binary Object Representation (CBOR)
               Sequences", RFC 8742, DOI 10.17487/RFC8742, February 2020,

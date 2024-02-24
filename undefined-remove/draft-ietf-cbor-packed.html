@@ -1694,7 +1694,10 @@ the entries in the map supplied as the rump data item.<a href="#section-2.4-3.2.
               <p id="section-2.4-3.2.2.1">Special casing the member value <code>undefined</code> makes it impossible to
 use this construct for updating maps by insertion of or
 replacement with actual <code>undefined</code> member values; <code>undefined</code> as a
-member value on the left-hand-side map stays untouched though.<a href="#section-2.4-3.2.2.1" class="pilcrow">¶</a></p>
+member value on the left-hand-side map stays untouched though.
+This exception is similar to the one JSON Merge Patch <span>[<a href="#RFC7396" class="cite xref">RFC7396</a>]</span> makes
+for <code>null</code> values, which are however much more commonly used and
+therefore more problematic.<a href="#section-2.4-3.2.2.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
 </aside>
@@ -2290,6 +2293,10 @@ this requires additional consideration.)<a href="#section-7-3" class="pilcrow">�
 <dt id="RFC7049">[RFC7049]</dt>
         <dd>
 <span class="refAuthor">Bormann, C.</span> and <span class="refAuthor">P. Hoffman</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR)"</span>, <span class="seriesInfo">RFC 7049</span>, <span class="seriesInfo">DOI 10.17487/RFC7049</span>, <time datetime="2013-10" class="refDate">October 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7049">https://www.rfc-editor.org/rfc/rfc7049</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7396">[RFC7396]</dt>
+        <dd>
+<span class="refAuthor">Hoffman, P.</span> and <span class="refAuthor">J. Snell</span>, <span class="refTitle">"JSON Merge Patch"</span>, <span class="seriesInfo">RFC 7396</span>, <span class="seriesInfo">DOI 10.17487/RFC7396</span>, <time datetime="2014-10" class="refDate">October 2014</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7396">https://www.rfc-editor.org/rfc/rfc7396</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8742">[RFC8742]</dt>
         <dd>
