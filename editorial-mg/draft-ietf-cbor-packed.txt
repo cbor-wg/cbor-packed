@@ -595,13 +595,13 @@ Table of Contents
    items and arguments that apply to the entire tag (by default empty
    tables).  The arrays given as the first and second element of the
    content of the tag 1113 ("Split-Basic-Packed-CBOR") are prepended to
-   the tables for shared items and arguments that apply to the entire
-   tag (by default empty tables).  As discussed in the introduction to
-   this section, references in the supplied new arrays use the new
-   number space (where inherited items are shifted by the new items
-   given), while the inherited items themselves use the inherited number
-   space (so their semantics do not change by the mere action of
-   inheritance).
+   the tables for shared items and arguments, respectively, that apply
+   to the entire tag (by default empty tables).  As discussed in the
+   introduction to this section, references in the supplied new arrays
+   use the new number space (where inherited items are shifted by the
+   new items given), while the inherited items themselves use the
+   inherited number space (so their semantics do not change by the mere
+   action of inheritance).
 
    The original CBOR data item can be reconstructed by recursively
    replacing shared and argument references encountered in the rump by
@@ -671,6 +671,11 @@ Table of Contents
       6("temp-fridge"),
       6("temp-ambient")]
    ])
+
+   Note that for these examples, the implicit join semantics for mixed
+   string-array concatenation as defined in Section 2.4, Paragraph 5
+   actually obviate the need for an explicit join/ijoin tag; the
+   examples do serve to demonstrate the explicit usage of the tag.
 
 5.  Tag Validity: Tag Equivalence Principle
 
