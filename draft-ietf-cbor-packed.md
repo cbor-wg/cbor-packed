@@ -174,9 +174,10 @@ Packing tables:
 Current set:
 : The packing tables in effect at the data item under consideration.
 
-Expansion:
+Reconstruction:
 : The result of applying a packed reference in the context of given
-  Packing tables.
+  packing tables; we speak of the _reconstruction of a packed reference_
+  as that result.
 
 The definitions of {{-bis}} apply.
 Specifically: The term "byte" is used in its now customary sense as a synonym for
@@ -576,7 +577,7 @@ change by the mere action of inheritance).
 
 The original CBOR data item can be reconstructed by recursively
 replacing shared and argument references encountered in the rump by
-their expansions.
+their reconstructions.
 
 # Function Tags
 
