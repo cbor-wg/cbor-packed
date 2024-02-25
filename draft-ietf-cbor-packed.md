@@ -154,6 +154,13 @@ Terminology and Conventions        {#terms}
 
 {::boilerplate bcp14-tagged}
 
+Original data item:
+: A CBOR data item that is intended to be expressed by a Packed data
+  item; the result of all reconstructions.
+
+Packed data item:
+: A CBOR data item that involves packed references (_packed CBOR_).
+
 Packed reference:
 : A shared item reference or an argument reference.
 
@@ -163,6 +170,18 @@ Shared item reference:
 Argument reference:
 : A reference that combines a shared argument with a rump item as
   defined in {{sec-referencing-argument-items}}.
+
+Rump:
+: The data item contained in an argument reference that is combined
+  with the argument to yield the reconstruction.
+
+Straight reference:
+: An argument reference that uses the argument as the left-hand side
+  and the rump as the right-hand side.
+
+Inverted reference:
+: An argument reference that uses the rump as the left-hand side
+  and the argument as the right-hand side.
 
 Function tag:
 : A tag used in an argument reference for the argument (straight
