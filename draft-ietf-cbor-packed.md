@@ -98,11 +98,9 @@ informative:
 [^status]
 
 [^status]:
-    The present version (-10) fixes references, an example, and
-    various nits and typos.
-
-
-
+    The present version (-11) adds an author, the "record" function
+    tag (TBD114), a special role for the simple value `undefined`, and
+    a number of editorial cleanups.
 
 --- middle
 
@@ -318,19 +316,19 @@ reference combines a prefix out of the argument table with the rump
 data item, and an inverted reference combines a rump data item with a
 suffix out of the argument table.
 
-| straight reference                        |     table index |
-|-------------------------------------------|-----------------|
-| Tag 6(straight rump)                      |               0 |
-| Tag 224..255(straight rump)               |           0..31 |
-| Tag 28704..32767(straight rump)           |        32..4095 |
-| Tag 1879052288..2147483647(straight rump) | 4096..268435455 |
+| straight reference               |     table index |
+|----------------------------------|-----------------|
+| Tag 6(rump)                      |               0 |
+| Tag 224..255(rump)               |           0..31 |
+| Tag 28704..32767(rump)           |        32..4095 |
+| Tag 1879052288..2147483647(rump) | 4096..268435455 |
 {: #tab-straight cols='l r' title="Straight Referencing (e.g., Prefix) Arguments"}
 
-| inverted reference                        |    table index |
-|-------------------------------------------|----------------|
-| Tag 216..223(inverted rump)               |           0..7 |
-| Tag 27647..28671(inverted rump)           |        8..1023 |
-| Tag 1811940352..1879048191(inverted rump) | 1024..67108863 |
+| inverted reference               |    table index |
+|----------------------------------|----------------|
+| Tag 216..223(rump)               |           0..7 |
+| Tag 27647..28671(rump)           |        8..1023 |
+| Tag 1811940352..1879048191(rump) | 1024..67108863 |
 {: #tab-inverted cols='l r' title="Inverted Referencing (e.g., Suffix) Arguments"}
 
 Argument data items are referenced by using the reference data items
@@ -343,8 +341,8 @@ to the "argument"; the tag content of the reference is the "rump item".
 When reconstructing the original data item, such a reference is
 replaced by a data item constructed from the argument data item found
 in the table (argument, which might need to be recursively unpacked
-first) and the rump data item (rump, again possibly recursively
-unpacked).
+first) and the rump data item (rump, again possibly needing to be
+recursively unpacked).
 
 Separate from the tag used as a reference, a tag ("function tag") may
 be involved to supply a function to be used in resolving the
