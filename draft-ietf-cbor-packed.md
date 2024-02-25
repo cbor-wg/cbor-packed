@@ -131,7 +131,7 @@ Packed CBOR can make use of two kinds of optimization:
   that reference.
 - argument sharing: application of a function with two arguments, one of which is shared.
   Data items (strings, containers) that share a prefix
-  or suffix (affix), or more generally data items that can be
+  or suffix, or more generally data items that can be
   constructed from a function taking a shared argument and a rump data item,
   can be replaced by a reference to the shared argument plus a rump data
   item.
@@ -163,10 +163,6 @@ Shared item reference:
 Argument reference:
 : A reference that combines a shared argument with a rump item as
   defined in {{sec-referencing-argument-items}}.
-
-Affix:
-: Prefix or suffix, used as an argument in an argument reference
-  employing the default function "concatenation".
 
 Function reference:
 : An argument reference that uses a tag for argument, rump, or both,
