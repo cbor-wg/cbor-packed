@@ -164,9 +164,11 @@ Argument reference:
 : A reference that combines a shared argument with a rump item as
   defined in {{sec-referencing-argument-items}}.
 
-Function reference:
-: An argument reference that uses a tag for argument, rump, or both,
-  causing the application of a function to reconstruct the data item.
+Function tag:
+: A tag used in an argument reference for the argument (straight
+  references) or the rump (inverted references), causing the
+  application of a function indicated by the function tag to
+  reconstruct the data item.
 
 Packing tables:
 : The pair of a shared item table and an argument table.
