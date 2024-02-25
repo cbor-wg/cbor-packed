@@ -586,7 +586,8 @@ The array given as the first element of the content of tag 113
 and arguments that apply to the entire tag (by default empty tables).
 The arrays given as the first and second element of the content of the
 tag 1113 ("Split-Basic-Packed-CBOR") are prepended to the tables for
-shared items and arguments that apply to the entire tag (by default
+shared items and arguments, respectively,
+that apply to the entire tag (by default
 empty tables).
 As discussed in the introduction to this section, references
 in the supplied new arrays use the new number space (where inherited
