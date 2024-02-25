@@ -173,7 +173,7 @@ Function tag:
 Packing tables:
 : The pair of a shared item table and an argument table.
 
-Current set:
+Active set (of packing tables):
 : The packing tables in effect at the data item under consideration.
 
 Reconstruction:
@@ -213,10 +213,10 @@ they are referenced.
 
 ## Packing Tables
 
-At any point within a data item making use of Packed CBOR, there is a
-Current Set of packing tables that applies.
+At any point within a data item making use of Packed CBOR, there is an
+_active set_ of packing tables that applies.
 
-There are two packing tables in a Current Set:
+There are two packing tables in an active set:
 
 * Shared item table
 * Argument table
@@ -252,7 +252,7 @@ MAY require that unpacking errors are tolerated in some positions.
 
 ## Referencing Shared Items
 
-Shared items are stored in the shared item table of the Current Set.
+Shared items are stored in the shared item table of the active set.
 
 The shared data items are referenced by using the reference data items
 in {{tab-shared}}.  When reconstructing the original data item, such a
