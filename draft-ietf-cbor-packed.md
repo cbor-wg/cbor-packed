@@ -440,6 +440,7 @@ The concatenation function is defined as follows:
   build both byte and text strings, depending on what type of rump is
   being used.
 
+{: #implicit-join}
 * If one side is one of the string types, and the other side is an
   array, the result of the concatenation is equivalent to the
   application of the "join" function ({{join}}) to the string as the
@@ -671,6 +672,11 @@ from the same place could be:
    6("temp-ambient")]
 ])
 ~~~
+
+Note that for these examples, the implicit join semantics for mixed
+string-array concatenation as defined in {{implicit-join}} actually
+obviate the need for an explicit join/ijoin tag; the examples do serve
+to demonstrate the explicit usage of the tag.
 
 Tag Validity: Tag Equivalence Principle
 ===================================
