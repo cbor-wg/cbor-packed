@@ -907,7 +907,7 @@ Examples
 
 The (JSON-compatible) CBOR data structure depicted in {{fig-example-in}},
 400 bytes of binary CBOR, could be packed into the CBOR data item depicted
-in {{fig-example-out}}, ~309 bytes, only employing item sharing.
+in {{fig-example-out}}, 308 bytes, only employing item sharing.
 With support for argument sharing and the record function tag 114,
 the data item can be packed into 298 bytes as depicted in {{fig-example-out-record}}.
 Note that this particular example does not lend itself to prefix compression,
