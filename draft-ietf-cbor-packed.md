@@ -691,6 +691,8 @@ whose items are treated as value items for the resulting map.
 The map is constructed by grouping key and value items
 with equal position in the provided arrays into pairs that constitute the resulting map.
 
+The value item array MUST NOT be longer than the key item array.
+
 The value item array MAY be shorter than the key item array, in which
 case the one or more unmatched value items towards the end are treated as _absent_.
 Additionally, value items that are the CBOR simple value `undefined`
