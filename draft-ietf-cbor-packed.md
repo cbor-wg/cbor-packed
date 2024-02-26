@@ -967,9 +967,9 @@ so it uses the simple common-table setup form (tag 113).
               "Moby Dick", simple(3), "0-553-21311-3"]),
            6([simple(2), "J. R. R. Tolkien",
                "The Lord of the Rings", 22.99, "0-395-19395-8"])],
-       "bicycle": {"color": "red", simple(0): 19.95}}}])
+       "bicycle": {"color": "red", simple(1): 19.95}}}])
 ~~~
-{: #fig-example-out-record title="Example packed CBOR data item with item and argument sharing"}
+{: #fig-example-out-record title="Example packed CBOR data item using item sharing and the record function tag"}
 
 
 The (JSON-compatible) CBOR data structure below has been packed with shared
