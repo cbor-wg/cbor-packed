@@ -5,8 +5,8 @@
 Network Working Group                                         C. Bormann
 Internet-Draft                                    Universität Bremen TZI
 Intended status: Standards Track                             M. Gütschow
-Expires: 28 August 2024                                       TU Dresden
-                                                        25 February 2024
+Expires: 29 August 2024                                       TU Dresden
+                                                        26 February 2024
 
 
                               Packed CBOR
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 28 August 2024.
+   This Internet-Draft will expire on 29 August 2024.
 
 Copyright Notice
 
@@ -172,7 +172,7 @@ Table of Contents
    capitals, as shown here.
 
    Original data item:  A CBOR data item that is intended to be
-      expressed by a Packed data item; the result of all
+      expressed by a packed data item; the result of all
       reconstructions.
 
    Packed data item:  A CBOR data item that involves packed references
