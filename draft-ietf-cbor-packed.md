@@ -649,10 +649,11 @@ For an example, we assume this unpacked data item:
  "coap:://packed.example/bar.cbor",
  "mailto:support@packed.example"]
 ~~~
+{: check="json"}
 
 A packed form of this using straight references could be:
 
-~~~
+~~~ cbor-diag
 113([[106("packed.example")],
   [6(["https://", "/foo.html"]),
    6(["coap://", "/bar.cbor"]),
@@ -666,7 +667,7 @@ side are interchanged ('i').
 
 A packed form of the first example using inverted references and the ijoin tag could be:
 
-~~~
+~~~ cbor-diag
 113([["packed.example"],
   [216(105(["https://", "/foo.html"])),
    216(105(["coap://", "/bar.cbor"])),
@@ -677,7 +678,7 @@ A packed form of the first example using inverted references and the ijoin tag c
 A packed form of an array with many URIs that reference SenML items
 from the same place could be:
 
-~~~
+~~~ cbor-diag
 113([[105(["coaps://[2001::db8::1]/s/", ".senml"])],
   [6("temp-freezer"),
    6("temp-fridge"),
@@ -912,7 +913,7 @@ the data item can be packed into 298 bytes as depicted in {{fig-example-out-reco
 Note that this particular example does not lend itself to prefix compression,
 so it uses the simple common-table setup form (tag 113).
 
-~~~ json
+~~~ cbor-diag
 { "store": {
     "book": [
       { "category": "reference",
@@ -945,7 +946,8 @@ so it uses the simple common-table setup form (tag 113).
   }
 }
 ~~~
-{: #fig-example-in title="Example original CBOR data item"}
+{: #fig-example-in check="json"
+title="Example original CBOR data item, 400 bytes"}
 
 ~~~ cbor-diag
 113([["price", "category", "author", "title", "fiction", 8.95,
@@ -965,7 +967,8 @@ so it uses the simple common-table setup form (tag 113).
           simple(6): "0-395-19395-8", simple(0): 22.99}],
        "bicycle": {"color": "red", simple(0): 19.95}}}])
 ~~~
-{: #fig-example-out title="Example packed CBOR data item with item sharing only"}
+{: #fig-example-out title="Example packed CBOR data item with item
+sharing only, 308 bytes"}
 
 ~~~ cbor-diag
 113([[114(["category", "author",
@@ -985,14 +988,15 @@ so it uses the simple common-table setup form (tag 113).
                "The Lord of the Rings", 22.99, "0-395-19395-8"])],
        "bicycle": {"color": "red", simple(1): 19.95}}}])
 ~~~
-{: #fig-example-out-record title="Example packed CBOR data item using item sharing and the record function tag"}
+{: #fig-example-out-record title="Example packed CBOR data item using
+item sharing and the record function tag, 298 bytes"}
 
 
 The (JSON-compatible) CBOR data structure below has been packed with shared
 item and (partial) prefix compression only and employs the split-table
 setup form (tag 1113).
 
-~~~ json
+~~~ cbor-diag
 {
   "name": "MyLED",
   "interactions": [
@@ -1117,9 +1121,10 @@ setup form (tag 1113).
    "http://192.168.1.102:8444/wot/w3c-wot-td-context.jsonld"
 }
 ~~~
-{: #fig-example-in2 title="Example original CBOR data item"}
+{: #fig-example-in2 check="json" title="Example original CBOR data
+item, 1210 bytes"}
 
-~~~ cbordiag
+~~~ cbor-diag
 1113([/shared/["name", "@type", "links", "href", "mediaType",
             /  0       1       2        3         4 /
     "application/json", "outputData", {"valueType": {"type":
@@ -1151,7 +1156,7 @@ setup form (tag 1113).
      simple(1): "Lamp", "id": "0", "base": 225(""),
      "@context": 6("2:8444/wot/w3c-wot-td-context.jsonld")}])
 ~~~
-{: #fig-example-out2 title="Example packed CBOR data item"}
+{: #fig-example-out2 title="Example packed CBOR data item, 505 bytes"}
 
 
 Acknowledgements
