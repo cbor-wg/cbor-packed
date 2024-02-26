@@ -98,11 +98,9 @@ informative:
 [^status]
 
 [^status]:
-    The present version (-10) fixes references, an example, and
-    various nits and typos.
-
-
-
+    The present version (-11) adds an author, the "record" function
+    tag (TBD114), a special role for the simple value `undefined`, and
+    a number of editorial cleanups.
 
 --- middle
 
@@ -131,7 +129,7 @@ Packed CBOR can make use of two kinds of optimization:
   that reference.
 - argument sharing: application of a function with two arguments, one of which is shared.
   Data items (strings, containers) that share a prefix
-  or suffix (affix), or more generally data items that can be
+  or suffix, or more generally data items that can be
   constructed from a function taking a shared argument and a rump data item,
   can be replaced by a reference to the shared argument plus a rump data
   item.
@@ -154,6 +152,13 @@ Terminology and Conventions        {#terms}
 
 {::boilerplate bcp14-tagged}
 
+Original data item:
+: A CBOR data item that is intended to be expressed by a packed data
+  item; the result of all reconstructions.
+
+Packed data item:
+: A CBOR data item that involves packed references (_packed CBOR_).
+
 Packed reference:
 : A shared item reference or an argument reference.
 
@@ -164,23 +169,34 @@ Argument reference:
 : A reference that combines a shared argument with a rump item as
   defined in {{sec-referencing-argument-items}}.
 
-Affix:
-: Prefix or suffix, used as an argument in an argument reference
-  employing the default function "concatenation".
+Rump:
+: The data item contained in an argument reference that is combined
+  with the argument to yield the reconstruction.
 
-Function reference:
-: An argument reference that uses a tag for argument, rump, or both,
-  causing the application of a function to reconstruct the data item.
+Straight reference:
+: An argument reference that uses the argument as the left-hand side
+  and the rump as the right-hand side.
+
+Inverted reference:
+: An argument reference that uses the rump as the left-hand side
+  and the argument as the right-hand side.
+
+Function tag:
+: A tag used in an argument reference for the argument (straight
+  references) or the rump (inverted references), causing the
+  application of a function indicated by the function tag in order to
+  reconstruct the data item.
 
 Packing tables:
 : The pair of a shared item table and an argument table.
 
-Current set:
+Active set (of packing tables):
 : The packing tables in effect at the data item under consideration.
 
-Expansion:
+Reconstruction:
 : The result of applying a packed reference in the context of given
-  Packing tables.
+  packing tables; we speak of the _reconstruction of a packed reference_
+  as that result.
 
 The definitions of {{-bis}} apply.
 Specifically: The term "byte" is used in its now customary sense as a synonym for
@@ -214,10 +230,10 @@ they are referenced.
 
 ## Packing Tables
 
-At any point within a data item making use of Packed CBOR, there is a
-Current Set of packing tables that applies.
+At any point within a data item making use of Packed CBOR, there is an
+_active set_ of packing tables that applies.
 
-There are two packing tables in a Current Set:
+There are two packing tables in an active set:
 
 * Shared item table
 * Argument table
@@ -253,7 +269,7 @@ MAY require that unpacking errors are tolerated in some positions.
 
 ## Referencing Shared Items
 
-Shared items are stored in the shared item table of the Current Set.
+Shared items are stored in the shared item table of the active set.
 
 The shared data items are referenced by using the reference data items
 in {{tab-shared}}.  When reconstructing the original data item, such a
@@ -300,19 +316,19 @@ reference combines a prefix out of the argument table with the rump
 data item, and an inverted reference combines a rump data item with a
 suffix out of the argument table.
 
-| straight reference                        |     table index |
-|-------------------------------------------|-----------------|
-| Tag 6(straight rump)                      |               0 |
-| Tag 224..255(straight rump)               |           0..31 |
-| Tag 28704..32767(straight rump)           |        32..4095 |
-| Tag 1879052288..2147483647(straight rump) | 4096..268435455 |
+| straight reference               |     table index |
+|----------------------------------|-----------------|
+| Tag 6(rump)                      |               0 |
+| Tag 224..255(rump)               |           0..31 |
+| Tag 28704..32767(rump)           |        32..4095 |
+| Tag 1879052288..2147483647(rump) | 4096..268435455 |
 {: #tab-straight cols='l r' title="Straight Referencing (e.g., Prefix) Arguments"}
 
-| inverted reference                        |    table index |
-|-------------------------------------------|----------------|
-| Tag 216..223(inverted rump)               |           0..7 |
-| Tag 27647..28671(inverted rump)           |        8..1023 |
-| Tag 1811940352..1879048191(inverted rump) | 1024..67108863 |
+| inverted reference               |    table index |
+|----------------------------------|----------------|
+| Tag 216..223(rump)               |           0..7 |
+| Tag 27647..28671(rump)           |        8..1023 |
+| Tag 1811940352..1879048191(rump) | 1024..67108863 |
 {: #tab-inverted cols='l r' title="Inverted Referencing (e.g., Suffix) Arguments"}
 
 Argument data items are referenced by using the reference data items
@@ -325,8 +341,8 @@ to the "argument"; the tag content of the reference is the "rump item".
 When reconstructing the original data item, such a reference is
 replaced by a data item constructed from the argument data item found
 in the table (argument, which might need to be recursively unpacked
-first) and the rump data item (rump, again possibly recursively
-unpacked).
+first) and the rump data item (rump, again possibly needing to be
+recursively unpacked).
 
 Separate from the tag used as a reference, a tag ("function tag") may
 be involved to supply a function to be used in resolving the
@@ -424,6 +440,7 @@ The concatenation function is defined as follows:
   build both byte and text strings, depending on what type of rump is
   being used.
 
+{: #implicit-join}
 * If one side is one of the string types, and the other side is an
   array, the result of the concatenation is equivalent to the
   application of the "join" function ({{join}}) to the string as the
@@ -570,7 +587,8 @@ The array given as the first element of the content of tag 113
 and arguments that apply to the entire tag (by default empty tables).
 The arrays given as the first and second element of the content of the
 tag 1113 ("Split-Basic-Packed-CBOR") are prepended to the tables for
-shared items and arguments that apply to the entire tag (by default
+shared items and arguments, respectively,
+that apply to the entire tag (by default
 empty tables).
 As discussed in the introduction to this section, references
 in the supplied new arrays use the new number space (where inherited
@@ -580,7 +598,7 @@ change by the mere action of inheritance).
 
 The original CBOR data item can be reconstructed by recursively
 replacing shared and argument references encountered in the rump by
-their expansions.
+their reconstructions.
 
 # Function Tags
 
@@ -654,6 +672,11 @@ from the same place could be:
    6("temp-ambient")]
 ])
 ~~~
+
+Note that for these examples, the implicit join semantics for mixed
+string-array concatenation as defined in {{implicit-join}} actually
+obviate the need for an explicit join/ijoin tag; the examples do serve
+to demonstrate the explicit usage of the tag.
 
 Tag Validity: Tag Equivalence Principle
 ===================================
