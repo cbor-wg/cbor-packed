@@ -692,6 +692,8 @@ Table of Contents
    position in the provided arrays into pairs that constitute the
    resulting map.
 
+   The value item array MUST NOT be longer than the key item array.
+
    The value item array MAY be shorter than the key item array, in which
    case the one or more unmatched value items towards the end are
    treated as _absent_. Additionally, value items that are the CBOR
