@@ -691,9 +691,11 @@ whose items are treated as value items for the resulting map.
 The map is constructed by grouping key and value items
 with equal position in the provided arrays into pairs that constitute the resulting map.
 
-If the matching value item for a given key item is either >undefined< (simple value 23)
-or does not exist (because the value item array is shorter than the key item array),
-the resulting pair is not included in the resulting map.
+The value item array MAY be shorter than the key item array, in which
+case the one or more unmatched value items towards the end are treated as _absent_.
+Additionally, value items that are the CBOR simple value `undefined`
+(simple(23), encoding 0xf7) are also treated as absent.
+Key items whose matching value items are absent are not included in the resulting map.
 
 For an example, we assume this unpacked data item:
 
