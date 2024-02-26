@@ -153,7 +153,7 @@ Terminology and Conventions        {#terms}
 {::boilerplate bcp14-tagged}
 
 Original data item:
-: A CBOR data item that is intended to be expressed by a Packed data
+: A CBOR data item that is intended to be expressed by a packed data
   item; the result of all reconstructions.
 
 Packed data item:
