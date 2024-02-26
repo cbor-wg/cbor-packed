@@ -1228,6 +1228,9 @@ a number of editorial cleanups.</span><a href="#section-abstract-4" class="pilcr
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
                 <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-join-function-tags" class="internal xref">Join Function Tags</a></p>
 </li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-record-function-tag" class="internal xref">Record Function Tag</a></p>
+</li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
@@ -1914,7 +1917,7 @@ their reconstructions.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
 <p id="section-4-1">Function tags that occur in an argument or a rump supply the semantics
 for reconstructing a data item from their tag content and the
 non-dominating rump or argument, respectively.
-The present specification defines a pair of function tags.<a href="#section-4-1" class="pilcrow">¶</a></p>
+The present specification defines three function tags.<a href="#section-4-1" class="pilcrow">¶</a></p>
 <div id="join">
 <section id="section-4.1">
         <h3 id="name-join-function-tags">
@@ -1983,6 +1986,55 @@ from the same place could be:<a href="#section-4.1-12" class="pilcrow">¶</a></p
 string-array concatenation as defined in <a href="#implicit-join" class="auto internal xref">Section 2.4, Paragraph 5</a> actually
 obviate the need for an explicit join/ijoin tag; the examples do serve
 to demonstrate the explicit usage of the tag.<a href="#section-4.1-14" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="record">
+<section id="section-4.2">
+        <h3 id="name-record-function-tag">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-record-function-tag" class="section-name selfRef">Record Function Tag</a>
+        </h3>
+<p id="section-4.2-1">Tag 114 ('r') defines the "record" function, which combines
+an array of keys with an array of values into a map.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-2">The record function expects an array as its left-hand side,
+whose items are treated as key items for the resulting map,
+and an array of equal or shorter length as its right-hand side,
+whose items are treated as value items for the resulting map.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.2-3">The map is constructed by grouping key and value items
+with equal position in the provided arrays into pairs that constitute the resulting map.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2-4">The value item array <span class="bcp14">MAY</span> be shorter than the key item array, in which
+case the one or more unmatched value items towards the end are treated as <em>absent</em>.
+Additionally, value items that are the CBOR simple value <code>undefined</code>
+(simple(23), encoding 0xf7) are also treated as absent.
+Key items whose matching value items are absent are not included in the resulting map.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
+<p id="section-4.2-5">For an example, we assume this unpacked data item:<a href="#section-4.2-5" class="pilcrow">¶</a></p>
+<div class="lang-cbor-diag sourcecode" id="section-4.2-6">
+<pre>
+[{"key0": false, "key1": "value 1", "key2": 2},
+ {"key0": true, "key1": "value -1", "key2": -2},
+ {"key1": "", "key2": 0}]
+</pre><a href="#section-4.2-6" class="pilcrow">¶</a>
+</div>
+<p id="section-4.2-7">A straightforward packed form of this using the record function tag could be:<a href="#section-4.2-7" class="pilcrow">¶</a></p>
+<div class="lang-cbor-diag sourcecode" id="section-4.2-8">
+<pre>
+113([[114(["key0", "key1", "key2"])],
+  [6([false, "value 1", 2]),
+   6([true, "value -1", -2]),
+   6([undefined, "", 0])]
+])
+</pre><a href="#section-4.2-8" class="pilcrow">¶</a>
+</div>
+<p id="section-4.2-9">A slightly more concise packed form can be achieved by manipulating the key item order
+(recall that the order of key/value pairs in maps carries no semantics):<a href="#section-4.2-9" class="pilcrow">¶</a></p>
+<div class="lang-cbor-diag sourcecode" id="section-4.2-10">
+<pre>
+113([[114(["key1", "key2", "key0"])],
+  [6(["value 1", 2, false]),
+   6(["value -1", -2, true]),
+   6(["", 0])]
+])
+</pre><a href="#section-4.2-10" class="pilcrow">¶</a>
+</div>
 </section>
 </div>
 </section>
@@ -2150,6 +2202,12 @@ IANA is requested to allocate the tags defined in <a href="#tab-tag-values" clas
               <td class="text-right" rowspan="1" colspan="1">113</td>
               <td class="text-left" rowspan="1" colspan="1">array (shared-and-argument-items, rump)</td>
               <td class="text-left" rowspan="1" colspan="1">Packed CBOR: table setup</td>
+              <td class="text-left" rowspan="1" colspan="1">draft-ietf-cbor-packed</td>
+            </tr>
+            <tr>
+              <td class="text-right" rowspan="1" colspan="1">114</td>
+              <td class="text-left" rowspan="1" colspan="1">array</td>
+              <td class="text-left" rowspan="1" colspan="1">Packed CBOR: record function</td>
               <td class="text-left" rowspan="1" colspan="1">draft-ietf-cbor-packed</td>
             </tr>
             <tr>
@@ -2337,11 +2395,13 @@ this requires additional consideration.)<a href="#section-7-3" class="pilcrow">�
       <h2 id="name-examples">
 <a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
       </h2>
-<p id="appendix-A-1">The (JSON-compatible) CBOR data structure depicted in
-<a href="#fig-example-in" class="auto internal xref">Figure 2</a>, 400 bytes of binary CBOR, could lead to a packed
-CBOR data item depicted in <a href="#fig-example-out" class="auto internal xref">Figure 3</a>, ~309 bytes.  Note that
-this particular example does not lend itself to prefix compression, so
-it uses the simple common-table setup form (tag 113).<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<p id="appendix-A-1">The (JSON-compatible) CBOR data structure depicted in <a href="#fig-example-in" class="auto internal xref">Figure 2</a>,
+400 bytes of binary CBOR, could be packed into the CBOR data item depicted
+in <a href="#fig-example-out" class="auto internal xref">Figure 3</a>, ~309 bytes, only employing item sharing.
+With support for argument sharing and the record function tag 114,
+the data item can be packed into 298 bytes as depicted in <a href="#fig-example-out-record" class="auto internal xref">Figure 4</a>.
+Note that this particular example does not lend itself to prefix compression,
+so it uses the simple common-table setup form (tag 113).<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <span id="name-example-original-cbor-data-"></span><div id="fig-example-in">
 <figure id="figure-2">
         <div class="lang-json sourcecode" id="appendix-A-2.1">
@@ -2406,15 +2466,41 @@ it uses the simple common-table setup form (tag 113).<a href="#appendix-A-1" cla
 </pre>
 </div>
 <figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
-<a href="#name-example-packed-cbor-data-it" class="selfRef">Example packed CBOR data item</a>
+<a href="#name-example-packed-cbor-data-it" class="selfRef">Example packed CBOR data item with item sharing only</a>
         </figcaption></figure>
 </div>
-<p id="appendix-A-4">The (JSON-compatible) CBOR data structure below has been packed with shared
-item and (partial) prefix compression only and employs the split-table
-setup form (tag 1113).<a href="#appendix-A-4" class="pilcrow">¶</a></p>
-<span id="name-example-original-cbor-data-i"></span><div id="fig-example-in2">
+<span id="name-example-packed-cbor-data-ite"></span><div id="fig-example-out-record">
 <figure id="figure-4">
-        <div class="breakable lang-json sourcecode" id="appendix-A-5.1">
+        <div class="lang-cbor-diag sourcecode" id="appendix-A-4.1">
+<pre>
+113([[114(["category", "author",
+           "title", simple(1), "isbn"]),
+    /  0                       /
+      "price", "fiction", 8.95],
+    /  1        2         3    /
+     {"store": {
+       "book": [
+           6(["reference", "Nigel Rees",
+              "Sayings of the Century", simple(3)]),
+           6([simple(2), "Evelyn Waugh",
+              "Sword of Honour", 12.99]),
+           6([simple(2), "Herman Melville",
+              "Moby Dick", simple(3), "0-553-21311-3"]),
+           6([simple(2), "J. R. R. Tolkien",
+               "The Lord of the Rings", 22.99, "0-395-19395-8"])],
+       "bicycle": {"color": "red", simple(1): 19.95}}}])
+</pre>
+</div>
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<a href="#name-example-packed-cbor-data-ite" class="selfRef">Example packed CBOR data item using item sharing and the record function tag</a>
+        </figcaption></figure>
+</div>
+<p id="appendix-A-5">The (JSON-compatible) CBOR data structure below has been packed with shared
+item and (partial) prefix compression only and employs the split-table
+setup form (tag 1113).<a href="#appendix-A-5" class="pilcrow">¶</a></p>
+<span id="name-example-original-cbor-data-i"></span><div id="fig-example-in2">
+<figure id="figure-5">
+        <div class="breakable lang-json sourcecode" id="appendix-A-6.1">
 <pre>
 {
   "name": "MyLED",
@@ -2541,13 +2627,13 @@ setup form (tag 1113).<a href="#appendix-A-4" class="pilcrow">¶</a></p>
 }
 </pre>
 </div>
-<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
 <a href="#name-example-original-cbor-data-i" class="selfRef">Example original CBOR data item</a>
         </figcaption></figure>
 </div>
-<span id="name-example-packed-cbor-data-ite"></span><div id="fig-example-out2">
-<figure id="figure-5">
-        <div class="lang-cbordiag sourcecode" id="appendix-A-6.1">
+<span id="name-example-packed-cbor-data-item"></span><div id="fig-example-out2">
+<figure id="figure-6">
+        <div class="lang-cbordiag sourcecode" id="appendix-A-7.1">
 <pre>
 1113([/shared/["name", "@type", "links", "href", "mediaType",
             /  0       1       2        3         4 /
@@ -2581,8 +2667,8 @@ setup form (tag 1113).<a href="#appendix-A-4" class="pilcrow">¶</a></p>
      "@context": 6("2:8444/wot/w3c-wot-td-context.jsonld")}])
 </pre>
 </div>
-<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
-<a href="#name-example-packed-cbor-data-ite" class="selfRef">Example packed CBOR data item</a>
+<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
+<a href="#name-example-packed-cbor-data-item" class="selfRef">Example packed CBOR data item</a>
         </figcaption></figure>
 </div>
 </section>
