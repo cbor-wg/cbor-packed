@@ -184,7 +184,7 @@ Inverted reference:
 Function tag:
 : A tag used in an argument reference for the argument (straight
   references) or the rump (inverted references), causing the
-  application of a function indicated by the function tag to
+  application of a function indicated by the function tag in order to
   reconstruct the data item.
 
 Packing tables:
