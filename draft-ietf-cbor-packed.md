@@ -726,6 +726,57 @@ string-array concatenation as defined in {{implicit-join}} actually
 obviate the need for an explicit join/ijoin tag; the examples do serve
 to demonstrate the explicit usage of the tag.
 
+## Record Function Tag {#record}
+
+Tag 114 ('r') defines the "record" function, which combines
+an array of keys with an array of values into a map.
+
+The record function expects an array as its left-hand side,
+whose items are treated as key items for the resulting map,
+and an array of equal or shorter length as its right-hand side,
+whose items are treated as value items for the resulting map.
+
+The map is constructed by grouping key and value items
+with equal position in the provided arrays into pairs that constitute the resulting map.
+
+The value item array MUST NOT be longer than the key item array.
+
+The value item array MAY be shorter than the key item array, in which
+case the one or more unmatched value items towards the end are treated as _absent_.
+Additionally, value items that are the CBOR simple value `undefined`
+(simple(23), encoding 0xf7) are also treated as absent.
+Key items whose matching value items are absent are not included in the resulting map.
+
+For an example, we assume this unpacked data item:
+
+~~~ cbor-diag
+[{"key0": false, "key1": "value 1", "key2": 2},
+ {"key0": true, "key1": "value -1", "key2": -2},
+ {"key1": "", "key2": 0}]
+~~~
+
+A straightforward packed form of this using the record function tag could be:
+
+~~~ cbor-diag
+113([[114(["key0", "key1", "key2"])],
+  [6([false, "value 1", 2]),
+   6([true, "value -1", -2]),
+   6([undefined, "", 0])]
+])
+~~~
+
+A slightly more concise packed form can be achieved by manipulating the key item order
+(recall that the order of key/value pairs in maps carries no semantics):
+
+~~~ cbor-diag
+113([[114(["key1", "key2", "key0"])],
+  [6(["value 1", 2, false]),
+   6(["value -1", -2, true]),
+   6(["", 0])]
+])
+~~~
+
+
 Tag Validity: Tag Equivalence Principle
 ===================================
 
