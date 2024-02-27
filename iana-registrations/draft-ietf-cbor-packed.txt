@@ -881,6 +881,13 @@ Table of Contents
    |                        |                 | record    | cbor-     |
    |                        |                 | function  | packed    |
    +------------------------+-----------------+-----------+-----------+
+   |               216..223 | function tag or | Packed    | draft-    |
+   |                        | concatenation   | CBOR:     | ietf-     |
+   |                        | item (text      | inverted  | cbor-     |
+   |                        | string, byte    |           | packed    |
+   |                        | string, array,  |           |           |
+   |                        | or map)         |           |           |
+   +------------------------+-----------------+-----------+-----------+
    |               224..255 | any             | Packed    | draft-    |
    |                        |                 | CBOR:     | ietf-     |
    |                        |                 | straight  | cbor-     |
@@ -896,23 +903,6 @@ Table of Contents
    |                        | argument-items, | table     | cbor-     |
    |                        | rump)           | setup     | packed    |
    +------------------------+-----------------+-----------+-----------+
-   |           28704..32767 | any             | Packed    | draft-    |
-   |                        |                 | CBOR:     | ietf-     |
-   |                        |                 | straight  | cbor-     |
-   |                        |                 |           | packed    |
-   +------------------------+-----------------+-----------+-----------+
-   | 1879052288..2147483647 | any             | Packed    | draft-    |
-   |                        |                 | CBOR:     | ietf-     |
-   |                        |                 | straight  | cbor-     |
-   |                        |                 |           | packed    |
-   +------------------------+-----------------+-----------+-----------+
-   |               216..223 | function tag or | Packed    | draft-    |
-   |                        | concatenation   | CBOR:     | ietf-     |
-   |                        | item (text      | inverted  | cbor-     |
-   |                        | string, byte    |           | packed    |
-   |                        | string, array,  |           |           |
-   |                        | or map)         |           |           |
-   +------------------------+-----------------+-----------+-----------+
    |           27647..28671 | function tag or | Packed    | draft-    |
    |                        | concatenation   | CBOR:     | ietf-     |
    |                        | item (text      | inverted  | cbor-     |
@@ -920,12 +910,22 @@ Table of Contents
    |                        | string, array,  |           |           |
    |                        | or map)         |           |           |
    +------------------------+-----------------+-----------+-----------+
+   |           28704..32767 | any             | Packed    | draft-    |
+   |                        |                 | CBOR:     | ietf-     |
+   |                        |                 | straight  | cbor-     |
+   |                        |                 |           | packed    |
+   +------------------------+-----------------+-----------+-----------+
    | 1811940352..1879048191 | function tag or | Packed    | draft-    |
    |                        | concatenation   | CBOR:     | ietf-     |
    |                        | item (text      | inverted  | cbor-     |
    |                        | string, byte    |           | packed    |
    |                        | string, array,  |           |           |
    |                        | or map)         |           |           |
+   +------------------------+-----------------+-----------+-----------+
+   | 1879052288..2147483647 | any             | Packed    | draft-    |
+   |                        |                 | CBOR:     | ietf-     |
+   |                        |                 | straight  | cbor-     |
+   |                        |                 |           | packed    |
    +------------------------+-----------------+-----------+-----------+
 
                      Table 4: Values for Tag Numbers
