@@ -867,14 +867,14 @@ IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 |                    106 | array of concatenation item (text string, byte string, array, or map)          | Packed CBOR: join function   | draft-ietf-cbor-packed |
 |                    113 | array (shared-and-argument-items, rump)                                        | Packed CBOR: table setup     | draft-ietf-cbor-packed |
 |                    114 | array                                                                          | Packed CBOR: record function | draft-ietf-cbor-packed |
+|               216..223 | function tag or concatenation item (text string, byte string, array, or map)   | Packed CBOR: inverted        | draft-ietf-cbor-packed |
 |               224..255 | any                                                                            | Packed CBOR: straight        | draft-ietf-cbor-packed |
 |                   1112 | undefined (0xf7)                                                               | Packed CBOR: reference error | draft-ietf-cbor-packed |
 |                   1113 | array (shared-items, argument-items, rump)                                     | Packed CBOR: table setup     | draft-ietf-cbor-packed |
-|           28704..32767 | any                                                                            | Packed CBOR: straight        | draft-ietf-cbor-packed |
-| 1879052288..2147483647 | any                                                                            | Packed CBOR: straight        | draft-ietf-cbor-packed |
-|               216..223 | function tag or concatenation item (text string, byte string, array, or map)   | Packed CBOR: inverted        | draft-ietf-cbor-packed |
 |           27647..28671 | function tag or concatenation item (text string, byte string, array, or map)   | Packed CBOR: inverted        | draft-ietf-cbor-packed |
+|           28704..32767 | any                                                                            | Packed CBOR: straight        | draft-ietf-cbor-packed |
 | 1811940352..1879048191 | function tag or concatenation item (text string, byte string, array, or map)   | Packed CBOR: inverted        | draft-ietf-cbor-packed |
+| 1879052288..2147483647 | any                                                                            | Packed CBOR: straight        | draft-ietf-cbor-packed |
 {: #tab-tag-values cols='r l l' title="Values for Tag Numbers"}
 
 
