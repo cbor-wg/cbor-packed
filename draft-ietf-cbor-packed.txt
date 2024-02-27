@@ -850,78 +850,85 @@ Table of Contents
    In the registry "CBOR Tags" [IANA.cbor-tags], IANA is requested to
    allocate the tags defined in Table 4.
 
-    +========================+================+===========+===========+
-    |                    Tag | Data Item      | Semantics | Reference |
-    +========================+================+===========+===========+
-    |                      6 | integer (for   | Packed    | draft-    |
-    |                        | shared); text  | CBOR:     | ietf-     |
-    |                        | string, byte   | shared/   | cbor-     |
-    |                        | string, array, | straight  | packed    |
-    |                        | map, tag (for  |           |           |
-    |                        | straight)      |           |           |
-    +------------------------+----------------+-----------+-----------+
-    |                    105 | text string,   | Packed    | draft-    |
-    |                        | byte string,   | CBOR:     | ietf-     |
-    |                        | array, map,    | ijoin     | cbor-     |
-    |                        | tag            | function  | packed    |
-    +------------------------+----------------+-----------+-----------+
-    |                    106 | text string,   | Packed    | draft-    |
-    |                        | byte string,   | CBOR:     | ietf-     |
-    |                        | array, map,    | join      | cbor-     |
-    |                        | tag            | function  | packed    |
-    +------------------------+----------------+-----------+-----------+
-    |                    113 | array (shared- | Packed    | draft-    |
-    |                        | and-argument-  | CBOR:     | ietf-     |
-    |                        | items, rump)   | table     | cbor-     |
-    |                        |                | setup     | packed    |
-    +------------------------+----------------+-----------+-----------+
-    |                    114 | array          | Packed    | draft-    |
-    |                        |                | CBOR:     | ietf-     |
-    |                        |                | record    | cbor-     |
-    |                        |                | function  | packed    |
-    +------------------------+----------------+-----------+-----------+
-    |               224..255 | text string,   | Packed    | draft-    |
-    |                        | byte string,   | CBOR:     | ietf-     |
-    |                        | array, map,    | straight  | cbor-     |
-    |                        | tag            |           | packed    |
-    +------------------------+----------------+-----------+-----------+
-    |                   1112 | undefined      | Packed    | draft-    |
-    |                        | (0xf7)         | CBOR:     | ietf-     |
-    |                        |                | reference | cbor-     |
-    |                        |                | error     | packed    |
-    +------------------------+----------------+-----------+-----------+
-    |                   1113 | array (shared- | Packed    | draft-    |
-    |                        | items,         | CBOR:     | ietf-     |
-    |                        | argument-      | table     | cbor-     |
-    |                        | items, rump)   | setup     | packed    |
-    +------------------------+----------------+-----------+-----------+
-    |           28704..32767 | text string,   | Packed    | draft-    |
-    |                        | byte string,   | CBOR:     | ietf-     |
-    |                        | array, map,    | straight  | cbor-     |
-    |                        | tag            |           | packed    |
-    +------------------------+----------------+-----------+-----------+
-    | 1879052288..2147483647 | text string,   | Packed    | draft-    |
-    |                        | byte string,   | CBOR:     | ietf-     |
-    |                        | array, map,    | straight  | cbor-     |
-    |                        | tag            |           | packed    |
-    +------------------------+----------------+-----------+-----------+
-    |               216..223 | text string,   | Packed    | draft-    |
-    |                        | byte string,   | CBOR:     | ietf-     |
-    |                        | array, map,    | inverted  | cbor-     |
-    |                        | tag            |           | packed    |
-    +------------------------+----------------+-----------+-----------+
-    |           27647..28671 | text string,   | Packed    | draft-    |
-    |                        | byte string,   | CBOR:     | ietf-     |
-    |                        | array, map,    | inverted  | cbor-     |
-    |                        | tag            |           | packed    |
-    +------------------------+----------------+-----------+-----------+
-    | 1811940352..1879048191 | text string,   | Packed    | draft-    |
-    |                        | byte string,   | CBOR:     | ietf-     |
-    |                        | array, map,    | inverted  | cbor-     |
-    |                        | tag            |           | packed    |
-    +------------------------+----------------+-----------+-----------+
+   +========================+=================+===========+===========+
+   |                    Tag | Data Item       | Semantics | Reference |
+   +========================+=================+===========+===========+
+   |                      6 | integer (for    | Packed    | draft-    |
+   |                        | shared); any    | CBOR:     | ietf-     |
+   |                        | except integer  | shared/   | cbor-     |
+   |                        | (for straight)  | straight  | packed    |
+   +------------------------+-----------------+-----------+-----------+
+   |                    105 | concatenation   | Packed    | draft-    |
+   |                        | item (text      | CBOR:     | ietf-     |
+   |                        | string, byte    | ijoin     | cbor-     |
+   |                        | string, array,  | function  | packed    |
+   |                        | or map)         |           |           |
+   +------------------------+-----------------+-----------+-----------+
+   |                    106 | array of        | Packed    | draft-    |
+   |                        | concatenation   | CBOR:     | ietf-     |
+   |                        | item (text      | join      | cbor-     |
+   |                        | string, byte    | function  | packed    |
+   |                        | string, array,  |           |           |
+   |                        | or map)         |           |           |
+   +------------------------+-----------------+-----------+-----------+
+   |                    113 | array (shared-  | Packed    | draft-    |
+   |                        | and-argument-   | CBOR:     | ietf-     |
+   |                        | items, rump)    | table     | cbor-     |
+   |                        |                 | setup     | packed    |
+   +------------------------+-----------------+-----------+-----------+
+   |                    114 | array           | Packed    | draft-    |
+   |                        |                 | CBOR:     | ietf-     |
+   |                        |                 | record    | cbor-     |
+   |                        |                 | function  | packed    |
+   +------------------------+-----------------+-----------+-----------+
+   |               216..223 | function tag or | Packed    | draft-    |
+   |                        | concatenation   | CBOR:     | ietf-     |
+   |                        | item (text      | inverted  | cbor-     |
+   |                        | string, byte    |           | packed    |
+   |                        | string, array,  |           |           |
+   |                        | or map)         |           |           |
+   +------------------------+-----------------+-----------+-----------+
+   |               224..255 | any             | Packed    | draft-    |
+   |                        |                 | CBOR:     | ietf-     |
+   |                        |                 | straight  | cbor-     |
+   |                        |                 |           | packed    |
+   +------------------------+-----------------+-----------+-----------+
+   |                   1112 | undefined       | Packed    | draft-    |
+   |                        | (0xf7)          | CBOR:     | ietf-     |
+   |                        |                 | reference | cbor-     |
+   |                        |                 | error     | packed    |
+   +------------------------+-----------------+-----------+-----------+
+   |                   1113 | array (shared-  | Packed    | draft-    |
+   |                        | items,          | CBOR:     | ietf-     |
+   |                        | argument-items, | table     | cbor-     |
+   |                        | rump)           | setup     | packed    |
+   +------------------------+-----------------+-----------+-----------+
+   |           27647..28671 | function tag or | Packed    | draft-    |
+   |                        | concatenation   | CBOR:     | ietf-     |
+   |                        | item (text      | inverted  | cbor-     |
+   |                        | string, byte    |           | packed    |
+   |                        | string, array,  |           |           |
+   |                        | or map)         |           |           |
+   +------------------------+-----------------+-----------+-----------+
+   |           28704..32767 | any             | Packed    | draft-    |
+   |                        |                 | CBOR:     | ietf-     |
+   |                        |                 | straight  | cbor-     |
+   |                        |                 |           | packed    |
+   +------------------------+-----------------+-----------+-----------+
+   | 1811940352..1879048191 | function tag or | Packed    | draft-    |
+   |                        | concatenation   | CBOR:     | ietf-     |
+   |                        | item (text      | inverted  | cbor-     |
+   |                        | string, byte    |           | packed    |
+   |                        | string, array,  |           |           |
+   |                        | or map)         |           |           |
+   +------------------------+-----------------+-----------+-----------+
+   | 1879052288..2147483647 | any             | Packed    | draft-    |
+   |                        |                 | CBOR:     | ietf-     |
+   |                        |                 | straight  | cbor-     |
+   |                        |                 |           | packed    |
+   +------------------------+-----------------+-----------+-----------+
 
-                      Table 4: Values for Tag Numbers
+                     Table 4: Values for Tag Numbers
 
 6.2.  CBOR Simple Values Registry
 
