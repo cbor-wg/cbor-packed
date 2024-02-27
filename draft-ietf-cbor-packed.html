@@ -1069,7 +1069,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bormann &amp; Gütschow</td>
-<td class="center">Expires 29 August 2024</td>
+<td class="center">Expires 30 August 2024</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1082,12 +1082,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-cbor-packed-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-02-26" class="published">26 February 2024</time>
+<time datetime="2024-02-27" class="published">27 February 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-08-29">29 August 2024</time></dd>
+<dd class="expires"><time datetime="2024-08-30">30 August 2024</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1157,7 +1157,7 @@ a number of editorial cleanups.</span><a href="#section-abstract-4" class="pilcr
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 29 August 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 30 August 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1965,7 +1965,7 @@ based on the type of the joiner
 </pre><a href="#section-4.1-6" class="pilcrow">¶</a>
 </div>
 <p id="section-4.1-7">A packed form of this using straight references could be:<a href="#section-4.1-7" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.1-8">
+<div class="lang-cbor-diag sourcecode" id="section-4.1-8">
 <pre>
 113([[106("packed.example")],
   [6(["https://", "/foo.html"]),
@@ -1978,7 +1978,7 @@ based on the type of the joiner
 like that of tag 106, except that the left-hand side and right-hand
 side are interchanged ('i').<a href="#section-4.1-9" class="pilcrow">¶</a></p>
 <p id="section-4.1-10">A packed form of the first example using inverted references and the ijoin tag could be:<a href="#section-4.1-10" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.1-11">
+<div class="lang-cbor-diag sourcecode" id="section-4.1-11">
 <pre>
 113([["packed.example"],
   [216(105(["https://", "/foo.html"])),
@@ -1989,7 +1989,7 @@ side are interchanged ('i').<a href="#section-4.1-9" class="pilcrow">¶</a></p>
 </div>
 <p id="section-4.1-12">A packed form of an array with many URIs that reference SenML items
 from the same place could be:<a href="#section-4.1-12" class="pilcrow">¶</a></p>
-<div class="alignLeft art-text artwork" id="section-4.1-13">
+<div class="lang-cbor-diag sourcecode" id="section-4.1-13">
 <pre>
 113([[105(["coaps://[2001::db8::1]/s/", ".senml"])],
   [6("temp-freezer"),
@@ -2418,14 +2418,14 @@ this requires additional consideration.)<a href="#section-7-3" class="pilcrow">�
       </h2>
 <p id="appendix-A-1">The (JSON-compatible) CBOR data structure depicted in <a href="#fig-example-in" class="auto internal xref">Figure 2</a>,
 400 bytes of binary CBOR, could be packed into the CBOR data item depicted
-in <a href="#fig-example-out" class="auto internal xref">Figure 3</a>, ~309 bytes, only employing item sharing.
+in <a href="#fig-example-out" class="auto internal xref">Figure 3</a>, 308 bytes, only employing item sharing.
 With support for argument sharing and the record function tag 114,
 the data item can be packed into 298 bytes as depicted in <a href="#fig-example-out-record" class="auto internal xref">Figure 4</a>.
 Note that this particular example does not lend itself to prefix compression,
 so it uses the simple common-table setup form (tag 113).<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <span id="name-example-original-cbor-data-"></span><div id="fig-example-in">
 <figure id="figure-2">
-        <div class="lang-json sourcecode" id="appendix-A-2.1">
+        <div class="lang-cbor-diag sourcecode" id="appendix-A-2.1">
 <pre>
 { "store": {
     "book": [
@@ -2461,7 +2461,7 @@ so it uses the simple common-table setup form (tag 113).<a href="#appendix-A-1" 
 </pre>
 </div>
 <figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
-<a href="#name-example-original-cbor-data-" class="selfRef">Example original CBOR data item</a>
+<a href="#name-example-original-cbor-data-" class="selfRef">Example original CBOR data item, 400 bytes</a>
         </figcaption></figure>
 </div>
 <span id="name-example-packed-cbor-data-it"></span><div id="fig-example-out">
@@ -2487,7 +2487,7 @@ so it uses the simple common-table setup form (tag 113).<a href="#appendix-A-1" 
 </pre>
 </div>
 <figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
-<a href="#name-example-packed-cbor-data-it" class="selfRef">Example packed CBOR data item with item sharing only</a>
+<a href="#name-example-packed-cbor-data-it" class="selfRef">Example packed CBOR data item with item sharing only, 308 bytes</a>
         </figcaption></figure>
 </div>
 <span id="name-example-packed-cbor-data-ite"></span><div id="fig-example-out-record">
@@ -2513,7 +2513,7 @@ so it uses the simple common-table setup form (tag 113).<a href="#appendix-A-1" 
 </pre>
 </div>
 <figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
-<a href="#name-example-packed-cbor-data-ite" class="selfRef">Example packed CBOR data item using item sharing and the record function tag</a>
+<a href="#name-example-packed-cbor-data-ite" class="selfRef">Example packed CBOR data item using item sharing and the record function tag, 298 bytes</a>
         </figcaption></figure>
 </div>
 <p id="appendix-A-5">The (JSON-compatible) CBOR data structure below has been packed with shared
@@ -2521,7 +2521,7 @@ item and (partial) prefix compression only and employs the split-table
 setup form (tag 1113).<a href="#appendix-A-5" class="pilcrow">¶</a></p>
 <span id="name-example-original-cbor-data-i"></span><div id="fig-example-in2">
 <figure id="figure-5">
-        <div class="breakable lang-json sourcecode" id="appendix-A-6.1">
+        <div class="breakable lang-cbor-diag sourcecode" id="appendix-A-6.1">
 <pre>
 {
   "name": "MyLED",
@@ -2649,12 +2649,12 @@ setup form (tag 1113).<a href="#appendix-A-5" class="pilcrow">¶</a></p>
 </pre>
 </div>
 <figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
-<a href="#name-example-original-cbor-data-i" class="selfRef">Example original CBOR data item</a>
+<a href="#name-example-original-cbor-data-i" class="selfRef">Example original CBOR data item, 1210 bytes</a>
         </figcaption></figure>
 </div>
 <span id="name-example-packed-cbor-data-item"></span><div id="fig-example-out2">
 <figure id="figure-6">
-        <div class="lang-cbordiag sourcecode" id="appendix-A-7.1">
+        <div class="lang-cbor-diag sourcecode" id="appendix-A-7.1">
 <pre>
 1113([/shared/["name", "@type", "links", "href", "mediaType",
             /  0       1       2        3         4 /
@@ -2689,7 +2689,7 @@ setup form (tag 1113).<a href="#appendix-A-5" class="pilcrow">¶</a></p>
 </pre>
 </div>
 <figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
-<a href="#name-example-packed-cbor-data-item" class="selfRef">Example packed CBOR data item</a>
+<a href="#name-example-packed-cbor-data-item" class="selfRef">Example packed CBOR data item, 505 bytes</a>
         </figcaption></figure>
 </div>
 </section>

@@ -5,8 +5,8 @@
 Network Working Group                                         C. Bormann
 Internet-Draft                                    Universität Bremen TZI
 Intended status: Standards Track                             M. Gütschow
-Expires: 29 August 2024                                       TU Dresden
-                                                        26 February 2024
+Expires: 30 August 2024                                       TU Dresden
+                                                        27 February 2024
 
 
                               Packed CBOR
@@ -67,7 +67,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 29 August 2024.
+   This Internet-Draft will expire on 30 August 2024.
 
 Copyright Notice
 
@@ -1021,7 +1021,7 @@ Appendix A.  Examples
 
    The (JSON-compatible) CBOR data structure depicted in Figure 2, 400
    bytes of binary CBOR, could be packed into the CBOR data item
-   depicted in Figure 3, ~309 bytes, only employing item sharing.  With
+   depicted in Figure 3, 308 bytes, only employing item sharing.  With
    support for argument sharing and the record function tag 114, the
    data item can be packed into 298 bytes as depicted in Figure 4.  Note
    that this particular example does not lend itself to prefix
@@ -1059,7 +1059,7 @@ Appendix A.  Examples
      }
    }
 
-                 Figure 2: Example original CBOR data item
+            Figure 2: Example original CBOR data item, 400 bytes
 
    113([["price", "category", "author", "title", "fiction", 8.95,
                                                                 "isbn"],
@@ -1078,7 +1078,8 @@ Appendix A.  Examples
              simple(6): "0-395-19395-8", simple(0): 22.99}],
           "bicycle": {"color": "red", simple(0): 19.95}}}])
 
-       Figure 3: Example packed CBOR data item with item sharing only
+      Figure 3: Example packed CBOR data item with item sharing only,
+                                 308 bytes
 
    113([[114(["category", "author",
               "title", simple(1), "isbn"]),
@@ -1098,7 +1099,7 @@ Appendix A.  Examples
           "bicycle": {"color": "red", simple(1): 19.95}}}])
 
        Figure 4: Example packed CBOR data item using item sharing and
-                          the record function tag
+                     the record function tag, 298 bytes
 
    The (JSON-compatible) CBOR data structure below has been packed with
    shared item and (partial) prefix compression only and employs the
@@ -1228,7 +1229,7 @@ Appendix A.  Examples
       "http://192.168.1.102:8444/wot/w3c-wot-td-context.jsonld"
    }
 
-                 Figure 5: Example original CBOR data item
+           Figure 5: Example original CBOR data item, 1210 bytes
 
    1113([/shared/["name", "@type", "links", "href", "mediaType",
                /  0       1       2        3         4 /
@@ -1261,7 +1262,7 @@ Appendix A.  Examples
         simple(1): "Lamp", "id": "0", "base": 225(""),
         "@context": 6("2:8444/wot/w3c-wot-td-context.jsonld")}])
 
-                  Figure 6: Example packed CBOR data item
+             Figure 6: Example packed CBOR data item, 505 bytes
 
 Acknowledgements
 
