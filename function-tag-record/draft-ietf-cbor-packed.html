@@ -1,0 +1,2738 @@
+<!DOCTYPE html>
+<html lang="en" class="Internet-Draft">
+<head>
+<meta charset="utf-8">
+<meta content="Common,Latin" name="scripts">
+<meta content="initial-scale=1.0" name="viewport">
+<title>Packed CBOR</title>
+<meta content="Carsten Bormann" name="author">
+<meta content="Mikolai Gütschow" name="author">
+<meta content='
+       The Concise Binary Object Representation (CBOR, RFC 8949 == STD 94) is a data
+format whose design goals include the possibility of extremely small
+code size, fairly small message size, and extensibility without the
+need for version negotiation. 
+       CBOR does not provide any forms of data compression.
+CBOR data items, in particular when generated from legacy data models,
+often allow considerable gains in compactness when applying data
+compression.
+While traditional data compression techniques such as DEFLATE (RFC 1951) can work well for CBOR encoded data items, their disadvantage is
+that the receiver needs to decompress the compressed form to make
+use of the data. 
+       This specification describes Packed CBOR, a simple transformation of a
+CBOR data item into another CBOR data item that is almost as easy to
+consume as the original CBOR data item.  A separate decompression
+step is therefore often not required at the receiver. 
+       The present version (-11) adds an author, the "record" function
+tag (TBD114), a special role for the simple value  undefined , and
+a number of editorial cleanups. 
+    ' name="description">
+<meta content="xml2rfc 3.19.4" name="generator">
+<meta content="Internet-Draft" name="keyword">
+<meta content="draft-ietf-cbor-packed-latest" name="ietf.draft">
+<!-- Generator version information:
+  xml2rfc 3.19.4
+    Python 3.11.6
+    ConfigArgParse 1.7
+    google-i18n-address 3.1.0
+    intervaltree 3.1.0
+    Jinja2 3.1.2
+    lxml 4.9.3
+    platformdirs 4.2.0
+    pycountry 22.3.5
+    PyYAML 6.0.1
+    requests 2.31.0
+    setuptools 68.2.2
+    six 1.16.0
+    wcwidth 0.2.13
+-->
+<link href="draft-ietf-cbor-packed.xml" rel="alternate" type="application/rfc+xml">
+<link href="#copyright" rel="license">
+<style type="text/css">@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: italic;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Italic'), local('Lora-Italic'), url('https://martinthomson.github.io/rfc-css/fonts/lora-italic-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Lora Regular'), local('Lora-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/lora-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic-ext.woff2') format('woff2');
+  unicode-range: U+0460-052F, U+1C80-1C88, U+20B4, U+2DE0-2DFF, U+A640-A69F, U+FE2E-FE2F;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-cyrillic.woff2') format('woff2');
+  unicode-range: U+0400-045F, U+0490-0491, U+04B0-04B1, U+2116;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: local('Lora Bold'), local('Lora-Bold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-bold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: 'Lora';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Lora SemiBold'), local('Lora-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/lora-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-vietnamese.woff2') format('woff2');
+  unicode-range: U+0102-0103, U+0110-0111, U+1EA0-1EF9, U+20AB;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Cabin Condensed';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: local('Cabin Condensed SemiBold'), local('CabinCondensed-SemiBold'), url('https://martinthomson.github.io/rfc-css/fonts/cabincondensed-semibold-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-024F, U+0259, U+1E00-1EFF, U+2020, U+20A0-20AB, U+20AD-20CF, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+@font-face {
+  font-family: 'Oxygen Mono';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: local('Oxygen Mono'), local('OxygenMono-Regular'), url('https://martinthomson.github.io/rfc-css/fonts/oxygenmono-regular-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+  color-scheme: light dark;
+  --background-color: #fff;
+  --text-color: #222;
+  --title-color: #191919;
+  --link-color: #2a6496;
+  --highlight-color: #f9f9f9;
+  --line-color: #eee;
+  --pilcrow-weak: #ddd;
+  --pilcrow-strong: #bbb;
+  --small-font-size: 14.5px;
+  --font-mono: 'Oxygen Mono', monospace;
+  scrollbar-color: #bbb #eee;
+}
+body {
+  max-width: 600px;
+  margin: 75px auto;
+  padding: 0 5px;
+  color: var(--text-color);
+  background-color: var(--background-color);
+  font: 16px/22px "Lora", serif;
+  scroll-behavior: smooth;
+}
+
+.ears {
+  display: none;
+}
+
+/* headings */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Cabin Condensed", sans-serif;
+  font-weight: 600;
+  margin: 0.8em 0 0.3em;
+  font-size-adjust: 0.5;
+  color: var(--title-color);
+}
+h1#title {
+  font-size: 32px;
+  line-height: 40px;
+  clear: both;
+}
+h1#title, h1#rfcnum {
+  margin: 1.5em 0 0.2em;
+}
+h1#rfcnum + h1#title {
+  margin: 0.2em 0;
+}
+
+h1, h2, h3 {
+  font-size: 22px;
+  line-height: 27px;
+}
+h4, h5, h6 {
+  font-size: 20px;
+  line-height: 24px;
+}
+
+/* general structure */
+.author {
+  padding-bottom: 0.3em;
+}
+#abstract+p {
+  font-size: 18px;
+  line-height: 24px;
+}
+#abstract+p code, #abstract+p samp, #abstract+p tt {
+  font-size: 16px;
+  line-height: 0;
+}
+
+p {
+  padding: 0;
+  margin: 0.5em 0;
+  text-align: left;
+}
+div {
+  margin: 0;
+}
+.alignRight.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignRight.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignRight {
+  margin: 1em 0;
+}
+.alignRight > *:first-child {
+  border: none;
+  margin: 0;
+  float: right;
+  clear: both;
+}
+.alignRight > *:nth-child(2) {
+  clear: both;
+  display: block;
+  border: none;
+}
+svg {
+  display: block;
+}
+/* font-family isn't space-separated, but =~ will have to do */
+svg[font-family~="monospace" i], svg [font-family~="monospace" i] {
+  font-family: var(--font-mono);
+}
+.alignCenter.art-text {
+  background-color: var(--highlight-color);
+  border: 1px solid var(--line-color);
+  border-radius: 3px;
+  padding: 0.5em 1em 0;
+  margin-bottom: 0.5em;
+}
+.alignCenter.art-text pre {
+  padding: 0;
+  width: auto;
+}
+.alignCenter {
+  margin: 1em 0;
+}
+.alignCenter > *:first-child {
+  border: none;
+  /* this isn't optimal, but it's an existence proof.  PrinceXML doesn't
+     support flexbox yet.
+  */
+  display: table;
+  margin: 0 auto;
+}
+
+/* lists */
+ol, ul {
+  padding: 0;
+  margin: 0 0 0.5em 2em;
+}
+:is(ol, ul) :is(ol, ul) {
+  margin-left: 1em;
+}
+li {
+  margin: 0 0 0.25em 0;
+}
+.ulCompact li {
+  margin: 0;
+}
+ul.empty, .ulEmpty {
+  list-style-type: none;
+}
+ul.empty li, .ulEmpty li {
+  margin-top: 0.5em;
+}
+:is(ul, ol).compact, .ulCompact, .olCompact {
+  line-height: 1;
+  margin: 0 0 0 2em;
+}
+
+/* definition lists */
+dl {
+  clear: left;
+  --indent: 3ch;
+  /* --indent: attr(indent ch); not supported in any browser, but we can dream */
+}
+dl.olPercent {
+  --indent: 5ch;
+}
+dl > dt {
+  float: left;
+  margin-right: 2ch;
+  min-width: 8ch;
+}
+dl.dlNewline > dt {
+  float: none;
+}
+dl > dd {
+  margin-bottom: .8em;
+  margin-left: var(--indent) !important; /* stupid element overrides */
+  min-height: 2ex;
+}
+dl.olPercent > dt {
+  min-width: calc(var(--indent) - 2ch);
+}
+:is(dl.compact, .dlCompact) > dd {
+  margin-bottom: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:first-child, .break:first-child + *) {
+  margin-top: 0;
+}
+:is(dl.compact, .dlCompact) > dd > :is(:last-child) {
+  margin-bottom: 0;
+}
+dl > dd > dl {
+  margin-top: 0.5em;
+  margin-bottom: 0;
+}
+:is(dd, span).break {
+  display: none;
+}
+
+/* links */
+a, a[href].selfRef:hover {
+  text-decoration: none;
+}
+a[href] {
+  color: var(--link-color);
+}
+a[href].selfRef, .iref + a[href].internal {
+  color: var(--text-color);
+}
+a[href]:hover {
+  text-decoration: underline;
+}
+a[href].selfRef:hover {
+  background-color: var(--highlight-color);
+}
+a.xref:is(.cite, .auto), :is(#status-of-memo, #copyright) a {
+  white-space: nowrap;
+}
+
+/* Figures */
+tt, code, pre {
+  background-color: var(--highlight-color);
+  font: 14px/22px var(--font-mono);
+}
+tt, code {
+  /* changing the font for inline elements leads to different ascender
+     and descender heights; as we want to retain baseline alignment,
+     remove leading to avoid altering the final height of lines
+     note: this fails if these blocks take an entire line,
+     a different solution would be great */
+  line-height: 0;
+}
+:is(h1, h2, h3, h4, h5, h6) :is(tt, code) {
+  font-size: 84%;
+}
+pre {
+  border: 1px solid var(--line-color);
+  font-size: 13.5px;
+  line-height: 16px;
+  letter-spacing: -0.2px;
+  margin: 5px;
+  padding: 5px;
+}
+img {
+  max-width: 100%;
+}
+figure {
+  margin: 0.5em 0;
+  padding: 0;
+}
+figure blockquote {
+  margin: 0.8em 0.4em 0.4em;
+}
+figcaption, caption {
+  font-style: italic;
+  margin: 0.5em 1.5em;
+  text-align: left;
+}
+@media screen {
+  /* Auto-collapse boilerplate. */
+  :is(#status-of-memo, #copyright) p {
+    margin: -2px 0;
+    max-height: 0;
+    transition: max-height 2s ease, margin 0.5s ease 0.5s;
+    overflow: hidden;
+  }
+  :is(#status-of-memo, #copyright):hover p,
+  :is(#status-of-memo, #copyright) h2:target ~ p {
+    margin: 0.5em 0;
+    max-height: 500px;
+    overflow: auto;
+  }
+  pre, svg {
+    display: inline-block;
+    overflow-x: auto;
+  }
+  pre {
+    max-width: 100%;
+    width: calc(100% - 22px - 1em);
+  }
+  svg {
+    max-width: calc(100% - 22px - 1em);
+  }
+  figure pre {
+    display: block;
+    width: calc(100% - 25px);
+  }
+  :is(pre, svg) + .pilcrow {
+    display: inline-block;
+    vertical-align: text-bottom;
+    padding-bottom: 8px;
+  }
+}
+
+/* aside, blockquote */
+aside, blockquote {
+  margin-left: 0;
+  padding: 0 2em;
+  font-style: italic;
+}
+blockquote {
+  margin: 1em 0;
+}
+cite {
+  display: block;
+  text-align: right;
+  font-style: italic;
+}
+
+/* tables */
+table {
+  max-width: 100%;
+  margin: 0 0 1em;
+  border-collapse: collapse;
+}
+table.right {
+  margin-left: auto;
+}
+table.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+table.left {
+  margin-right: auto;
+}
+thead, tbody {
+  border: 1px solid var(--line-color);
+}
+th, td {
+  text-align: left;
+  vertical-align: top;
+  padding: 5px 10px;
+}
+th {
+  background-color: var(--line-color);
+}
+:is(tr:nth-child(2n), thead+tbody > tr:nth-child(2n+1)) > td {
+  background-color: var(--background-color);
+}
+:is(tr:nth-child(2n+1), thead+tbody > tr:nth-child(2n)) > td {
+  background-color: var(--highlight-color);
+}
+table caption {
+  margin: 0;
+  padding: 3px 0 3px 1em;
+}
+table p {
+  margin: 0;
+}
+
+/* pilcrow */
+a.pilcrow {
+  margin-left: 3px;
+  opacity: 0.2;
+  user-select: none;
+}
+a.pilcrow[href] { color: var(--pilcrow-weak); }
+a.pilcrow[href]:hover { text-decoration: none; }
+@media not print {
+  :hover > a.pilcrow {
+    opacity: 1;
+  }
+  a.pilcrow[href]:hover {
+    color: var(--pilcrow-strong);
+    background-color: transparent;
+  }
+}
+@media print {
+  a.pilcrow {
+    display: none;
+  }
+}
+
+/* misc */
+hr {
+  border: 0;
+  border-top: 1px solid var(--line-color);
+}
+.bcp14 {
+  font-variant: small-caps;
+  font-weight: 600;
+  font-size: var(--small-font-size);
+}
+.role {
+  font-variant: all-small-caps;
+}
+sub, sup {
+  line-height: 1;
+  font-size: 80%;
+}
+
+/* info block */
+#identifiers {
+  margin: 0;
+  font-size: var(--small-font-size);
+  line-height: 18px;
+  --identifier-width: 15ch;
+}
+#identifiers dt {
+  width: var(--identifier-width);
+  min-width: var(--identifier-width);
+  clear: left;
+  float: left;
+  text-align: right;
+  margin-right: 1ch;
+}
+#identifiers dd {
+  margin: 0;
+  margin-left: calc(1em + var(--identifier-width)) !important;
+  min-width: 5em;
+}
+#identifiers .authors .author {
+  display: inline-block;
+  margin-right: 1.5em;
+}
+#identifiers .authors .org {
+  font-style: italic;
+}
+
+/* The prepared/rendered info at the very bottom of the page */
+.docInfo {
+  color: #999;
+  font-size: 0.9em;
+  font-style: italic;
+  margin-top: 2em;
+}
+.docInfo .prepared {
+  float: left;
+}
+.docInfo .prepared {
+  float: right;
+}
+
+/* table of contents */
+#toc {
+  padding: 0.75em 0 2em 0;
+  margin-bottom: 1em;
+}
+#toc nav ul {
+  margin: 0 0.5em 0 0;
+  padding: 0;
+  list-style: none;
+}
+#toc nav li {
+  line-height: 1.3em;
+  margin: 0.75em 0;
+  padding-left: 1.2em;
+  text-indent: -1.2em;
+}
+#toc a.xref {
+  white-space: normal;
+}
+/* references */
+.references dt {
+  text-align: right;
+  font-weight: bold;
+  min-width: 10ch;
+  margin-right: 1.5ch;
+}
+.references dt:target::before {
+  content: "⇒";
+  width: 15px;
+  margin: 0 10px 0 -25px;
+}
+.references dd {
+  margin-left: 12ch !important;
+  overflow: auto;
+}
+
+.refInstance {
+  margin-bottom: 1.25em;
+}
+
+.references .ascii {
+  margin-bottom: 0.25em;
+}
+
+/* index */
+#rfc\.index\.index + ul {
+  margin-left: 0;
+}
+
+/* authors */
+address.vcard {
+  font-style: normal;
+  margin: 1em 0;
+}
+address.vcard .nameRole {
+  font-weight: 700;
+  margin-left: 0;
+}
+address.vcard .label {
+  margin: 0.5em 0;
+}
+address.vcard .type {
+  display: none;
+}
+.alternative-contact {
+  margin: 1.5em 0 1em;
+}
+hr.addr {
+  border-top: 1px dashed;
+  margin: 0;
+  color: #ddd;
+  max-width: calc(100% - 16px);
+}
+@media (min-width: 500px) {
+  #authors-addresses > section {
+    column-count: 2;
+    column-gap: 20px;
+  }
+  #authors-addresses > section > h2 {
+    column-span: all;
+  }
+  /* hack for break-inside: avoid-column */
+  #authors-addresses address {
+    display: inline-block;
+    break-inside: avoid-column;
+  }
+}
+
+.rfcEditorRemove p:first-of-type {
+  font-style: italic;
+}
+.cref {
+  background-color: rgba(249, 232, 105, 0.3);
+  padding: 2px 4px;
+}
+.crefSource {
+  font-style: italic;
+}
+/* alternative layout for smaller screens */
+@media screen and (max-width: 929px) {
+  #toc {
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    right: 0;
+    padding: 0;
+    margin: 0;
+    border-bottom: 1px solid #ccc;
+    opacity: 0.6;
+  }
+  #toc.active {
+      opacity: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 2px 0 2px 6px;
+    padding-right: 1em;
+    font-size: 18px;
+    line-height: 24px;
+    min-width: 190px;
+    text-align: right;
+    background-color: #444;
+    color: white;
+    cursor: pointer;
+  }
+  #toc h2::before { /* css hamburger */
+    float: right;
+    position: relative;
+    width: 1em;
+    height: 1px;
+    left: -164px;
+    margin: 8px 0 0 0;
+    background: white none repeat scroll 0 0;
+    box-shadow: 0 4px 0 0 white, 0 8px 0 0 white;
+    content: "";
+  }
+  #toc nav {
+    display: none;
+    background-color: var(--background-color);
+    padding: 0.5em 1em 1em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    height: calc(100vh - 48px);
+    border-left: 1px solid #ddd;
+  }
+  #toc.active nav {
+    display: block;
+  }
+  /* Make the collapsed ToC header render white on gray also when it's a link */
+  #toc h2 a,
+  #toc h2 a:link,
+  #toc h2 a:focus,
+  #toc h2 a:hover,
+  #toc a.toplink,
+  #toc a.toplink:hover {
+    color: white;
+    background-color: #444;
+    text-decoration: none;
+  }
+  #toc a.toplink {
+    margin-top: 2px;
+  }
+}
+
+/* alternative layout for wide screens */
+@media screen and (min-width: 930px) {
+  body {
+    padding-right: 360px;
+    padding-right: calc(min(180px + 20%, 500px));
+  }
+  #toc {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    right: calc(50vw - 480px);
+    width: 312px;
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+  }
+  #toc h2 {
+    margin: 0;
+    padding: 0.25em 1em 1em 0;
+  }
+  #toc nav {
+    display: block;
+    height: calc(90vh - 84px);
+    bottom: 0;
+    padding: 0.5em 0 2em;
+    overflow: auto;
+    overscroll-behavior: contain;
+    scrollbar-width: thin;
+  }
+  #toc nav > ul  {
+    margin-bottom: 2em;
+  }
+  #toc ul {
+    margin: 0 0 0 4px;
+    font-size: var(--small-font-size);
+  }
+  #toc ul :is(p, li) {
+    margin: 2px 0;
+    line-height: 22px;
+  }
+  img { /* future proofing */
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+/* pagination */
+@media print {
+  body {
+    width: 100%;
+  }
+  p {
+    orphans: 3;
+    widows: 3;
+  }
+  #n-copyright-notice {
+    border-bottom: none;
+  }
+  #toc, #n-introduction {
+    page-break-before: always;
+  }
+  #toc {
+    border-top: none;
+    padding-top: 0;
+  }
+  figure, pre {
+    page-break-inside: avoid;
+  }
+  figure {
+    overflow: scroll;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+  }
+  h2+*, h3+*, h4+*, h5+*, h6+* {
+    page-break-before: avoid;
+  }
+  pre {
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    font-size: 10pt;
+  }
+  table {
+    border: 1px solid #ddd;
+  }
+  td {
+    border-top: 1px solid #ddd;
+  }
+}
+
+@page :first {
+  padding-top: 0;
+  @top-left {
+    content: normal;
+    border: none;
+  }
+  @top-center {
+    content: normal;
+    border: none;
+  }
+  @top-right {
+    content: normal;
+    border: none;
+  }
+}
+
+@page {
+  size: A4;
+  margin-bottom: 45mm;
+  padding-top: 20px;
+}
+
+/* Changes introduced to fix issues found during implementation */
+
+/* Separate body from document info even without intervening H1 */
+section {
+  clear: both;
+}
+
+/* Top align author divs, to avoid names without organization dropping level with org names */
+.author {
+  vertical-align: top;
+}
+
+/* Style section numbers with more space between number and title */
+.section-number {
+  padding-right: 0.5em;
+}
+
+/* Add styling for a link in the ToC that points to the top of the document */
+a.toplink {
+  float: right;
+  margin: 8px 0.5em 0;
+}
+
+/* Provide styling for table cell text alignment */
+table .text-left {
+  text-align: left;
+}
+table .text-center {
+  text-align: center;
+}
+table .text-right {
+  text-align: right;
+}
+
+/* Make the alternative author contact information look less like just another
+   author, and group it closer with the primary author contact information */
+.alternative-contact {
+  margin: 0.5em 0 0.25em 0;
+}
+address .non-ascii {
+  margin: 0 0 0 2em;
+}
+
+/* With it being possible to set tables with alignment
+  left, center, and right, { width: 100%; } does not make sense */
+table {
+  width: auto;
+}
+
+/* Avoid reference text that sits in a block with very wide left margin,
+   because of a long floating dt label.*/
+.references dd {
+  overflow: visible;
+}
+
+/* Control caption placement */
+caption {
+  caption-side: bottom;
+}
+
+/* Limit the width of the author address vcard, so names in right-to-left
+   script don't end up on the other side of the page. */
+
+address.vcard {
+  max-width: 20em;
+  margin-right: auto;
+}
+
+/* For address alignment dependent on LTR or RTL scripts */
+address div.left {
+  text-align: left;
+}
+address div.right {
+  text-align: right;
+}
+
+/* Give the table caption label the same styling as the figcaption */
+
+@media print {
+  .toplink {
+    display: none;
+  }
+
+  /* avoid overwriting the top border line with the ToC header */
+  #toc {
+    padding-top: 1px;
+  }
+
+  /* Avoid page breaks inside dl and author address entries */
+  dd {
+    page-break-before: avoid;
+  }
+  .vcard {
+    page-break-inside: avoid;
+  }
+
+}
+
+/* Dark mode. */
+@media (prefers-color-scheme: dark) {
+:root {
+  --background-color: #121212;
+  --text-color: #f0f0f0;
+  --title-color: #fff;
+  --link-color: #4da4f0;
+  --highlight-color: #282828;
+  --line-color: #444;
+  --pilcrow-weak: #444;
+  --pilcrow-strong: #666;
+  scrollbar-color: #777 #333;
+}
+}
+
+/* SVG Trick: a prefix match works because only black and white are allowed */
+svg :is([stroke="black"], [stroke^="#000"]) {
+  stroke: var(--text-color);
+}
+svg :is([stroke="white"], [stroke^="#fff"]) {
+  stroke: var(--background-color);
+}
+svg :is([fill="black"], [fill^="#000"], :not([fill])) {
+  fill: var(--text-color);
+}
+svg :is([fill="white"], [fill^="#fff"]) {
+  fill: var(--background-color);
+}
+</style>
+
+</head>
+<body class="xml2rfc">
+<table class="ears">
+<thead><tr>
+<td class="left">Internet-Draft</td>
+<td class="center">Packed CBOR</td>
+<td class="right">February 2024</td>
+</tr></thead>
+<tfoot><tr>
+<td class="left">Bormann &amp; Gütschow</td>
+<td class="center">Expires 29 August 2024</td>
+<td class="right">[Page]</td>
+</tr></tfoot>
+</table>
+<div id="external-metadata" class="document-information"></div>
+<div id="internal-metadata" class="document-information">
+<dl id="identifiers">
+<dt class="label-workgroup">Workgroup:</dt>
+<dd class="workgroup">Network Working Group</dd>
+<dt class="label-internet-draft">Internet-Draft:</dt>
+<dd class="internet-draft">draft-ietf-cbor-packed-latest</dd>
+<dt class="label-published">Published:</dt>
+<dd class="published">
+<time datetime="2024-02-26" class="published">26 February 2024</time>
+    </dd>
+<dt class="label-intended-status">Intended Status:</dt>
+<dd class="intended-status">Standards Track</dd>
+<dt class="label-expires">Expires:</dt>
+<dd class="expires"><time datetime="2024-08-29">29 August 2024</time></dd>
+<dt class="label-authors">Authors:</dt>
+<dd class="authors">
+<div class="author">
+      <div class="author-name">C. Bormann</div>
+<div class="org">Universität Bremen TZI</div>
+</div>
+<div class="author">
+      <div class="author-name">M. Gütschow</div>
+<div class="org">TU Dresden</div>
+</div>
+</dd>
+</dl>
+</div>
+<h1 id="title">Packed CBOR</h1>
+<section id="section-abstract">
+      <h2 id="abstract"><a href="#abstract" class="selfRef">Abstract</a></h2>
+<p id="section-abstract-1">The Concise Binary Object Representation (CBOR, RFC 8949 == STD 94) is a data
+format whose design goals include the possibility of extremely small
+code size, fairly small message size, and extensibility without the
+need for version negotiation.<a href="#section-abstract-1" class="pilcrow">¶</a></p>
+<p id="section-abstract-2">CBOR does not provide any forms of data compression.
+CBOR data items, in particular when generated from legacy data models,
+often allow considerable gains in compactness when applying data
+compression.
+While traditional data compression techniques such as DEFLATE (RFC 1951) can work well for CBOR encoded data items, their disadvantage is
+that the receiver needs to decompress the compressed form to make
+use of the data.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
+<p id="section-abstract-3">This specification describes Packed CBOR, a simple transformation of a
+CBOR data item into another CBOR data item that is almost as easy to
+consume as the original CBOR data item.  A separate decompression
+step is therefore often not required at the receiver.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
+<p id="section-abstract-4"><span class="cref" id="status">The present version (-11) adds an author, the "record" function
+tag (TBD114), a special role for the simple value <code>undefined</code>, and
+a number of editorial cleanups.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
+</section>
+<section class="note rfcEditorRemove" id="section-note.1">
+      <h2 id="name-about-this-document">
+<a href="#name-about-this-document" class="section-name selfRef">About This Document</a>
+      </h2>
+<p id="section-note.1-1">This note is to be removed before publishing as an RFC.<a href="#section-note.1-1" class="pilcrow">¶</a></p>
+<p id="section-note.1-2">
+        Status information for this document may be found at <span><a href="https://datatracker.ietf.org/doc/draft-ietf-cbor-packed/">https://datatracker.ietf.org/doc/draft-ietf-cbor-packed/</a></span>.<a href="#section-note.1-2" class="pilcrow">¶</a></p>
+<p id="section-note.1-3">
+        Discussion of this document takes place on the
+        CBOR Working Group mailing list (<span><a href="mailto:cbor@ietf.org">mailto:cbor@ietf.org</a></span>),
+        which is archived at <span><a href="https://mailarchive.ietf.org/arch/browse/cbor/">https://mailarchive.ietf.org/arch/browse/cbor/</a></span>.
+        Subscribe at <span><a href="https://www.ietf.org/mailman/listinfo/cbor/">https://www.ietf.org/mailman/listinfo/cbor/</a></span>.<a href="#section-note.1-3" class="pilcrow">¶</a></p>
+<p id="section-note.1-4">Source for this draft and an issue tracker can be found at
+        <span><a href="https://github.com/cbor-wg/cbor-packed">https://github.com/cbor-wg/cbor-packed</a></span>.<a href="#section-note.1-4" class="pilcrow">¶</a></p>
+</section>
+<div id="status-of-memo">
+<section id="section-boilerplate.1">
+        <h2 id="name-status-of-this-memo">
+<a href="#name-status-of-this-memo" class="section-name selfRef">Status of This Memo</a>
+        </h2>
+<p id="section-boilerplate.1-1">
+        This Internet-Draft is submitted in full conformance with the
+        provisions of BCP 78 and BCP 79.<a href="#section-boilerplate.1-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-2">
+        Internet-Drafts are working documents of the Internet Engineering Task
+        Force (IETF). Note that other groups may also distribute working
+        documents as Internet-Drafts. The list of current Internet-Drafts is
+        at <span><a href="https://datatracker.ietf.org/drafts/current/">https://datatracker.ietf.org/drafts/current/</a></span>.<a href="#section-boilerplate.1-2" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-3">
+        Internet-Drafts are draft documents valid for a maximum of six months
+        and may be updated, replaced, or obsoleted by other documents at any
+        time. It is inappropriate to use Internet-Drafts as reference
+        material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.1-4">
+        This Internet-Draft will expire on 29 August 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="copyright">
+<section id="section-boilerplate.2">
+        <h2 id="name-copyright-notice">
+<a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
+        </h2>
+<p id="section-boilerplate.2-1">
+            Copyright (c) 2024 IETF Trust and the persons identified as the
+            document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
+<p id="section-boilerplate.2-2">
+            This document is subject to BCP 78 and the IETF Trust's Legal
+            Provisions Relating to IETF Documents
+            (<span><a href="https://trustee.ietf.org/license-info">https://trustee.ietf.org/license-info</a></span>) in effect on the date of
+            publication of this document. Please review these documents
+            carefully, as they describe your rights and restrictions with
+            respect to this document. Code Components extracted from this
+            document must include Revised BSD License text as described in
+            Section 4.e of the Trust Legal Provisions and are provided without
+            warranty as described in the Revised BSD License.<a href="#section-boilerplate.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="toc">
+<section id="section-toc.1">
+        <a href="#" onclick="scroll(0,0)" class="toplink">▲</a><h2 id="name-table-of-contents">
+<a href="#name-table-of-contents" class="section-name selfRef">Table of Contents</a>
+        </h2>
+<nav class="toc"><ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1">
+            <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
+                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-terminology-and-conventions" class="internal xref">Terminology and Conventions</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2">
+            <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-packed-cbor" class="internal xref">Packed CBOR</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
+                <p id="section-toc.1-1.2.2.1.1" class="keepWithNext"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-packing-tables" class="internal xref">Packing Tables</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.2">
+                <p id="section-toc.1-1.2.2.2.1"><a href="#section-2.2" class="auto internal xref">2.2</a>.  <a href="#name-referencing-shared-items" class="internal xref">Referencing Shared Items</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.3">
+                <p id="section-toc.1-1.2.2.3.1"><a href="#section-2.3" class="auto internal xref">2.3</a>.  <a href="#name-referencing-argument-items" class="internal xref">Referencing Argument Items</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.4">
+                <p id="section-toc.1-1.2.2.4.1"><a href="#section-2.4" class="auto internal xref">2.4</a>.  <a href="#name-concatenation" class="internal xref">Concatenation</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.5">
+                <p id="section-toc.1-1.2.2.5.1"><a href="#section-2.5" class="auto internal xref">2.5</a>.  <a href="#name-discussion" class="internal xref">Discussion</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3">
+            <p id="section-toc.1-1.3.1"><a href="#section-3" class="auto internal xref">3</a>.  <a href="#name-table-setup" class="internal xref">Table Setup</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.3.2.1">
+                <p id="section-toc.1-1.3.2.1.1"><a href="#section-3.1" class="auto internal xref">3.1</a>.  <a href="#name-basic-packed-cbor" class="internal xref">Basic Packed CBOR</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4">
+            <p id="section-toc.1-1.4.1"><a href="#section-4" class="auto internal xref">4</a>.  <a href="#name-function-tags" class="internal xref">Function Tags</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.1">
+                <p id="section-toc.1-1.4.2.1.1"><a href="#section-4.1" class="auto internal xref">4.1</a>.  <a href="#name-join-function-tags" class="internal xref">Join Function Tags</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.4.2.2">
+                <p id="section-toc.1-1.4.2.2.1"><a href="#section-4.2" class="auto internal xref">4.2</a>.  <a href="#name-record-function-tag" class="internal xref">Record Function Tag</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-tag-validity-tag-equivalenc" class="internal xref">Tag Validity: Tag Equivalence Principle</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
+                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-tag-equivalence" class="internal xref">Tag Equivalence</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
+                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-tag-equivalence-of-packed-c" class="internal xref">Tag Equivalence of Packed CBOR Tags</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-cbor-tags-registry" class="internal xref">CBOR Tags Registry</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-cbor-simple-values-registry" class="internal xref">CBOR Simple Values Registry</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
+                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
+                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
+            <p id="section-toc.1-1.9.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-examples" class="internal xref">Examples</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
+            <p id="section-toc.1-1.10.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-acknowledgements" class="internal xref">Acknowledgements</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
+            <p id="section-toc.1-1.11.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+</li>
+        </ul>
+</nav>
+</section>
+</div>
+<div id="intro">
+<section id="section-1">
+      <h2 id="name-introduction">
+<a href="#section-1" class="section-number selfRef">1. </a><a href="#name-introduction" class="section-name selfRef">Introduction</a>
+      </h2>
+<p id="section-1-1">The Concise Binary Object Representation (CBOR, <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>) is a data
+format whose design goals include the possibility of extremely small
+code size, fairly small message size, and extensibility without the
+need for version negotiation.<a href="#section-1-1" class="pilcrow">¶</a></p>
+<p id="section-1-2">CBOR does not provide any forms of data compression.
+CBOR data items, in particular when generated from legacy data models,
+often allow considerable gains in compactness when applying data
+compression.
+While traditional data compression techniques such as DEFLATE <span>[<a href="#RFC1951" class="cite xref">RFC1951</a>]</span> can work well for CBOR encoded data items, their disadvantage is
+that the receiver needs to decompress the compressed form to make
+use of the data.<a href="#section-1-2" class="pilcrow">¶</a></p>
+<p id="section-1-3">This specification describes Packed CBOR, a simple transformation of a
+CBOR data item into another CBOR data item that is almost as easy to
+consume as the original CBOR data item.  A separate decompression
+step is therefore often not required at the receiver.<a href="#section-1-3" class="pilcrow">¶</a></p>
+<p id="section-1-4">This document defines the Packed CBOR format by specifying the
+transformation from a Packed CBOR data item to the original CBOR data
+item; it does not define an algorithm for a packer.
+Different packers can differ in the amount of effort they invest in
+arriving at a minimal packed form; often, they simply employ the
+sharing that is natural for a specific application.<a href="#section-1-4" class="pilcrow">¶</a></p>
+<p id="section-1-5">Packed CBOR can make use of two kinds of optimization:<a href="#section-1-5" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1-6.1">
+          <p id="section-1-6.1.1">item sharing: substructures (data items) that occur repeatedly
+in the original CBOR data item can be collapsed to a simple
+reference to a common representation of that data item.
+The processing required during consumption is limited to following
+that reference.<a href="#section-1-6.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-1-6.2">
+          <p id="section-1-6.2.1">argument sharing: application of a function with two arguments, one of which is shared.
+Data items (strings, containers) that share a prefix
+or suffix, or more generally data items that can be
+constructed from a function taking a shared argument and a rump data item,
+can be replaced by a reference to the shared argument plus a rump data
+item.
+For strings and the default "concatenation" function, the processing
+required during consumption is similar to
+following the argument reference plus that for an indefinite-length
+string.<a href="#section-1-6.2.1" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-1-7">A specific application protocol that employs Packed CBOR might allow
+both kinds of optimization or limit the representation to item
+sharing only.<a href="#section-1-7" class="pilcrow">¶</a></p>
+<p id="section-1-8">Packed CBOR is defined in two parts: Referencing packing tables
+(<a href="#sec-packed-cbor" class="auto internal xref">Section 2</a>) and setting up packing tables
+(<a href="#sec-table-setup" class="auto internal xref">Section 3</a>).<a href="#section-1-8" class="pilcrow">¶</a></p>
+<div id="terms">
+<section id="section-1.1">
+        <h3 id="name-terminology-and-conventions">
+<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-terminology-and-conventions" class="section-name selfRef">Terminology and Conventions</a>
+        </h3>
+<p id="section-1.1-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
+"<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
+described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
+appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-1.1-2">
+          <dt id="section-1.1-2.1">Original data item:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.1-2.2">
+            <p id="section-1.1-2.2.1">A CBOR data item that is intended to be expressed by a packed data
+item; the result of all reconstructions.<a href="#section-1.1-2.2.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-1.1-2.3">Packed data item:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.1-2.4">
+            <p id="section-1.1-2.4.1">A CBOR data item that involves packed references (<em>packed CBOR</em>).<a href="#section-1.1-2.4.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-1.1-2.5">Packed reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.1-2.6">
+            <p id="section-1.1-2.6.1">A shared item reference or an argument reference.<a href="#section-1.1-2.6.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-1.1-2.7">Shared item reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.1-2.8">
+            <p id="section-1.1-2.8.1">A reference to a shared item as defined in <a href="#sec-referencing-shared-items" class="auto internal xref">Section 2.2</a>.<a href="#section-1.1-2.8.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-1.1-2.9">Argument reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.1-2.10">
+            <p id="section-1.1-2.10.1">A reference that combines a shared argument with a rump item as
+defined in <a href="#sec-referencing-argument-items" class="auto internal xref">Section 2.3</a>.<a href="#section-1.1-2.10.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-1.1-2.11">Rump:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.1-2.12">
+            <p id="section-1.1-2.12.1">The data item contained in an argument reference that is combined
+with the argument to yield the reconstruction.<a href="#section-1.1-2.12.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-1.1-2.13">Straight reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.1-2.14">
+            <p id="section-1.1-2.14.1">An argument reference that uses the argument as the left-hand side
+and the rump as the right-hand side.<a href="#section-1.1-2.14.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-1.1-2.15">Inverted reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.1-2.16">
+            <p id="section-1.1-2.16.1">An argument reference that uses the rump as the left-hand side
+and the argument as the right-hand side.<a href="#section-1.1-2.16.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-1.1-2.17">Function tag:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.1-2.18">
+            <p id="section-1.1-2.18.1">A tag used in an argument reference for the argument (straight
+references) or the rump (inverted references), causing the
+application of a function indicated by the function tag in order to
+reconstruct the data item.<a href="#section-1.1-2.18.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-1.1-2.19">Packing tables:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.1-2.20">
+            <p id="section-1.1-2.20.1">The pair of a shared item table and an argument table.<a href="#section-1.1-2.20.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-1.1-2.21">Active set (of packing tables):</dt>
+          <dd style="margin-left: 1.5em" id="section-1.1-2.22">
+            <p id="section-1.1-2.22.1">The packing tables in effect at the data item under consideration.<a href="#section-1.1-2.22.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-1.1-2.23">Reconstruction:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.1-2.24">
+            <p id="section-1.1-2.24.1">The result of applying a packed reference in the context of given
+packing tables; we speak of the <em>reconstruction of a packed reference</em>
+as that result.<a href="#section-1.1-2.24.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+</dl>
+<p id="section-1.1-3">The definitions of <span>[<a href="#STD94" class="cite xref">STD94</a>]</span> apply.
+Specifically: The term "byte" is used in its now customary sense as a synonym for
+"octet"; "byte strings" are CBOR data items carrying a sequence of
+zero or more (binary) bytes, while "text strings" are CBOR data items carrying a
+sequence of zero or more Unicode code points (more precisely: Unicode
+scalar values), encoded in UTF-8 <span>[<a href="#STD63" class="cite xref">STD63</a>]</span>.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
+<p id="section-1.1-4">Where arithmetic is explained, this document uses the notation
+familiar from the programming language C, except that ".." denotes a range that includes
+both ends given, in the HTML and PDF versions, subtraction and
+negation are rendered as a hyphen ("-", as are various dashes), and
+superscript notation denotes exponentiation.
+For example, 2 to the power of 64 is notated: 2<sup>64</sup>.
+In the plain-text version of this specification, superscript notation
+is not available and therefore is rendered by a surrogate notation.
+That notation is not optimized for this RFC; it is unfortunately
+ambiguous with C's exclusive-or and requires circumspection
+from the reader of the plain-text version.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
+<p id="section-1.1-5">Examples of CBOR data items are shown
+in CBOR Extended Diagnostic Notation (Section <a href="https://rfc-editor.org/rfc/rfc8949#section-8" class="relref">8</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span> in
+conjunction with <span><a href="https://rfc-editor.org/rfc/rfc8610#appendix-G" class="relref">Appendix G</a> of [<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>).<a href="#section-1.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-packed-cbor">
+<section id="section-2">
+      <h2 id="name-packed-cbor">
+<a href="#section-2" class="section-number selfRef">2. </a><a href="#name-packed-cbor" class="section-name selfRef">Packed CBOR</a>
+      </h2>
+<p id="section-2-1">This section describes the packing tables, their structure, and how
+they are referenced.<a href="#section-2-1" class="pilcrow">¶</a></p>
+<div id="sec-packing-tables">
+<section id="section-2.1">
+        <h3 id="name-packing-tables">
+<a href="#section-2.1" class="section-number selfRef">2.1. </a><a href="#name-packing-tables" class="section-name selfRef">Packing Tables</a>
+        </h3>
+<p id="section-2.1-1">At any point within a data item making use of Packed CBOR, there is an
+<em>active set</em> of packing tables that applies.<a href="#section-2.1-1" class="pilcrow">¶</a></p>
+<p id="section-2.1-2">There are two packing tables in an active set:<a href="#section-2.1-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-2.1-3.1">
+            <p id="section-2.1-3.1.1">Shared item table<a href="#section-2.1-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-2.1-3.2">
+            <p id="section-2.1-3.2.1">Argument table<a href="#section-2.1-3.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-2.1-4">Without any table setup, these two tables are empty arrays.
+Table setup can cause these arrays to be non-empty, where the elements are
+(potentially themselves packed) data items.
+Each of the tables is indexed by an unsigned integer (starting
+from 0).
+Such an index may be derived from information in tags and their
+content as well as from CBOR simple values.<a href="#section-2.1-4" class="pilcrow">¶</a></p>
+<p id="section-2.1-5">Table setup mechanisms (see <a href="#sec-table-setup" class="auto internal xref">Section 3</a>) may include all
+information needed for table setup within the packed CBOR data item, or
+they may refer to external information.  This information may be
+immutable, or it may be intended to potentially grow over time.
+This raises the question of how a reference to a new item should be
+handled when the unpacker uses an older version of the external
+information.<a href="#section-2.1-5" class="pilcrow">¶</a></p>
+<p id="section-2.1-6">If, during unpacking, an index is used that references an item that is
+unpopulated in (e.g., outside the size of) the table in use, this <span class="bcp14">MAY</span> be treated as an
+error by the unpacker and abort the unpacking.
+Alternatively, the unpacker <span class="bcp14">MAY</span> provide the special value
+<code>1112(undefined)</code> (the simple value &gt;undefined&lt; as per Section <a href="https://rfc-editor.org/rfc/rfc8949#section-5.7" class="relref">5.7</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>, enclosed in the tag 1112) to the application and leave the
+error handling to the application.
+An unpacker <span class="bcp14">SHOULD</span> document which of these two alternatives has been
+chosen.
+CBOR based protocols that include the use of packed CBOR
+<span class="bcp14">MAY</span> require that unpacking errors are tolerated in some positions.<a href="#section-2.1-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-referencing-shared-items">
+<section id="section-2.2">
+        <h3 id="name-referencing-shared-items">
+<a href="#section-2.2" class="section-number selfRef">2.2. </a><a href="#name-referencing-shared-items" class="section-name selfRef">Referencing Shared Items</a>
+        </h3>
+<p id="section-2.2-1">Shared items are stored in the shared item table of the active set.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
+<p id="section-2.2-2">The shared data items are referenced by using the reference data items
+in <a href="#tab-shared" class="auto internal xref">Table 1</a>.  When reconstructing the original data item, such a
+reference is replaced by the referenced data item, which is then
+recursively unpacked.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
+<span id="name-referencing-shared-values"></span><div id="tab-shared">
+<table class="center" id="table-1">
+          <caption>
+<a href="#table-1" class="selfRef">Table 1</a>:
+<a href="#name-referencing-shared-values" class="selfRef">Referencing Shared Values</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">reference</th>
+              <th class="text-left" rowspan="1" colspan="1">table index</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Simple value 0..15</td>
+              <td class="text-left" rowspan="1" colspan="1">0..15</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Tag 6(unsigned integer N)</td>
+              <td class="text-left" rowspan="1" colspan="1">16 + 2*N</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Tag 6(negative integer N)</td>
+              <td class="text-left" rowspan="1" colspan="1">16 - 2*N - 1</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
+<p id="section-2.2-4">As examples,
+the first 22 elements of the shared item table are referenced by
+<code>simple(0)</code>, <code>simple(1)</code>, ... <code>simple(15)</code>, <code>6(0)</code>, <code>6(-1)</code>, <code>6(1)</code>,
+<code>6(-2)</code>, <code>6(2)</code>, <code>6(-3)</code>.
+(The alternation between unsigned and negative integers for even/odd
+table index values — "zigzag encoding" — makes systematic use of
+shorter integer encodings first.)<a href="#section-2.2-4" class="pilcrow">¶</a></p>
+<p id="section-2.2-5">Taking into account the encoding of these referring data items, there
+are 16 one-byte references, 48 two-byte references, 512 three-byte
+references, 131072 four-byte references, etc.
+As CBOR integers can grow to very large (or very negative) values,
+there is no practical limit to how many shared items might be used in
+a Packed CBOR item.<a href="#section-2.2-5" class="pilcrow">¶</a></p>
+<p id="section-2.2-6">Note that the semantics of Tag 6 depend on its tag content: An integer
+turns the tag into a shared item reference, whereas a string or
+container (map or array) turns it into a straight (prefix) reference (see
+<a href="#tab-straight" class="auto internal xref">Table 2</a>).
+Note also that the tag content of Tag 6 may itself be packed, so it
+may need to be unpacked to make this determination.<a href="#section-2.2-6" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-referencing-argument-items">
+<section id="section-2.3">
+        <h3 id="name-referencing-argument-items">
+<a href="#section-2.3" class="section-number selfRef">2.3. </a><a href="#name-referencing-argument-items" class="section-name selfRef">Referencing Argument Items</a>
+        </h3>
+<p id="section-2.3-1">The argument table serves as a common table that can be used for argument
+references, i.e., for concatenation as well as references involving a
+function tag.<a href="#section-2.3-1" class="pilcrow">¶</a></p>
+<p id="section-2.3-2">When referencing an argument, a distinction is made between straight
+and inverted references; if no function tag is involved, a straight
+reference combines a prefix out of the argument table with the rump
+data item, and an inverted reference combines a rump data item with a
+suffix out of the argument table.<a href="#section-2.3-2" class="pilcrow">¶</a></p>
+<span id="name-straight-referencing-eg-pre"></span><div id="tab-straight">
+<table class="center" id="table-2">
+          <caption>
+<a href="#table-2" class="selfRef">Table 2</a>:
+<a href="#name-straight-referencing-eg-pre" class="selfRef">Straight Referencing (e.g., Prefix) Arguments</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">straight reference</th>
+              <th class="text-right" rowspan="1" colspan="1">table index</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Tag 6(rump)</td>
+              <td class="text-right" rowspan="1" colspan="1">0</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Tag 224..255(rump)</td>
+              <td class="text-right" rowspan="1" colspan="1">0..31</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Tag 28704..32767(rump)</td>
+              <td class="text-right" rowspan="1" colspan="1">32..4095</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Tag 1879052288..2147483647(rump)</td>
+              <td class="text-right" rowspan="1" colspan="1">4096..268435455</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
+<span id="name-inverted-referencing-eg-suf"></span><div id="tab-inverted">
+<table class="center" id="table-3">
+          <caption>
+<a href="#table-3" class="selfRef">Table 3</a>:
+<a href="#name-inverted-referencing-eg-suf" class="selfRef">Inverted Referencing (e.g., Suffix) Arguments</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-left" rowspan="1" colspan="1">inverted reference</th>
+              <th class="text-right" rowspan="1" colspan="1">table index</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Tag 216..223(rump)</td>
+              <td class="text-right" rowspan="1" colspan="1">0..7</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Tag 27647..28671(rump)</td>
+              <td class="text-right" rowspan="1" colspan="1">8..1023</td>
+            </tr>
+            <tr>
+              <td class="text-left" rowspan="1" colspan="1">Tag 1811940352..1879048191(rump)</td>
+              <td class="text-right" rowspan="1" colspan="1">1024..67108863</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
+<p id="section-2.3-5">Argument data items are referenced by using the reference data items
+in <a href="#tab-straight" class="auto internal xref">Table 2</a> and <a href="#tab-inverted" class="auto internal xref">Table 3</a>.<a href="#section-2.3-5" class="pilcrow">¶</a></p>
+<p id="section-2.3-6">The tag number of the reference is used to derive a table index (an
+unsigned integer) leading
+to the "argument"; the tag content of the reference is the "rump item".<a href="#section-2.3-6" class="pilcrow">¶</a></p>
+<p id="section-2.3-7">When reconstructing the original data item, such a reference is
+replaced by a data item constructed from the argument data item found
+in the table (argument, which might need to be recursively unpacked
+first) and the rump data item (rump, again possibly needing to be
+recursively unpacked).<a href="#section-2.3-7" class="pilcrow">¶</a></p>
+<p id="section-2.3-8">Separate from the tag used as a reference, a tag ("function tag") may
+be involved to supply a function to be used in resolving the
+reference.  It is crucial not to confuse reference tag and, if
+present, function tag.<a href="#section-2.3-8" class="pilcrow">¶</a></p>
+<p id="section-2.3-9">A straight reference uses the argument as the provisional left-hand
+side and the rump data item as the right-hand side.
+An inverted reference uses the rump data item as the provisional
+left-hand side and the argument as the right-hand side.<a href="#section-2.3-9" class="pilcrow">¶</a></p>
+<p id="section-2.3-10">In both cases, the provisional left-hand side is examined.  If it is a
+tag ("function tag"), it is "unwrapped": The function tag's tag number
+is used to indicate the function to be applied, and the tag content is
+kept as the unwrapped left-hand side.
+If the provisional left-hand side is not a tag, it is kept as the
+unwrapped left-hand side, and the function to be applied is
+concatenation, as defined below.
+The right-hand side is taken as is as the unwrapped right-hand side.<a href="#section-2.3-10" class="pilcrow">¶</a></p>
+<p id="section-2.3-11">If a function tag was given, the reference is replaced by the result
+of applying the indicated unpacking function with the left-hand side
+as its first argument and the right-hand side as its second.
+The unpacking function is defined by the definition of the tag number
+supplied.
+If that definition does not define an unpacking function, the result
+of the unpacking is not valid.<a href="#section-2.3-11" class="pilcrow">¶</a></p>
+<p id="section-2.3-12">If no function tag was given, the reference is replaced by the
+left-hand side "concatenated" with the right-hand side, where
+concatenation is defined as in <a href="#sec-concatenation" class="auto internal xref">Section 2.4</a>.<a href="#section-2.3-12" class="pilcrow">¶</a></p>
+<p id="section-2.3-13">As a contrived (but short) example, if the argument table is
+<code>["foobar", h'666f6f62', "fo"]</code>, each of the following straight (prefix)
+references will unpack to <code>"foobart"</code>: <code>6("t")</code>, <code>225("art")</code>,
+<code>226("obart")</code> (the byte string h'666f6f62' == 'foob' is concatenated
+into a text string, and the last example is not an optimization).<a href="#section-2.3-13" class="pilcrow">¶</a></p>
+<p id="section-2.3-14">Note that table index 0 of the argument table can be referenced both
+with tag 6 and tag 224,
+however tag 6 with an integer content is used for shared item
+references (see <a href="#tab-shared" class="auto internal xref">Table 1</a>), so to combine index 0 with an integer
+rump, tag 224 needs to be used.
+The preferred encoding uses tag 6 if that is not necessary.<a href="#section-2.3-14" class="pilcrow">¶</a></p>
+<p id="section-2.3-15">Taking into account the encoding and ignoring the less optimal tag
+224, there is one single-byte straight (prefix)
+reference, 31 (2<sup>5</sup><code>-</code>2<sup>0</sup>) two-byte references, 4064
+(2<sup>12</sup><code>-</code>2<sup>5</sup>) three-byte references, and 26843160
+(2<sup>28</sup><code>-</code>2<sup>12</sup>) five-byte references for straight references.
+268435455 (2<sup>28</sup>) is an artificial limit, but should be high
+enough that there, again, is no practical limit to how many prefix
+items might be used in a Packed CBOR item.
+The numbers for inverted (suffix) references are one quarter of those, except
+that there is no single-byte reference and 8 two-byte references.<a href="#section-2.3-15" class="pilcrow">¶</a></p>
+<aside id="section-2.3-16">
+          <p id="section-2.3-16.1">Rationale:
+Experience suggests that straight (prefix) packing might be more
+likely than inverted (suffix) packing.  Also for this reason, there is no intent
+to spend a 1+0 tag value for inverted packing.<a href="#section-2.3-16.1" class="pilcrow">¶</a></p>
+</aside>
+</section>
+</div>
+<div id="sec-concatenation">
+<section id="section-2.4">
+        <h3 id="name-concatenation">
+<a href="#section-2.4" class="section-number selfRef">2.4. </a><a href="#name-concatenation" class="section-name selfRef">Concatenation</a>
+        </h3>
+<p id="section-2.4-1">The concatenation function is defined as follows:<a href="#section-2.4-1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-2.4-2.1">
+            <p id="section-2.4-2.1.1">If both left-hand side and right-hand side are arrays, the result of
+the concatenation is an array with all elements of the
+left-hand-side array followed by the elements of the right-hand side
+array.<a href="#section-2.4-2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-2.4-2.2">
+            <p id="section-2.4-2.2.1">If both left-hand side and right-hand side are maps, the result of
+the concatenation is a map that is initialized with a copy of the
+left-hand-side map, and then filled in with the members of the
+right-hand side map, replacing any existing members that have the
+same key.<a href="#section-2.4-2.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<aside id="section-2.4-3">
+          <p id="section-2.4-3.1">NOTE:
+  One application of the rule for straight references is to supply
+  default values out of a dictionary, which can then be overridden by
+  the entries in the map supplied as the rump data item.
+  Note that this pattern provides no way to remove a map entry from
+  the prefix table entry.<a href="#section-2.4-3.1" class="pilcrow">¶</a></p>
+</aside>
+<ul class="normal">
+<li class="normal" id="section-2.4-4.1">
+            <p id="section-2.4-4.1.1">If both left-hand side and right-hand side are one of the string
+types (not necessarily the same), the bytes of the left-hand side
+are concatenated with the bytes of the right-hand side.
+Byte strings concatenated with text strings need to contain valid
+UTF-8 data.
+The result of the concatenation gets the type of the unwrapped rump
+data item; this way a single argument table entry can be used to
+build both byte and text strings, depending on what type of rump is
+being used.<a href="#section-2.4-4.1.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<ul class="normal">
+<li class="normal" id="section-2.4-5.1">
+            <p id="section-2.4-5.1.1">If one side is one of the string types, and the other side is an
+array, the result of the concatenation is equivalent to the
+application of the "join" function (<a href="#join" class="auto internal xref">Section 4.1</a>) to the string as the
+left-hand side and the array as the right-hand side.
+The original right-hand side of the concatenation determines the
+string type of the result.<a href="#section-2.4-5.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-2.4-5.2">
+            <p id="section-2.4-5.2.1">Other type combinations of left-hand side and right-hand side are
+not valid.<a href="#section-2.4-5.2.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+<div id="sec-discussion">
+<section id="section-2.5">
+        <h3 id="name-discussion">
+<a href="#section-2.5" class="section-number selfRef">2.5. </a><a href="#name-discussion" class="section-name selfRef">Discussion</a>
+        </h3>
+<p id="section-2.5-1">This specification uses up a large number of Simple Values and Tags,
+in particular one of the rare one-byte tags and two thirds of the one-byte
+simple values.  Since the objective is compression, this is warranted
+only based on a consensus that this specific format could be
+useful for a wide area of applications, while maintaining reasonable
+simplicity in particular at the side of the consumer.<a href="#section-2.5-1" class="pilcrow">¶</a></p>
+<p id="section-2.5-2">A maliciously crafted Packed CBOR data item might contain a reference
+loop.  A consumer/decompressor <span class="bcp14">MUST</span> protect against that.<a href="#section-2.5-2" class="pilcrow">¶</a></p>
+<aside id="section-2.5-3">
+          <p id="section-2.5-3.1">Different strategies for decoding/consuming Packed CBOR are available.<br>
+For example:<a href="#section-2.5-3.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-2.5-3.2.1">
+              <p id="section-2.5-3.2.1.1">the decoder can decode and unpack the packed item, presenting an
+unpacked data item to the application.  In this case, the onus of
+dealing with loops is on the decoder.  (This strategy generally has
+the highest memory consumption, but also the simplest interface to
+the application.)  Besides avoiding getting stuck in a reference
+loop, the decoder will need to control its resource allocation, as
+data items can "blow up" during unpacking.<a href="#section-2.5-3.2.1.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-2.5-3.2.2">
+              <p id="section-2.5-3.2.2.1">the decoder can be oblivious of Packed CBOR.  In this case, the onus
+of dealing with loops is on the application, as is the entire onus
+of dealing with Packed CBOR.<a href="#section-2.5-3.2.2.1" class="pilcrow">¶</a></p>
+</li>
+            <li class="normal" id="section-2.5-3.2.3">
+              <p id="section-2.5-3.2.3.1">hybrid models are possible, for instance: The decoder builds a data
+item tree directly from the Packed CBOR as if it were oblivious, but
+also provides accessors that hide (resolve) the packing.  In this
+specific case, the onus of dealing with loops is on the accessors.<a href="#section-2.5-3.2.3.1" class="pilcrow">¶</a></p>
+</li>
+          </ul>
+<p id="section-2.5-3.3">In general, loop detection can be handled in a similar way in which
+loops of symbolic links are handled in a file system: A system-wide
+limit (often set to a value permitting some 20 to 40 indirections for
+symbolic links) is applied to
+any reference chase.<a href="#section-2.5-3.3" class="pilcrow">¶</a></p>
+</aside>
+<aside id="section-2.5-4">
+          <p id="section-2.5-4.1">NOTE:
+The present specification does nothing to help with the packing of CBOR
+sequences <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span>; maybe such a specification should be added.<a href="#section-2.5-4.1" class="pilcrow">¶</a></p>
+</aside>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-table-setup">
+<section id="section-3">
+      <h2 id="name-table-setup">
+<a href="#section-3" class="section-number selfRef">3. </a><a href="#name-table-setup" class="section-name selfRef">Table Setup</a>
+      </h2>
+<p id="section-3-1">The packing references described in <a href="#sec-packed-cbor" class="auto internal xref">Section 2</a> assume that
+packing tables have been set up.<a href="#section-3-1" class="pilcrow">¶</a></p>
+<p id="section-3-2">By default, both tables are empty (zero-length arrays).<a href="#section-3-2" class="pilcrow">¶</a></p>
+<p id="section-3-3">Table setup can happen in one of two ways:<a href="#section-3-3" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3-4.1">
+          <p id="section-3-4.1.1">By the application environment, e.g., a media type.  These can
+define tables that amount to a static dictionary that can be used in
+a CBOR data item for this application environment.
+Note that, without this information, a data item that uses such a
+static dictionary can be decoded at the CBOR level, but not fully
+unpacked.
+The table setup mechanisms provided by this document are defined in
+such a way that an unpacker can at least recognize if this is the
+case.<a href="#section-3-4.1.1" class="pilcrow">¶</a></p>
+</li>
+        <li class="normal" id="section-3-4.2">
+          <p id="section-3-4.2.1">By one or more <em>table-building</em> tags enclosing the packed content.
+Each tag is usually defined to build an augmented table by adding to
+the packing tables that already apply to the tag, and to apply the
+resulting augmented table when unpacking the tag content.
+Usually, the semantics of the tag will be to prepend items to one or
+more of the tables.
+(The specific behavior of any such tag, in the presence of a table
+applying to it, needs to be carefully specified.)<a href="#section-3-4.2.1" class="pilcrow">¶</a></p>
+<p id="section-3-4.2.2">
+Note that it may be useful to leave a particular efficiency tier
+alone and only prepend to a higher tier; e.g., a tag could insert
+shared items at table index 16 and shift anything that was already
+there further along in the array while leaving index 0 to 15 alone.
+Explicit additions by tag can combine with application-environment
+supplied tables that apply to the entire CBOR data item.<a href="#section-3-4.2.2" class="pilcrow">¶</a></p>
+<p id="section-3-4.2.3">
+Packed item references in the newly constructed (low-numbered) parts
+of the table are usually interpreted in the number space of that table
+(which includes the, now higher-numbered, inherited parts), while
+references in any existing, inherited (higher-numbered) part continue
+to use the (more limited) number space of the inherited table.<a href="#section-3-4.2.3" class="pilcrow">¶</a></p>
+</li>
+      </ul>
+<p id="section-3-5">Where external information is used in a table setup mechanism that is
+not immutable, care needs to be taken so that, over time, references
+to existing table entries stay valid (i.e., the information is only
+extended), and that a maximum size of this
+information is given.  This allows an unpacker to recognize references
+to items that are not yet defined in the version of the external
+reference that it uses, providing backward and possibly limited
+(degraded) forward compatibility.<a href="#section-3-5" class="pilcrow">¶</a></p>
+<p id="section-3-6">For table setup, the present specification only defines two simple
+table-building tags,
+which operate by prepending to the (by default empty) tables.<a href="#section-3-6" class="pilcrow">¶</a></p>
+<aside id="section-3-7">
+        <p id="section-3-7.1">Additional tags can be defined for dictionary referencing (possible combining that
+with Basic Packed CBOR mechanisms).
+The desirable details are likely to vary
+considerably between applications.
+A URI-based reference would be
+easy to define, but might be too inefficient when used in the likely
+combination with an <code>ni:</code> URI <span>[<a href="#RFC6920" class="cite xref">RFC6920</a>]</span>.<a href="#section-3-7.1" class="pilcrow">¶</a></p>
+</aside>
+<div id="sec-basic-packed-cbor">
+<section id="section-3.1">
+        <h3 id="name-basic-packed-cbor">
+<a href="#section-3.1" class="section-number selfRef">3.1. </a><a href="#name-basic-packed-cbor" class="section-name selfRef">Basic Packed CBOR</a>
+        </h3>
+<p id="section-3.1-1">Two tags are predefined by this specification for packing table setup.
+They are defined in CDDL <span>[<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> as in <a href="#fig-cddl" class="auto internal xref">Figure 1</a>:<a href="#section-3.1-1" class="pilcrow">¶</a></p>
+<span id="name-packed-cbor-in-cddl"></span><div id="fig-cddl">
+<figure id="figure-1">
+          <div class="lang-cddl sourcecode" id="section-3.1-2.1">
+<pre>
+Basic-Packed-CBOR = #6.113([[*shared-and-argument-item], rump])
+Split-Basic-Packed-CBOR =
+                    #6.1113([[*shared-item], [*argument-item], rump])
+rump = any
+shared-and-argument-item = any
+argument-item = any
+shared-item = any
+</pre>
+</div>
+<figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
+<a href="#name-packed-cbor-in-cddl" class="selfRef">Packed CBOR in CDDL</a>
+          </figcaption></figure>
+</div>
+<p id="section-3.1-3">(This assumes the allocation of tag numbers 113 ('q') and 1113 for
+these tags.)<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+<p id="section-3.1-4">The array given as the first element of the content of tag 113
+("Basic-Packed-CBOR") is prepended to both the tables for shared items
+and arguments that apply to the entire tag (by default empty tables).
+The arrays given as the first and second element of the content of the
+tag 1113 ("Split-Basic-Packed-CBOR") are prepended to the tables for
+shared items and arguments, respectively,
+that apply to the entire tag (by default
+empty tables).
+As discussed in the introduction to this section, references
+in the supplied new arrays use the new number space (where inherited
+items are shifted by the new items given), while the inherited items
+themselves use the inherited number space (so their semantics do not
+change by the mere action of inheritance).<a href="#section-3.1-4" class="pilcrow">¶</a></p>
+<p id="section-3.1-5">The original CBOR data item can be reconstructed by recursively
+replacing shared and argument references encountered in the rump by
+their reconstructions.<a href="#section-3.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-function-tags">
+<section id="section-4">
+      <h2 id="name-function-tags">
+<a href="#section-4" class="section-number selfRef">4. </a><a href="#name-function-tags" class="section-name selfRef">Function Tags</a>
+      </h2>
+<p id="section-4-1">Function tags that occur in an argument or a rump supply the semantics
+for reconstructing a data item from their tag content and the
+non-dominating rump or argument, respectively.
+The present specification defines three function tags.<a href="#section-4-1" class="pilcrow">¶</a></p>
+<div id="join">
+<section id="section-4.1">
+        <h3 id="name-join-function-tags">
+<a href="#section-4.1" class="section-number selfRef">4.1. </a><a href="#name-join-function-tags" class="section-name selfRef">Join Function Tags</a>
+        </h3>
+<p id="section-4.1-1">Tag 106 ('j') defines the "join" unpacking function, based on the
+concatenation function (<a href="#sec-concatenation" class="auto internal xref">Section 2.4</a>).<a href="#section-4.1-1" class="pilcrow">¶</a></p>
+<p id="section-4.1-2">The join function expects an item that can be concatenated as its
+left-hand side, and an array of such items as its right-hand side.
+Joining works by sequentially applying the concatenation function to
+the elements of the right-hand-side array, interspersing the left-hand
+side as the "joiner".<a href="#section-4.1-2" class="pilcrow">¶</a></p>
+<p id="section-4.1-3">An example in functional notation: <code>join(", ", ["a", "b", "c"])</code>
+returns <code>"a, b, c"</code>.<a href="#section-4.1-3" class="pilcrow">¶</a></p>
+<p id="section-4.1-4">For a right-hand side of one or more elements, the first element
+determines the type of the result when text strings and byte
+strings are mixed in the argument.
+For a right-hand side of one element, the joiner is not used, and that
+element returned.
+For a right-hand side of zero elements, a neutral element is generated
+based on the type of the joiner
+(empty text/byte string for a text/byte string, empty array for an array, empty map for a map).<a href="#section-4.1-4" class="pilcrow">¶</a></p>
+<p id="section-4.1-5">For an example, we assume this unpacked data item:<a href="#section-4.1-5" class="pilcrow">¶</a></p>
+<div class="lang-cbor-diag sourcecode" id="section-4.1-6">
+<pre>
+["https://packed.example/foo.html",
+ "coap:://packed.example/bar.cbor",
+ "mailto:support@packed.example"]
+</pre><a href="#section-4.1-6" class="pilcrow">¶</a>
+</div>
+<p id="section-4.1-7">A packed form of this using straight references could be:<a href="#section-4.1-7" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.1-8">
+<pre>
+113([[106("packed.example")],
+  [6(["https://", "/foo.html"]),
+   6(["coap://", "/bar.cbor"]),
+   6(["mailto:support@", ""])]
+])
+</pre><a href="#section-4.1-8" class="pilcrow">¶</a>
+</div>
+<p id="section-4.1-9">Tag 105 ('i') defines the "ijoin" unpacking function, which is exactly
+like that of tag 106, except that the left-hand side and right-hand
+side are interchanged ('i').<a href="#section-4.1-9" class="pilcrow">¶</a></p>
+<p id="section-4.1-10">A packed form of the first example using inverted references and the ijoin tag could be:<a href="#section-4.1-10" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.1-11">
+<pre>
+113([["packed.example"],
+  [216(105(["https://", "/foo.html"])),
+   216(105(["coap://", "/bar.cbor"])),
+   216("mailto:support@")]
+])
+</pre><a href="#section-4.1-11" class="pilcrow">¶</a>
+</div>
+<p id="section-4.1-12">A packed form of an array with many URIs that reference SenML items
+from the same place could be:<a href="#section-4.1-12" class="pilcrow">¶</a></p>
+<div class="alignLeft art-text artwork" id="section-4.1-13">
+<pre>
+113([[105(["coaps://[2001::db8::1]/s/", ".senml"])],
+  [6("temp-freezer"),
+   6("temp-fridge"),
+   6("temp-ambient")]
+])
+</pre><a href="#section-4.1-13" class="pilcrow">¶</a>
+</div>
+</section>
+</div>
+<div id="record">
+<section id="section-4.2">
+        <h3 id="name-record-function-tag">
+<a href="#section-4.2" class="section-number selfRef">4.2. </a><a href="#name-record-function-tag" class="section-name selfRef">Record Function Tag</a>
+        </h3>
+<p id="section-4.2-1">Tag 114 ('r') defines the "record" function, which combines
+an array of keys with an array of values into a map.<a href="#section-4.2-1" class="pilcrow">¶</a></p>
+<p id="section-4.2-2">The record function expects an array as its left-hand side,
+whose items are treated as key items for the resulting map,
+and an array of equal or shorter length as its right-hand side,
+whose items are treated as value items for the resulting map.<a href="#section-4.2-2" class="pilcrow">¶</a></p>
+<p id="section-4.2-3">The map is constructed by grouping key and value items
+with equal position in the provided arrays into pairs that constitute the resulting map.<a href="#section-4.2-3" class="pilcrow">¶</a></p>
+<p id="section-4.2-4">The value item array <span class="bcp14">MAY</span> be shorter than the key item array, in which
+case the one or more unmatched value items towards the end are treated as <em>absent</em>.
+Additionally, value items that are the CBOR simple value <code>undefined</code>
+(simple(23), encoding 0xf7) are also treated as absent.
+Key items whose matching value items are absent are not included in the resulting map.<a href="#section-4.2-4" class="pilcrow">¶</a></p>
+<p id="section-4.2-5">For an example, we assume this unpacked data item:<a href="#section-4.2-5" class="pilcrow">¶</a></p>
+<div class="lang-cbor-diag sourcecode" id="section-4.2-6">
+<pre>
+[{"key0": false, "key1": "value 1", "key2": 2},
+ {"key0": true, "key1": "value -1", "key2": -2},
+ {"key1": "", "key2": 0}]
+</pre><a href="#section-4.2-6" class="pilcrow">¶</a>
+</div>
+<p id="section-4.2-7">A straightforward packed form of this using the record function tag could be:<a href="#section-4.2-7" class="pilcrow">¶</a></p>
+<div class="lang-cbor-diag sourcecode" id="section-4.2-8">
+<pre>
+113([[114(["key0", "key1", "key2"])],
+  [6([false, "value 1", 2]),
+   6([true, "value -1", -2]),
+   6([undefined, "", 0])]
+])
+</pre><a href="#section-4.2-8" class="pilcrow">¶</a>
+</div>
+<p id="section-4.2-9">A slightly more concise packed form can be achieved by manipulating the key item order
+(recall that the order of key/value pairs in maps carries no semantics):<a href="#section-4.2-9" class="pilcrow">¶</a></p>
+<div class="lang-cbor-diag sourcecode" id="section-4.2-10">
+<pre>
+113([[114(["key1", "key2", "key0"])],
+  [6(["value 1", 2, false]),
+   6(["value -1", -2, true]),
+   6(["", 0])]
+])
+</pre><a href="#section-4.2-10" class="pilcrow">¶</a>
+</div>
+<p id="section-4.2-11">Note that for these examples, the implicit join semantics for mixed
+string-array concatenation as defined in <a href="#implicit-join" class="auto internal xref">Section 2.4, Paragraph 5</a> actually
+obviate the need for an explicit join/ijoin tag; the examples do serve
+to demonstrate the explicit usage of the tag.<a href="#section-4.2-11" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-tag-validity-tag-equivalence-principle">
+<section id="section-5">
+      <h2 id="name-tag-validity-tag-equivalenc">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-tag-validity-tag-equivalenc" class="section-name selfRef">Tag Validity: Tag Equivalence Principle</a>
+      </h2>
+<p id="section-5-1">In Section <a href="https://rfc-editor.org/rfc/rfc8949#section-5.3.2" class="relref">5.3.2</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>, the validity of tags is defined in terms
+of type and value of their tag content.
+The CBOR Tag registry (<span>[<a href="#IANA.cbor-tags" class="cite xref">IANA.cbor-tags</a>]</span> as defined in Section <a href="https://rfc-editor.org/rfc/rfc8949#section-9.2" class="relref">9.2</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>) allows
+recording the "data item" for a registered tag, which is usually an
+abbreviated description of the top-level data type allowed for the tag
+content.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">In other words, in the registry, the validity of a tag of a given tag
+number is described in terms of the top-level structure of the data
+carried in the tag content.
+The description of a tag might add further constraints for the data
+item.
+But in any case, a tag definition can only specify validity based on
+the structure of its tag content.<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-3">In Packed CBOR, a reference tag might be "standing in" for the actual
+tag content of an outer tag, or for a structural component of that.
+In this case, the formal structure of the outer tag's content before
+unpacking usually no longer fulfills the validity conditions of the
+outer tag.<a href="#section-5-3" class="pilcrow">¶</a></p>
+<p id="section-5-4">The underlying problem is not unique to Packed CBOR.
+For instance, <span>[<a href="#RFC8746" class="cite xref">RFC8746</a>]</span> describes tags 64..87 that "stand in" for CBOR
+arrays (the native form of which has major type 4).
+For the other tags defined in this specification, which require some
+array structure of the tag content, a footnote was added:<a href="#section-5-4" class="pilcrow">¶</a></p>
+<blockquote id="section-5-5">
+        <p id="section-5-5.1">[...] The second element of the outer array in the data item is a
+   native CBOR array (major type 4) or Typed Array (one of tag 64..87)<a href="#section-5-5.1" class="pilcrow">¶</a></p>
+</blockquote>
+<p id="section-5-6">The top-down approach to handle the "rendezvous" between the outer and
+inner tags does not support extensibility: any further Typed Array
+tags being defined do not inherit the exception granted to tag number
+64..87; they would need to formally update all existing tag
+definitions that can accept typed arrays or be of limited use with
+these existing tags.<a href="#section-5-6" class="pilcrow">¶</a></p>
+<p id="section-5-7">Instead, the tag validity mechanism needs to be extended by a
+bottom-up component: A tag definition needs to be able to declare that
+the tag can "stand in" for, (is, in terms of tag validity, equivalent
+to) some structure.<a href="#section-5-7" class="pilcrow">¶</a></p>
+<p id="section-5-8">E.g., tag 64..87 could have declared their equivalence to the CBOR major
+type 4 arrays they stand in for.<a href="#section-5-8" class="pilcrow">¶</a></p>
+<aside id="section-5-9">
+        <p id="section-5-9.1">Note that not all domain extensions to tags can be addressed using
+the equivalence principle: E.g., on a data model level, numbers with
+arbitrary exponents (<span>[<a href="#ARB-EXP" class="cite xref">ARB-EXP</a>]</span>, tags 264 and 265) are strictly a
+superset of CBOR's predefined fractional types, tags 4 and 5.
+They could not simply declare that they are equivalent to tags 4 and 5
+as a tag requiring a fractional value may have no way to handle the
+extended range of tag 264 and 265.<a href="#section-5-9.1" class="pilcrow">¶</a></p>
+</aside>
+<div id="sec-tag-equivalence">
+<section id="section-5.1">
+        <h3 id="name-tag-equivalence">
+<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-tag-equivalence" class="section-name selfRef">Tag Equivalence</a>
+        </h3>
+<p id="section-5.1-1">A tag definition <span class="bcp14">MAY</span> declare Tag Equivalence to some existing
+structure for the tag, under some conditions defined by the new tag
+definition.
+This, in effect, extends all existing tag definitions that accept the
+named structure to accept the newly defined tag under the conditions
+given for the Tag Equivalence.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
+<p id="section-5.1-2">A number of limitations apply to Tag Equivalence, which therefore
+should be applied deliberately and sparingly:<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-5.1-3.1">
+            <p id="section-5.1-3.1.1">Tag Equivalence is a new concept, which may not be implemented by an
+existing generic decoder.  A generic decoder not implementing tag
+equivalence might raise tag validity errors where Tag Equivalence
+says there should be none.<a href="#section-5.1-3.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-3.2">
+            <p id="section-5.1-3.2.1">A CBOR protocol <span class="bcp14">MAY</span> specify the use of Tag Equivalence, effectively
+limiting its full use to those generic encoders that implement it.
+Existing CBOR protocols that do not address Tag Equivalence
+implicitly have a new variant that allows Tag Equivalence
+(e.g., to support Packed CBOR with an existing protocol).
+A CBOR protocol that does address Tag Equivalence <span class="bcp14">MAY</span> be explicit
+about what kinds of Tag Equivalence it supports (e.g., only the
+reference tags employed by Packed CBOR and certain table setup tags).<a href="#section-5.1-3.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-3.3">
+            <p id="section-5.1-3.3.1">There is currently no way to express Tag Equivalence in CDDL.
+For Packed CBOR, CDDL would typically be used to describe the
+unpacked CBOR represented by it; further restricting the Packed CBOR
+is likely to lead to interoperability problems.
+(Note that, by definition, there is no need to describe Tag
+Equivalence on the receptacle side; only for the tag that declares
+Tag Equivalence.)<a href="#section-5.1-3.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-5.1-3.4">
+            <p id="section-5.1-3.4.1">The registry "<a href="http://www.iana.org/assignments/cbor-tags#cbor-tags" class="relref">CBOR Tags</a>" <span>[<a href="#IANA.cbor-tags" class="cite xref">IANA.cbor-tags</a>]</span>
+currently does not have a way to record any equivalence claimed
+for a tag.  A convention would be to alert to Tag Equivalence in the
+"Semantics (short form)" field of the registry.<span class="cref" id="todo">Needs to be done for the tag registrations here.</span><a href="#section-5.1-3.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</section>
+</div>
+<div id="sec-tag-equivalence-of-packed-cbor-tags">
+<section id="section-5.2">
+        <h3 id="name-tag-equivalence-of-packed-c">
+<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-tag-equivalence-of-packed-c" class="section-name selfRef">Tag Equivalence of Packed CBOR Tags</a>
+        </h3>
+<p id="section-5.2-1">The reference tags in this specification declare their equivalence to
+the unpacked shared items or function results they represent.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
+<p id="section-5.2-2">The table setup tags 113 and 1113 declare its equivalence to the unpacked CBOR
+data item represented by it.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-iana-considerations">
+<section id="section-6">
+      <h2 id="name-iana-considerations">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+      </h2>
+<div id="sec-cbor-tags-registry">
+<section id="section-6.1">
+        <h3 id="name-cbor-tags-registry">
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-cbor-tags-registry" class="section-name selfRef">CBOR Tags Registry</a>
+        </h3>
+<p id="section-6.1-1">In the registry "<a href="http://www.iana.org/assignments/cbor-tags#cbor-tags" class="relref">CBOR Tags</a>" <span>[<a href="#IANA.cbor-tags" class="cite xref">IANA.cbor-tags</a>]</span>,
+IANA is requested to allocate the tags defined in <a href="#tab-tag-values" class="auto internal xref">Table 4</a>.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<span id="name-values-for-tag-numbers"></span><div id="tab-tag-values">
+<table class="center" id="table-4">
+          <caption>
+<a href="#table-4" class="selfRef">Table 4</a>:
+<a href="#name-values-for-tag-numbers" class="selfRef">Values for Tag Numbers</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-right" rowspan="1" colspan="1">Tag</th>
+              <th class="text-left" rowspan="1" colspan="1">Data Item</th>
+              <th class="text-left" rowspan="1" colspan="1">Semantics</th>
+              <th class="text-left" rowspan="1" colspan="1">Reference</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-right" rowspan="1" colspan="1">6</td>
+              <td class="text-left" rowspan="1" colspan="1">integer (for shared); text string, byte string, array, map, tag (for straight)</td>
+              <td class="text-left" rowspan="1" colspan="1">Packed CBOR: shared/straight</td>
+              <td class="text-left" rowspan="1" colspan="1">draft-ietf-cbor-packed</td>
+            </tr>
+            <tr>
+              <td class="text-right" rowspan="1" colspan="1">105</td>
+              <td class="text-left" rowspan="1" colspan="1">text string, byte string, array, map, tag</td>
+              <td class="text-left" rowspan="1" colspan="1">Packed CBOR: ijoin function</td>
+              <td class="text-left" rowspan="1" colspan="1">draft-ietf-cbor-packed</td>
+            </tr>
+            <tr>
+              <td class="text-right" rowspan="1" colspan="1">106</td>
+              <td class="text-left" rowspan="1" colspan="1">text string, byte string, array, map, tag</td>
+              <td class="text-left" rowspan="1" colspan="1">Packed CBOR: join function</td>
+              <td class="text-left" rowspan="1" colspan="1">draft-ietf-cbor-packed</td>
+            </tr>
+            <tr>
+              <td class="text-right" rowspan="1" colspan="1">113</td>
+              <td class="text-left" rowspan="1" colspan="1">array (shared-and-argument-items, rump)</td>
+              <td class="text-left" rowspan="1" colspan="1">Packed CBOR: table setup</td>
+              <td class="text-left" rowspan="1" colspan="1">draft-ietf-cbor-packed</td>
+            </tr>
+            <tr>
+              <td class="text-right" rowspan="1" colspan="1">114</td>
+              <td class="text-left" rowspan="1" colspan="1">array</td>
+              <td class="text-left" rowspan="1" colspan="1">Packed CBOR: record function</td>
+              <td class="text-left" rowspan="1" colspan="1">draft-ietf-cbor-packed</td>
+            </tr>
+            <tr>
+              <td class="text-right" rowspan="1" colspan="1">224..255</td>
+              <td class="text-left" rowspan="1" colspan="1">text string, byte string, array, map, tag</td>
+              <td class="text-left" rowspan="1" colspan="1">Packed CBOR: straight</td>
+              <td class="text-left" rowspan="1" colspan="1">draft-ietf-cbor-packed</td>
+            </tr>
+            <tr>
+              <td class="text-right" rowspan="1" colspan="1">1112</td>
+              <td class="text-left" rowspan="1" colspan="1">undefined (0xf7)</td>
+              <td class="text-left" rowspan="1" colspan="1">Packed CBOR: reference error</td>
+              <td class="text-left" rowspan="1" colspan="1">draft-ietf-cbor-packed</td>
+            </tr>
+            <tr>
+              <td class="text-right" rowspan="1" colspan="1">1113</td>
+              <td class="text-left" rowspan="1" colspan="1">array (shared-items, argument-items, rump)</td>
+              <td class="text-left" rowspan="1" colspan="1">Packed CBOR: table setup</td>
+              <td class="text-left" rowspan="1" colspan="1">draft-ietf-cbor-packed</td>
+            </tr>
+            <tr>
+              <td class="text-right" rowspan="1" colspan="1">28704..32767</td>
+              <td class="text-left" rowspan="1" colspan="1">text string, byte string, array, map, tag</td>
+              <td class="text-left" rowspan="1" colspan="1">Packed CBOR: straight</td>
+              <td class="text-left" rowspan="1" colspan="1">draft-ietf-cbor-packed</td>
+            </tr>
+            <tr>
+              <td class="text-right" rowspan="1" colspan="1">1879052288..2147483647</td>
+              <td class="text-left" rowspan="1" colspan="1">text string, byte string, array, map, tag</td>
+              <td class="text-left" rowspan="1" colspan="1">Packed CBOR: straight</td>
+              <td class="text-left" rowspan="1" colspan="1">draft-ietf-cbor-packed</td>
+            </tr>
+            <tr>
+              <td class="text-right" rowspan="1" colspan="1">216..223</td>
+              <td class="text-left" rowspan="1" colspan="1">text string, byte string, array, map, tag</td>
+              <td class="text-left" rowspan="1" colspan="1">Packed CBOR: inverted</td>
+              <td class="text-left" rowspan="1" colspan="1">draft-ietf-cbor-packed</td>
+            </tr>
+            <tr>
+              <td class="text-right" rowspan="1" colspan="1">27647..28671</td>
+              <td class="text-left" rowspan="1" colspan="1">text string, byte string, array, map, tag</td>
+              <td class="text-left" rowspan="1" colspan="1">Packed CBOR: inverted</td>
+              <td class="text-left" rowspan="1" colspan="1">draft-ietf-cbor-packed</td>
+            </tr>
+            <tr>
+              <td class="text-right" rowspan="1" colspan="1">1811940352..1879048191</td>
+              <td class="text-left" rowspan="1" colspan="1">text string, byte string, array, map, tag</td>
+              <td class="text-left" rowspan="1" colspan="1">Packed CBOR: inverted</td>
+              <td class="text-left" rowspan="1" colspan="1">draft-ietf-cbor-packed</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
+</section>
+</div>
+<div id="sec-cbor-simple-values-registry">
+<section id="section-6.2">
+        <h3 id="name-cbor-simple-values-registry">
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-cbor-simple-values-registry" class="section-name selfRef">CBOR Simple Values Registry</a>
+        </h3>
+<p id="section-6.2-1">In the registry "<a href="http://www.iana.org/assignments/cbor-simple-values#simple" class="relref">CBOR Simple Values</a>" <span>[<a href="#IANA.cbor-simple-values" class="cite xref">IANA.cbor-simple-values</a>]</span>,
+IANA is requested to allocate the simple values defined in <a href="#tab-simple-values" class="auto internal xref">Table 5</a>.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+<span id="name-simple-values"></span><div id="tab-simple-values">
+<table class="center" id="table-5">
+          <caption>
+<a href="#table-5" class="selfRef">Table 5</a>:
+<a href="#name-simple-values" class="selfRef">Simple Values</a>
+          </caption>
+<thead>
+            <tr>
+              <th class="text-right" rowspan="1" colspan="1">Value</th>
+              <th class="text-left" rowspan="1" colspan="1">Semantics</th>
+              <th class="text-left" rowspan="1" colspan="1">Reference</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td class="text-right" rowspan="1" colspan="1">0..15</td>
+              <td class="text-left" rowspan="1" colspan="1">Packed CBOR: shared</td>
+              <td class="text-left" rowspan="1" colspan="1">draft-ietf-cbor-packed</td>
+            </tr>
+          </tbody>
+        </table>
+</div>
+</section>
+</div>
+</section>
+</div>
+<div id="sec-security-considerations">
+<section id="section-7">
+      <h2 id="name-security-considerations">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+      </h2>
+<p id="section-7-1">The security considerations of <span>[<a href="#STD94" class="cite xref">STD94</a>]</span> apply.<a href="#section-7-1" class="pilcrow">¶</a></p>
+<p id="section-7-2">Loops in the Packed CBOR can be used as a denial of service attack,
+see <a href="#sec-discussion" class="auto internal xref">Section 2.5</a>.<a href="#section-7-2" class="pilcrow">¶</a></p>
+<p id="section-7-3">As the unpacking is deterministic, packed forms can be used as signing
+inputs.  (Note that if external dictionaries are added to cbor-packed,
+this requires additional consideration.)<a href="#section-7-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<section id="section-8">
+      <h2 id="name-references">
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-references" class="section-name selfRef">References</a>
+      </h2>
+<div id="sec-normative-references">
+<section id="section-8.1">
+        <h3 id="name-normative-references">
+<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+        </h3>
+<dl class="references">
+<dt id="IANA.cbor-simple-values">[IANA.cbor-simple-values]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR) Simple Values"</span>, <span>&lt;<a href="http://www.iana.org/assignments/cbor-simple-values">http://www.iana.org/assignments/cbor-simple-values</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="IANA.cbor-tags">[IANA.cbor-tags]</dt>
+        <dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR) Tags"</span>, <span>&lt;<a href="http://www.iana.org/assignments/cbor-tags">http://www.iana.org/assignments/cbor-tags</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC2119">[RFC2119]</dt>
+        <dd>
+<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8174">[RFC8174]</dt>
+        <dd>
+<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8610">[RFC8610]</dt>
+        <dd>
+<span class="refAuthor">Birkholz, H.</span>, <span class="refAuthor">Vigano, C.</span>, and <span class="refAuthor">C. Bormann</span>, <span class="refTitle">"Concise Data Definition Language (CDDL): A Notational Convention to Express Concise Binary Object Representation (CBOR) and JSON Data Structures"</span>, <span class="seriesInfo">RFC 8610</span>, <span class="seriesInfo">DOI 10.17487/RFC8610</span>, <time datetime="2019-06" class="refDate">June 2019</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8610">https://www.rfc-editor.org/rfc/rfc8610</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="STD94">[STD94]</dt>
+      <dd>
+<div class="refInstance" id="RFC8949">
+            <span class="refAuthor">Bormann, C.</span> and <span class="refAuthor">P. Hoffman</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR)"</span>, <span class="seriesInfo">STD 94</span>, <span class="seriesInfo">RFC 8949</span>, <time datetime="2020-12" class="refDate">December 2020</time>. </div>
+<span>&lt;<a href="https://www.rfc-editor.org/info/std94">https://www.rfc-editor.org/info/std94</a>&gt;</span>
+</dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+<div id="sec-informative-references">
+<section id="section-8.2">
+        <h3 id="name-informative-references">
+<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+        </h3>
+<dl class="references">
+<dt id="ARB-EXP">[ARB-EXP]</dt>
+        <dd>
+<span class="refAuthor">Occil, P.</span>, <span class="refTitle">"Arbitrary-Exponent Numbers"</span>, <span class="refContent">Specification for Registration of CBOR Tags 264 and 265</span>, <span>&lt;<a href="http://peteroupc.github.io/CBOR/bigfrac.html">http://peteroupc.github.io/CBOR/bigfrac.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC1951">[RFC1951]</dt>
+        <dd>
+<span class="refAuthor">Deutsch, P.</span>, <span class="refTitle">"DEFLATE Compressed Data Format Specification version 1.3"</span>, <span class="seriesInfo">RFC 1951</span>, <span class="seriesInfo">DOI 10.17487/RFC1951</span>, <time datetime="1996-05" class="refDate">May 1996</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc1951">https://www.rfc-editor.org/rfc/rfc1951</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC6920">[RFC6920]</dt>
+        <dd>
+<span class="refAuthor">Farrell, S.</span>, <span class="refAuthor">Kutscher, D.</span>, <span class="refAuthor">Dannewitz, C.</span>, <span class="refAuthor">Ohlman, B.</span>, <span class="refAuthor">Keranen, A.</span>, and <span class="refAuthor">P. Hallam-Baker</span>, <span class="refTitle">"Naming Things with Hashes"</span>, <span class="seriesInfo">RFC 6920</span>, <span class="seriesInfo">DOI 10.17487/RFC6920</span>, <time datetime="2013-04" class="refDate">April 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc6920">https://www.rfc-editor.org/rfc/rfc6920</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC7049">[RFC7049]</dt>
+        <dd>
+<span class="refAuthor">Bormann, C.</span> and <span class="refAuthor">P. Hoffman</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR)"</span>, <span class="seriesInfo">RFC 7049</span>, <span class="seriesInfo">DOI 10.17487/RFC7049</span>, <time datetime="2013-10" class="refDate">October 2013</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc7049">https://www.rfc-editor.org/rfc/rfc7049</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8742">[RFC8742]</dt>
+        <dd>
+<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR) Sequences"</span>, <span class="seriesInfo">RFC 8742</span>, <span class="seriesInfo">DOI 10.17487/RFC8742</span>, <time datetime="2020-02" class="refDate">February 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8742">https://www.rfc-editor.org/rfc/rfc8742</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="RFC8746">[RFC8746]</dt>
+        <dd>
+<span class="refAuthor">Bormann, C., Ed.</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR) Tags for Typed Arrays"</span>, <span class="seriesInfo">RFC 8746</span>, <span class="seriesInfo">DOI 10.17487/RFC8746</span>, <time datetime="2020-02" class="refDate">February 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8746">https://www.rfc-editor.org/rfc/rfc8746</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="STD63">[STD63]</dt>
+      <dd>
+<div class="refInstance" id="RFC3629">
+            <span class="refAuthor">Yergeau, F.</span>, <span class="refTitle">"UTF-8, a transformation format of ISO 10646"</span>, <span class="seriesInfo">STD 63</span>, <span class="seriesInfo">RFC 3629</span>, <time datetime="2003-11" class="refDate">November 2003</time>. </div>
+<span>&lt;<a href="https://www.rfc-editor.org/info/std63">https://www.rfc-editor.org/info/std63</a>&gt;</span>
+</dd>
+<dd class="break"></dd>
+</dl>
+</section>
+</div>
+</section>
+<div id="sec-examples">
+<section id="appendix-A">
+      <h2 id="name-examples">
+<a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
+      </h2>
+<p id="appendix-A-1">The (JSON-compatible) CBOR data structure depicted in <a href="#fig-example-in" class="auto internal xref">Figure 2</a>,
+400 bytes of binary CBOR, could be packed into the CBOR data item depicted
+in <a href="#fig-example-out" class="auto internal xref">Figure 3</a>, ~309 bytes, only employing item sharing.
+With support for argument sharing and the record function tag 114,
+the data item can be packed into 298 bytes as depicted in <a href="#fig-example-out-record" class="auto internal xref">Figure 4</a>.
+Note that this particular example does not lend itself to prefix compression,
+so it uses the simple common-table setup form (tag 113).<a href="#appendix-A-1" class="pilcrow">¶</a></p>
+<span id="name-example-original-cbor-data-"></span><div id="fig-example-in">
+<figure id="figure-2">
+        <div class="lang-json sourcecode" id="appendix-A-2.1">
+<pre>
+{ "store": {
+    "book": [
+      { "category": "reference",
+        "author": "Nigel Rees",
+        "title": "Sayings of the Century",
+        "price": 8.95
+      },
+      { "category": "fiction",
+        "author": "Evelyn Waugh",
+        "title": "Sword of Honour",
+        "price": 12.99
+      },
+      { "category": "fiction",
+        "author": "Herman Melville",
+        "title": "Moby Dick",
+        "isbn": "0-553-21311-3",
+        "price": 8.95
+      },
+      { "category": "fiction",
+        "author": "J. R. R. Tolkien",
+        "title": "The Lord of the Rings",
+        "isbn": "0-395-19395-8",
+        "price": 22.99
+      }
+    ],
+    "bicycle": {
+      "color": "red",
+      "price": 19.95
+    }
+  }
+}
+</pre>
+</div>
+<figcaption><a href="#figure-2" class="selfRef">Figure 2</a>:
+<a href="#name-example-original-cbor-data-" class="selfRef">Example original CBOR data item</a>
+        </figcaption></figure>
+</div>
+<span id="name-example-packed-cbor-data-it"></span><div id="fig-example-out">
+<figure id="figure-3">
+        <div class="lang-cbor-diag sourcecode" id="appendix-A-3.1">
+<pre>
+113([["price", "category", "author", "title", "fiction", 8.95,
+                                                             "isbn"],
+    /  0          1         2         3         4         5    6   /
+     {"store": {
+       "book": [
+         {simple(1): "reference", simple(2): "Nigel Rees",
+          simple(3): "Sayings of the Century", simple(0): simple(5)},
+         {simple(1): simple(4), simple(2): "Evelyn Waugh",
+          simple(3): "Sword of Honour", simple(0): 12.99},
+         {simple(1): simple(4), simple(2): "Herman Melville",
+          simple(3): "Moby Dick", simple(6): "0-553-21311-3",
+          simple(0): simple(5)},
+         {simple(1): simple(4), simple(2): "J. R. R. Tolkien",
+          simple(3): "The Lord of the Rings",
+          simple(6): "0-395-19395-8", simple(0): 22.99}],
+       "bicycle": {"color": "red", simple(0): 19.95}}}])
+</pre>
+</div>
+<figcaption><a href="#figure-3" class="selfRef">Figure 3</a>:
+<a href="#name-example-packed-cbor-data-it" class="selfRef">Example packed CBOR data item with item sharing only</a>
+        </figcaption></figure>
+</div>
+<span id="name-example-packed-cbor-data-ite"></span><div id="fig-example-out-record">
+<figure id="figure-4">
+        <div class="lang-cbor-diag sourcecode" id="appendix-A-4.1">
+<pre>
+113([[114(["category", "author",
+           "title", simple(1), "isbn"]),
+    /  0                       /
+      "price", "fiction", 8.95],
+    /  1        2         3    /
+     {"store": {
+       "book": [
+           6(["reference", "Nigel Rees",
+              "Sayings of the Century", simple(3)]),
+           6([simple(2), "Evelyn Waugh",
+              "Sword of Honour", 12.99]),
+           6([simple(2), "Herman Melville",
+              "Moby Dick", simple(3), "0-553-21311-3"]),
+           6([simple(2), "J. R. R. Tolkien",
+               "The Lord of the Rings", 22.99, "0-395-19395-8"])],
+       "bicycle": {"color": "red", simple(1): 19.95}}}])
+</pre>
+</div>
+<figcaption><a href="#figure-4" class="selfRef">Figure 4</a>:
+<a href="#name-example-packed-cbor-data-ite" class="selfRef">Example packed CBOR data item using item sharing and the record function tag</a>
+        </figcaption></figure>
+</div>
+<p id="appendix-A-5">The (JSON-compatible) CBOR data structure below has been packed with shared
+item and (partial) prefix compression only and employs the split-table
+setup form (tag 1113).<a href="#appendix-A-5" class="pilcrow">¶</a></p>
+<span id="name-example-original-cbor-data-i"></span><div id="fig-example-in2">
+<figure id="figure-5">
+        <div class="breakable lang-json sourcecode" id="appendix-A-6.1">
+<pre>
+{
+  "name": "MyLED",
+  "interactions": [
+    {
+      "links": [
+        {
+          "href":
+           "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueRed",
+          "mediaType": "application/json"
+        }
+      ],
+      "outputData": {
+        "valueType": {
+          "type": "number"
+        }
+      },
+      "name": "rgbValueRed",
+      "writable": true,
+      "@type": [
+        "Property"
+      ]
+    },
+    {
+      "links": [
+        {
+          "href":
+           "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueGreen",
+          "mediaType": "application/json"
+        }
+      ],
+      "outputData": {
+        "valueType": {
+          "type": "number"
+        }
+      },
+      "name": "rgbValueGreen",
+      "writable": true,
+      "@type": [
+        "Property"
+      ]
+    },
+    {
+      "links": [
+        {
+          "href":
+           "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueBlue",
+          "mediaType": "application/json"
+        }
+      ],
+      "outputData": {
+        "valueType": {
+          "type": "number"
+        }
+      },
+      "name": "rgbValueBlue",
+      "writable": true,
+      "@type": [
+        "Property"
+      ]
+    },
+    {
+      "links": [
+        {
+          "href":
+           "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueWhite",
+          "mediaType": "application/json"
+        }
+      ],
+      "outputData": {
+        "valueType": {
+          "type": "number"
+        }
+      },
+      "name": "rgbValueWhite",
+      "writable": true,
+      "@type": [
+        "Property"
+      ]
+    },
+    {
+      "links": [
+        {
+          "href":
+           "http://192.168.1.103:8445/wot/thing/MyLED/ledOnOff",
+          "mediaType": "application/json"
+        }
+      ],
+      "outputData": {
+        "valueType": {
+          "type": "boolean"
+        }
+      },
+      "name": "ledOnOff",
+      "writable": true,
+      "@type": [
+        "Property"
+      ]
+    },
+    {
+      "links": [
+        {
+          "href":
+"http://192.168.1.103:8445/wot/thing/MyLED/colorTemperatureChanged",
+          "mediaType": "application/json"
+        }
+      ],
+      "outputData": {
+        "valueType": {
+          "type": "number"
+        }
+      },
+      "name": "colorTemperatureChanged",
+      "@type": [
+        "Event"
+      ]
+    }
+  ],
+  "@type": "Lamp",
+  "id": "0",
+  "base": "http://192.168.1.103:8445/wot/thing",
+  "@context":
+   "http://192.168.1.102:8444/wot/w3c-wot-td-context.jsonld"
+}
+</pre>
+</div>
+<figcaption><a href="#figure-5" class="selfRef">Figure 5</a>:
+<a href="#name-example-original-cbor-data-i" class="selfRef">Example original CBOR data item</a>
+        </figcaption></figure>
+</div>
+<span id="name-example-packed-cbor-data-item"></span><div id="fig-example-out2">
+<figure id="figure-6">
+        <div class="lang-cbordiag sourcecode" id="appendix-A-7.1">
+<pre>
+1113([/shared/["name", "@type", "links", "href", "mediaType",
+            /  0       1       2        3         4 /
+    "application/json", "outputData", {"valueType": {"type":
+         /  5               6               7 /
+    "number"}}, ["Property"], "writable", "valueType", "type"],
+               /   8            9           10           11 /
+   /argument/ ["http://192.168.1.10", 6("3:8445/wot/thing"),
+              / 6                        225 /
+   225("/MyLED/"), 226("rgbValue"), "rgbValue",
+     / 226             227           228     /
+   {simple(6): simple(7), simple(9): true, simple(1): simple(8)}],
+     / 229 /
+   /rump/ {simple(0): "MyLED",
+           "interactions": [
+   229({simple(2): [{simple(3): 227("Red"), simple(4): simple(5)}],
+    simple(0): 228("Red")}),
+   229({simple(2): [{simple(3): 227("Green"), simple(4): simple(5)}],
+    simple(0): 228("Green")}),
+   229({simple(2): [{simple(3): 227("Blue"), simple(4): simple(5)}],
+    simple(0): 228("Blue")}),
+   229({simple(2): [{simple(3): 227("White"), simple(4): simple(5)}],
+    simple(0): "rgbValueWhite"}),
+   {simple(2): [{simple(3): 226("ledOnOff"), simple(4): simple(5)}],
+    simple(6): {simple(10): {simple(11): "boolean"}}, simple(0):
+    "ledOnOff", simple(9): true, simple(1): simple(8)},
+   {simple(2): [{simple(3): 226("colorTemperatureChanged"),
+    simple(4): simple(5)}], simple(6): simple(7), simple(0):
+    "colorTemperatureChanged", simple(1): ["Event"]}],
+     simple(1): "Lamp", "id": "0", "base": 225(""),
+     "@context": 6("2:8444/wot/w3c-wot-td-context.jsonld")}])
+</pre>
+</div>
+<figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
+<a href="#name-example-packed-cbor-data-item" class="selfRef">Example packed CBOR data item</a>
+        </figcaption></figure>
+</div>
+</section>
+</div>
+<div id="sec-acknowledgements">
+<section id="appendix-B">
+      <h2 id="name-acknowledgements">
+<a href="#name-acknowledgements" class="section-name selfRef">Acknowledgements</a>
+      </h2>
+<p id="appendix-B-1">CBOR packing was part of the original proposal that turned into CBOR, but did
+not make it into <span>[<a href="#RFC7049" class="cite xref">RFC7049</a>]</span>, the predecessor of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>.
+Various attempts to come up with a specification over the years did not
+proceed.
+In 2017, <span class="contact-name">Sebastian Käbisch</span> proposed
+investigating compact representations of W3C Thing Descriptions, which
+prompted the author to come up with what turned into the present design.<a href="#appendix-B-1" class="pilcrow">¶</a></p>
+<p id="appendix-B-2">This work was supported in part by the German Federal Ministry of
+Education and Research (BMBF) within the project Concrete Contracts.<a href="#appendix-B-2" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="authors-addresses">
+<section id="appendix-C">
+      <h2 id="name-authors-addresses">
+<a href="#name-authors-addresses" class="section-name selfRef">Authors' Addresses</a>
+      </h2>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Carsten Bormann</span></div>
+<div dir="auto" class="left"><span class="org">Universität Bremen TZI</span></div>
+<div dir="auto" class="left"><span class="street-address">Postfach 330440</span></div>
+<div dir="auto" class="left">
+<span class="postal-code">D-28359</span> <span class="locality">Bremen</span>
+</div>
+<div dir="auto" class="left"><span class="country-name">Germany</span></div>
+<div class="tel">
+<span>Phone:</span>
+<a href="tel:+49-421-218-63921" class="tel">+49-421-218-63921</a>
+</div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:cabo@tzi.org" class="email">cabo@tzi.org</a>
+</div>
+</address>
+<address class="vcard">
+        <div dir="auto" class="left"><span class="fn nameRole">Mikolai Gütschow</span></div>
+<div dir="auto" class="left"><span class="org">TUD Dresden University of Technology</span></div>
+<div dir="auto" class="left"><span class="street-address">Helmholtzstr. 10</span></div>
+<div dir="auto" class="left">
+<span class="postal-code">D-01069</span> <span class="locality">Dresden</span>
+</div>
+<div dir="auto" class="left"><span class="country-name">Germany</span></div>
+<div class="email">
+<span>Email:</span>
+<a href="mailto:mikolai.guetschow@tu-dresden.de" class="email">mikolai.guetschow@tu-dresden.de</a>
+</div>
+</address>
+</section>
+</div>
+<script>const toc = document.getElementById("toc");
+toc.querySelector("h2").addEventListener("click", e => {
+  toc.classList.toggle("active");
+});
+toc.querySelector("nav").addEventListener("click", e => {
+  toc.classList.remove("active");
+});
+</script>
+</body>
+</html>
