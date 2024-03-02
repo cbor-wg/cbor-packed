@@ -99,9 +99,8 @@ informative:
 [^status]
 
 [^status]:
-    The present version (-11) adds an author, the "record" function
-    tag (TBD114), a special role for the simple value `undefined`, and
-    a number of editorial cleanups.
+    The present version (-12) updates the IANA "Values for Tag
+    Numbers" table, sorting it and cleaning up the "Data Item" column.
 
 --- middle
 
