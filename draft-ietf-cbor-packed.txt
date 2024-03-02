@@ -5,8 +5,8 @@
 Network Working Group                                         C. Bormann
 Internet-Draft                                    Universität Bremen TZI
 Intended status: Standards Track                             M. Gütschow
-Expires: 30 August 2024                                       TU Dresden
-                                                        27 February 2024
+Expires: 3 September 2024                                     TU Dresden
+                                                            2 March 2024
 
 
                               Packed CBOR
@@ -49,6 +49,15 @@ About This Document
    https://mailarchive.ietf.org/arch/browse/cbor/.  Subscribe at
    https://www.ietf.org/mailman/listinfo/cbor/.
 
+
+
+
+
+Bormann & Gütschow      Expires 3 September 2024                [Page 1]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
+
    Source for this draft and an issue tracker can be found at
    https://github.com/cbor-wg/cbor-packed.
 
@@ -67,7 +76,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 30 August 2024.
+   This Internet-Draft will expire on 3 September 2024.
 
 Copyright Notice
 
@@ -85,32 +94,40 @@ Copyright Notice
 
 Table of Contents
 
-   1.  Introduction
-     1.1.  Terminology and Conventions
-   2.  Packed CBOR
-     2.1.  Packing Tables
-     2.2.  Referencing Shared Items
-     2.3.  Referencing Argument Items
-     2.4.  Concatenation
-     2.5.  Discussion
-   3.  Table Setup
-     3.1.  Basic Packed CBOR
-   4.  Function Tags
-     4.1.  Join Function Tags
-     4.2.  Record Function Tag
-   5.  Tag Validity: Tag Equivalence Principle
-     5.1.  Tag Equivalence
-     5.2.  Tag Equivalence of Packed CBOR Tags
-   6.  IANA Considerations
-     6.1.  CBOR Tags Registry
-     6.2.  CBOR Simple Values Registry
-   7.  Security Considerations
-   8.  References
-     8.1.  Normative References
-     8.2.  Informative References
-   Appendix A.  Examples
-   Acknowledgements
-   Authors' Addresses
+   1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
+     1.1.  Terminology and Conventions . . . . . . . . . . . . . . .   4
+   2.  Packed CBOR . . . . . . . . . . . . . . . . . . . . . . . . .   5
+     2.1.  Packing Tables  . . . . . . . . . . . . . . . . . . . . .   6
+     2.2.  Referencing Shared Items  . . . . . . . . . . . . . . . .   6
+     2.3.  Referencing Argument Items  . . . . . . . . . . . . . . .   7
+     2.4.  Concatenation . . . . . . . . . . . . . . . . . . . . . .  10
+     2.5.  Discussion  . . . . . . . . . . . . . . . . . . . . . . .  11
+   3.  Table Setup . . . . . . . . . . . . . . . . . . . . . . . . .  12
+     3.1.  Basic Packed CBOR . . . . . . . . . . . . . . . . . . . .  13
+   4.  Function Tags . . . . . . . . . . . . . . . . . . . . . . . .  14
+     4.1.  Join Function Tags  . . . . . . . . . . . . . . . . . . .  14
+
+
+
+Bormann & Gütschow      Expires 3 September 2024                [Page 2]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
+
+     4.2.  Record Function Tag . . . . . . . . . . . . . . . . . . .  15
+   5.  Tag Validity: Tag Equivalence Principle . . . . . . . . . . .  16
+     5.1.  Tag Equivalence . . . . . . . . . . . . . . . . . . . . .  17
+     5.2.  Tag Equivalence of Packed CBOR Tags . . . . . . . . . . .  18
+   6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  18
+     6.1.  CBOR Tags Registry  . . . . . . . . . . . . . . . . . . .  18
+     6.2.  CBOR Simple Values Registry . . . . . . . . . . . . . . .  20
+   7.  Security Considerations . . . . . . . . . . . . . . . . . . .  21
+   8.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  21
+     8.1.  Normative References  . . . . . . . . . . . . . . . . . .  21
+     8.2.  Informative References  . . . . . . . . . . . . . . . . .  21
+   Appendix A.  Examples . . . . . . . . . . . . . . . . . . . . . .  22
+   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  28
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  28
 
 1.  Introduction
 
@@ -140,6 +157,18 @@ Table of Contents
    natural for a specific application.
 
    Packed CBOR can make use of two kinds of optimization:
+
+
+
+
+
+
+
+
+Bormann & Gütschow      Expires 3 September 2024                [Page 3]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
 
    *  item sharing: substructures (data items) that occur repeatedly in
       the original CBOR data item can be collapsed to a simple reference
@@ -190,6 +219,13 @@ Table of Contents
    Rump:  The data item contained in an argument reference that is
       combined with the argument to yield the reconstruction.
 
+
+
+Bormann & Gütschow      Expires 3 September 2024                [Page 4]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
+
    Straight reference:  An argument reference that uses the argument as
       the left-hand side and the rump as the right-hand side.
 
@@ -239,6 +275,13 @@ Table of Contents
    This section describes the packing tables, their structure, and how
    they are referenced.
 
+
+
+Bormann & Gütschow      Expires 3 September 2024                [Page 5]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
+
 2.1.  Packing Tables
 
    At any point within a data item making use of Packed CBOR, there is
@@ -284,6 +327,17 @@ Table of Contents
    reference is replaced by the referenced data item, which is then
    recursively unpacked.
 
+
+
+
+
+
+
+Bormann & Gütschow      Expires 3 September 2024                [Page 6]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
+
                +===========================+==============+
                | reference                 | table index  |
                +===========================+==============+
@@ -326,6 +380,19 @@ Table of Contents
    reference combines a prefix out of the argument table with the rump
    data item, and an inverted reference combines a rump data item with a
    suffix out of the argument table.
+
+
+
+
+
+
+
+
+
+Bormann & Gütschow      Expires 3 September 2024                [Page 7]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
 
           +==================================+=================+
           | straight reference               |     table index |
@@ -371,6 +438,17 @@ Table of Contents
    be involved to supply a function to be used in resolving the
    reference.  It is crucial not to confuse reference tag and, if
    present, function tag.
+
+
+
+
+
+
+
+Bormann & Gütschow      Expires 3 September 2024                [Page 8]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
 
    A straight reference uses the argument as the provisional left-hand
    side and the rump data item as the right-hand side.  An inverted
@@ -418,6 +496,15 @@ Table of Contents
    prefix items might be used in a Packed CBOR item.  The numbers for
    inverted (suffix) references are one quarter of those, except that
    there is no single-byte reference and 8 two-byte references.
+
+
+
+
+
+Bormann & Gütschow      Expires 3 September 2024                [Page 9]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
 
       |  Rationale: Experience suggests that straight (prefix) packing
       |  might be more likely than inverted (suffix) packing.  Also for
@@ -468,6 +555,13 @@ Table of Contents
       can be used to build both byte and text strings, depending on what
       type of rump is being used.
 
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 10]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
+
    *  If one side is one of the string types, and the other side is an
       array, the result of the concatenation is equivalent to the
       application of the "join" function (Section 4.1) to the string as
@@ -515,6 +609,15 @@ Table of Contents
       |        hide (resolve) the packing.  In this specific case, the
       |        onus of dealing with loops is on the accessors.
       |  
+
+
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 11]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
+
       |  In general, loop detection can be handled in a similar way in
       |  which loops of symbolic links are handled in a file system: A
       |  system-wide limit (often set to a value permitting some 20 to
@@ -563,6 +666,14 @@ Table of Contents
       Packed item references in the newly constructed (low-numbered)
       parts of the table are usually interpreted in the number space of
       that table (which includes the, now higher-numbered, inherited
+
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 12]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
+
       parts), while references in any existing, inherited (higher-
       numbered) part continue to use the (more limited) number space of
       the inherited table.
@@ -611,6 +722,14 @@ Table of Contents
    tables).  The arrays given as the first and second element of the
    content of the tag 1113 ("Split-Basic-Packed-CBOR") are prepended to
    the tables for shared items and arguments, respectively, that apply
+
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 13]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
+
    to the entire tag (by default empty tables).  As discussed in the
    introduction to this section, references in the supplied new arrays
    use the new number space (where inherited items are shifted by the
@@ -658,6 +777,14 @@ Table of Contents
     "mailto:support@packed.example"]
 
    A packed form of this using straight references could be:
+
+
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 14]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
 
    113([[106("packed.example")],
      [6(["https://", "/foo.html"]),
@@ -708,6 +835,13 @@ Table of Contents
 
    The value item array MUST NOT be longer than the key item array.
 
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 15]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
+
    The value item array MAY be shorter than the key item array, in which
    case the one or more unmatched value items towards the end are
    treated as _absent_. Additionally, value items that are the CBOR
@@ -755,6 +889,14 @@ Table of Contents
    further constraints for the data item.  But in any case, a tag
    definition can only specify validity based on the structure of its
    tag content.
+
+
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 16]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
 
    In Packed CBOR, a reference tag might be "standing in" for the actual
    tag content of an outer tag, or for a structural component of that.
@@ -804,6 +946,14 @@ Table of Contents
    that accept the named structure to accept the newly defined tag under
    the conditions given for the Tag Equivalence.
 
+
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 17]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
+
    A number of limitations apply to Tag Equivalence, which therefore
    should be applied deliberately and sparingly:
 
@@ -849,6 +999,16 @@ Table of Contents
 
    In the registry "CBOR Tags" [IANA.cbor-tags], IANA is requested to
    allocate the tags defined in Table 4.
+
+
+
+
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 18]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
 
    +========================+=================+===========+===========+
    |                    Tag | Data Item       | Semantics | Reference |
@@ -898,6 +1058,14 @@ Table of Contents
    |                        |                 | reference | cbor-     |
    |                        |                 | error     | packed    |
    +------------------------+-----------------+-----------+-----------+
+
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 19]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
+
    |                   1113 | array (shared-  | Packed    | draft-    |
    |                        | items,          | CBOR:     | ietf-     |
    |                        | argument-items, | table     | cbor-     |
@@ -942,6 +1110,17 @@ Table of Contents
          +-------+---------------------+------------------------+
 
                           Table 5: Simple Values
+
+
+
+
+
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 20]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
 
 7.  Security Considerations
 
@@ -989,6 +1168,16 @@ Table of Contents
 
 8.2.  Informative References
 
+
+
+
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 21]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
+
    [ARB-EXP]  Occil, P., "Arbitrary-Exponent Numbers", Specification for
               Registration of CBOR Tags 264 and 265,
               <http://peteroupc.github.io/CBOR/bigfrac.html>.
@@ -1034,6 +1223,17 @@ Appendix A.  Examples
    that this particular example does not lend itself to prefix
    compression, so it uses the simple common-table setup form (tag 113).
 
+
+
+
+
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 22]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
+
    { "store": {
        "book": [
          { "category": "reference",
@@ -1067,6 +1267,28 @@ Appendix A.  Examples
    }
 
             Figure 2: Example original CBOR data item, 400 bytes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 23]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
 
    113([["price", "category", "author", "title", "fiction", 8.95,
                                                                 "isbn"],
@@ -1111,6 +1333,18 @@ Appendix A.  Examples
    The (JSON-compatible) CBOR data structure below has been packed with
    shared item and (partial) prefix compression only and employs the
    split-table setup form (tag 1113).
+
+
+
+
+
+
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 24]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
 
    {
      "name": "MyLED",
@@ -1160,6 +1394,14 @@ Appendix A.  Examples
               "http://192.168.1.103:8445/wot/thing/MyLED/rgbValueBlue",
              "mediaType": "application/json"
            }
+
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 25]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
+
          ],
          "outputData": {
            "valueType": {
@@ -1208,6 +1450,14 @@ Appendix A.  Examples
          "writable": true,
          "@type": [
            "Property"
+
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 26]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
+
          ]
        },
        {
@@ -1237,6 +1487,32 @@ Appendix A.  Examples
    }
 
            Figure 5: Example original CBOR data item, 1210 bytes
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 27]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
 
    1113([/shared/["name", "@type", "links", "href", "mediaType",
                /  0       1       2        3         4 /
@@ -1286,6 +1562,14 @@ Acknowledgements
 
 Authors' Addresses
 
+
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 28]
+
+Internet-Draft                 Packed CBOR                    March 2024
+
+
    Carsten Bormann
    Universität Bremen TZI
    Postfach 330440
@@ -1301,3 +1585,40 @@ Authors' Addresses
    D-01069 Dresden
    Germany
    Email: mikolai.guetschow@tu-dresden.de
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bormann & Gütschow      Expires 3 September 2024               [Page 29]
