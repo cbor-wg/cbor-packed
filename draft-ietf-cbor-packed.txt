@@ -33,9 +33,8 @@ Abstract
    step is therefore often not required at the receiver.
 
 
-   // The present version (-11) adds an author, the "record" function
-   // tag (TBD114), a special role for the simple value undefined, and a
-   // number of editorial cleanups.
+   // The present version (-12) updates the IANA "Values for Tag
+   // Numbers" table, sorting it and cleaning up the "Data Item" column.
 
 About This Document
 
@@ -49,7 +48,8 @@ About This Document
    https://mailarchive.ietf.org/arch/browse/cbor/.  Subscribe at
    https://www.ietf.org/mailman/listinfo/cbor/.
 
-
+   Source for this draft and an issue tracker can be found at
+   https://github.com/cbor-wg/cbor-packed.
 
 
 
@@ -57,9 +57,6 @@ Bormann & Gütschow      Expires 3 September 2024                [Page 1]
 
 Internet-Draft                 Packed CBOR                    March 2024
 
-
-   Source for this draft and an issue tracker can be found at
-   https://github.com/cbor-wg/cbor-packed.
 
 Status of This Memo
 
@@ -97,7 +94,7 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
      1.1.  Terminology and Conventions . . . . . . . . . . . . . . .   4
    2.  Packed CBOR . . . . . . . . . . . . . . . . . . . . . . . . .   5
-     2.1.  Packing Tables  . . . . . . . . . . . . . . . . . . . . .   6
+     2.1.  Packing Tables  . . . . . . . . . . . . . . . . . . . . .   5
      2.2.  Referencing Shared Items  . . . . . . . . . . . . . . . .   6
      2.3.  Referencing Argument Items  . . . . . . . . . . . . . . .   7
      2.4.  Concatenation . . . . . . . . . . . . . . . . . . . . . .  10
@@ -106,6 +103,9 @@ Table of Contents
      3.1.  Basic Packed CBOR . . . . . . . . . . . . . . . . . . . .  13
    4.  Function Tags . . . . . . . . . . . . . . . . . . . . . . . .  14
      4.1.  Join Function Tags  . . . . . . . . . . . . . . . . . . .  14
+     4.2.  Record Function Tag . . . . . . . . . . . . . . . . . . .  15
+   5.  Tag Validity: Tag Equivalence Principle . . . . . . . . . . .  16
+     5.1.  Tag Equivalence . . . . . . . . . . . . . . . . . . . . .  17
 
 
 
@@ -114,9 +114,6 @@ Bormann & Gütschow      Expires 3 September 2024                [Page 2]
 Internet-Draft                 Packed CBOR                    March 2024
 
 
-     4.2.  Record Function Tag . . . . . . . . . . . . . . . . . . .  15
-   5.  Tag Validity: Tag Equivalence Principle . . . . . . . . . . .  16
-     5.1.  Tag Equivalence . . . . . . . . . . . . . . . . . . . . .  17
      5.2.  Tag Equivalence of Packed CBOR Tags . . . . . . . . . . .  18
    6.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  18
      6.1.  CBOR Tags Registry  . . . . . . . . . . . . . . . . . . .  18
@@ -158,8 +155,11 @@ Internet-Draft                 Packed CBOR                    March 2024
 
    Packed CBOR can make use of two kinds of optimization:
 
-
-
+   *  item sharing: substructures (data items) that occur repeatedly in
+      the original CBOR data item can be collapsed to a simple reference
+      to a common representation of that data item.  The processing
+      required during consumption is limited to following that
+      reference.
 
 
 
@@ -169,12 +169,6 @@ Bormann & Gütschow      Expires 3 September 2024                [Page 3]
 
 Internet-Draft                 Packed CBOR                    March 2024
 
-
-   *  item sharing: substructures (data items) that occur repeatedly in
-      the original CBOR data item can be collapsed to a simple reference
-      to a common representation of that data item.  The processing
-      required during consumption is limited to following that
-      reference.
 
    *  argument sharing: application of a function with two arguments,
       one of which is shared.  Data items (strings, containers) that
@@ -219,18 +213,18 @@ Internet-Draft                 Packed CBOR                    March 2024
    Rump:  The data item contained in an argument reference that is
       combined with the argument to yield the reconstruction.
 
+   Straight reference:  An argument reference that uses the argument as
+      the left-hand side and the rump as the right-hand side.
+
+   Inverted reference:  An argument reference that uses the rump as the
+      left-hand side and the argument as the right-hand side.
+
 
 
 Bormann & Gütschow      Expires 3 September 2024                [Page 4]
 
 Internet-Draft                 Packed CBOR                    March 2024
 
-
-   Straight reference:  An argument reference that uses the argument as
-      the left-hand side and the rump as the right-hand side.
-
-   Inverted reference:  An argument reference that uses the rump as the
-      left-hand side and the argument as the right-hand side.
 
    Function tag:  A tag used in an argument reference for the argument
       (straight references) or the rump (inverted references), causing
@@ -275,17 +269,18 @@ Internet-Draft                 Packed CBOR                    March 2024
    This section describes the packing tables, their structure, and how
    they are referenced.
 
+2.1.  Packing Tables
+
+   At any point within a data item making use of Packed CBOR, there is
+   an _active set_ of packing tables that applies.
+
+
 
 
 Bormann & Gütschow      Expires 3 September 2024                [Page 5]
 
 Internet-Draft                 Packed CBOR                    March 2024
 
-
-2.1.  Packing Tables
-
-   At any point within a data item making use of Packed CBOR, there is
-   an _active set_ of packing tables that applies.
 
    There are two packing tables in an active set:
 
@@ -326,6 +321,11 @@ Internet-Draft                 Packed CBOR                    March 2024
    items in Table 1.  When reconstructing the original data item, such a
    reference is replaced by the referenced data item, which is then
    recursively unpacked.
+
+
+
+
+
 
 
 
