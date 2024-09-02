@@ -7,7 +7,7 @@
 <title>Packed CBOR</title>
 <meta content="Carsten Bormann" name="author">
 <meta content="Mikolai Gütschow" name="author">
-<meta content='
+<meta content="
        The Concise Binary Object Representation (CBOR, RFC 8949 == STD 94) is a data
 format whose design goals include the possibility of extremely small
 code size, fairly small message size, and extensibility without the
@@ -17,32 +17,31 @@ CBOR data items, in particular when generated from legacy data models,
 often allow considerable gains in compactness when applying data
 compression.
 While traditional data compression techniques such as DEFLATE (RFC 1951) can work well for CBOR encoded data items, their disadvantage is
-that the receiver needs to decompress the compressed form to make
+that the recipient needs to decompress the compressed form to make
 use of the data. 
        This specification describes Packed CBOR, a simple transformation of a
 CBOR data item into another CBOR data item that is almost as easy to
 consume as the original CBOR data item.  A separate decompression
-step is therefore often not required at the receiver. 
-       The present version (-12) updates the IANA "Values for Tag
-Numbers" table, sorting it and cleaning up the "Data Item" column. 
-    ' name="description">
-<meta content="xml2rfc 3.19.4" name="generator">
+step is therefore often not required at the recipient. 
+       The present version ( -13 ) is a refresh of the implementation
+draft  -12  with minor editorial improvements. 
+    " name="description">
+<meta content="xml2rfc 3.23.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-cbor-packed-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.19.4
-    Python 3.11.6
+  xml2rfc 3.23.0
+    Python 3.12.3
     ConfigArgParse 1.7
     google-i18n-address 3.1.0
     intervaltree 3.1.0
-    Jinja2 3.1.2
-    lxml 4.9.3
-    platformdirs 4.2.0
+    Jinja2 3.1.4
+    lxml 4.9.4
+    platformdirs 4.2.2
     pycountry 22.3.5
     PyYAML 6.0.1
-    requests 2.31.0
-    setuptools 68.2.2
-    six 1.16.0
+    requests 2.32.3
+    setuptools 70.3.0
     wcwidth 0.2.13
 -->
 <link href="draft-ietf-cbor-packed.xml" rel="alternate" type="application/rfc+xml">
@@ -1064,11 +1063,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Packed CBOR</td>
-<td class="right">March 2024</td>
+<td class="right">September 2024</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bormann &amp; Gütschow</td>
-<td class="center">Expires 3 September 2024</td>
+<td class="center">Expires 6 March 2025</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1081,12 +1080,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-cbor-packed-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2024-03-02" class="published">2 March 2024</time>
+<time datetime="2024-09-02" class="published">2 September 2024</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2024-09-03">3 September 2024</time></dd>
+<dd class="expires"><time datetime="2025-03-06">6 March 2025</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1112,14 +1111,14 @@ CBOR data items, in particular when generated from legacy data models,
 often allow considerable gains in compactness when applying data
 compression.
 While traditional data compression techniques such as DEFLATE (RFC 1951) can work well for CBOR encoded data items, their disadvantage is
-that the receiver needs to decompress the compressed form to make
+that the recipient needs to decompress the compressed form to make
 use of the data.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
 <p id="section-abstract-3">This specification describes Packed CBOR, a simple transformation of a
 CBOR data item into another CBOR data item that is almost as easy to
 consume as the original CBOR data item.  A separate decompression
-step is therefore often not required at the receiver.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
-<p id="section-abstract-4"><span class="cref" id="status">The present version (-12) updates the IANA "Values for Tag
-Numbers" table, sorting it and cleaning up the "Data Item" column.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
+step is therefore often not required at the recipient.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
+<p id="section-abstract-4"><span class="cref" id="status">The present version (<code>-13</code>) is a refresh of the implementation
+draft <code>-12</code> with minor editorial improvements.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1155,7 +1154,7 @@ Numbers" table, sorting it and cleaning up the "Data Item" column.</span><a href
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 3 September 2024.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 6 March 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1294,12 +1293,12 @@ CBOR data items, in particular when generated from legacy data models,
 often allow considerable gains in compactness when applying data
 compression.
 While traditional data compression techniques such as DEFLATE <span>[<a href="#RFC1951" class="cite xref">RFC1951</a>]</span> can work well for CBOR encoded data items, their disadvantage is
-that the receiver needs to decompress the compressed form to make
+that the recipient needs to decompress the compressed form to make
 use of the data.<a href="#section-1-2" class="pilcrow">¶</a></p>
 <p id="section-1-3">This specification describes Packed CBOR, a simple transformation of a
 CBOR data item into another CBOR data item that is almost as easy to
 consume as the original CBOR data item.  A separate decompression
-step is therefore often not required at the receiver.<a href="#section-1-3" class="pilcrow">¶</a></p>
+step is therefore often not required at the recipient.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">This document defines the Packed CBOR format by specifying the
 transformation from a Packed CBOR data item to the original CBOR data
 item; it does not define an algorithm for a packer.
@@ -1341,7 +1340,7 @@ sharing only.<a href="#section-1-7" class="pilcrow">¶</a></p>
         </h3>
 <p id="section-1.1-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
 "<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
-described in BCP 14 <span>[<a href="#RFC2119" class="cite xref">RFC2119</a>]</span> <span>[<a href="#RFC8174" class="cite xref">RFC8174</a>]</span> when, and only when, they
+described in <span>[<a href="#BCP14" class="cite xref">BCP14</a>]</span> (<a href="#RFC2119" class="auto internal xref">RFC2119</a>) (<a href="#RFC8174" class="auto internal xref">RFC8174</a>) when, and only when, they
 appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-1.1-2">
           <dt id="section-1.1-2.1">Original data item:</dt>
@@ -1434,7 +1433,7 @@ ambiguous with C's exclusive-or and requires circumspection
 from the reader of the plain-text version.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
 <p id="section-1.1-5">Examples of CBOR data items are shown
 in CBOR Extended Diagnostic Notation (Section <a href="https://rfc-editor.org/rfc/rfc8949#section-8" class="relref">8</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span> in
-conjunction with <span><a href="https://rfc-editor.org/rfc/rfc8610#appendix-G" class="relref">Appendix G</a> of [<a href="#RFC8610" class="cite xref">RFC8610</a>]</span>).<a href="#section-1.1-5" class="pilcrow">¶</a></p>
+conjunction with <span><a href="https://rfc-editor.org/rfc/rfc8610#appendix-G" class="relref">Appendix G</a> of [<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> <span class="cref" id="update">➔ possibly update to</span> <span>[<a href="#I-D.ietf-cbor-edn-literals" class="cite xref">I-D.ietf-cbor-edn-literals</a>]</span>).<a href="#section-1.1-5" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2129,7 +2128,7 @@ says there should be none.<a href="#section-5.1-3.1.1" class="pilcrow">¶</a></p
 </li>
           <li class="normal" id="section-5.1-3.2">
             <p id="section-5.1-3.2.1">A CBOR protocol <span class="bcp14">MAY</span> specify the use of Tag Equivalence, effectively
-limiting its full use to those generic encoders that implement it.
+limiting the protocol's full use to those generic encoders that implement it.
 Existing CBOR protocols that do not address Tag Equivalence
 implicitly have a new variant that allows Tag Equivalence
 (e.g., to support Packed CBOR with an existing protocol).
@@ -2147,7 +2146,7 @@ Equivalence on the receptacle side; only for the tag that declares
 Tag Equivalence.)<a href="#section-5.1-3.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-5.1-3.4">
-            <p id="section-5.1-3.4.1">The registry "<a href="http://www.iana.org/assignments/cbor-tags#cbor-tags" class="relref">CBOR Tags</a>" <span>[<a href="#IANA.cbor-tags" class="cite xref">IANA.cbor-tags</a>]</span>
+            <p id="section-5.1-3.4.1">The registry "<a href="https://www.iana.org/assignments/cbor-tags#cbor-tags" class="relref">CBOR Tags</a>" <span>[<a href="#IANA.cbor-tags" class="cite xref">IANA.cbor-tags</a>]</span>
 currently does not have a way to record any equivalence claimed
 for a tag.  A convention would be to alert to Tag Equivalence in the
 "Semantics (short form)" field of the registry.<span class="cref" id="todo">Needs to be done for the tag registrations here.</span><a href="#section-5.1-3.4.1" class="pilcrow">¶</a></p>
@@ -2162,8 +2161,8 @@ for a tag.  A convention would be to alert to Tag Equivalence in the
         </h3>
 <p id="section-5.2-1">The reference tags in this specification declare their equivalence to
 the unpacked shared items or function results they represent.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<p id="section-5.2-2">The table setup tags 113 and 1113 declare its equivalence to the unpacked CBOR
-data item represented by it.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+<p id="section-5.2-2">The table setup tags 113 and 1113 declare their equivalence to the unpacked CBOR
+data item represented by them.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2178,7 +2177,7 @@ data item represented by it.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
         <h3 id="name-cbor-tags-registry">
 <a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-cbor-tags-registry" class="section-name selfRef">CBOR Tags Registry</a>
         </h3>
-<p id="section-6.1-1">In the registry "<a href="http://www.iana.org/assignments/cbor-tags#cbor-tags" class="relref">CBOR Tags</a>" <span>[<a href="#IANA.cbor-tags" class="cite xref">IANA.cbor-tags</a>]</span>,
+<p id="section-6.1-1">In the registry "<a href="https://www.iana.org/assignments/cbor-tags#cbor-tags" class="relref">CBOR Tags</a>" <span>[<a href="#IANA.cbor-tags" class="cite xref">IANA.cbor-tags</a>]</span>,
 IANA is requested to allocate the tags defined in <a href="#tab-tag-values" class="auto internal xref">Table 4</a>.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
 <span id="name-values-for-tag-numbers"></span><div id="tab-tag-values">
 <table class="center" id="table-4">
@@ -2283,7 +2282,7 @@ IANA is requested to allocate the tags defined in <a href="#tab-tag-values" clas
         <h3 id="name-cbor-simple-values-registry">
 <a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-cbor-simple-values-registry" class="section-name selfRef">CBOR Simple Values Registry</a>
         </h3>
-<p id="section-6.2-1">In the registry "<a href="http://www.iana.org/assignments/cbor-simple-values#simple" class="relref">CBOR Simple Values</a>" <span>[<a href="#IANA.cbor-simple-values" class="cite xref">IANA.cbor-simple-values</a>]</span>,
+<p id="section-6.2-1">In the registry "<a href="https://www.iana.org/assignments/cbor-simple-values#simple" class="relref">CBOR Simple Values</a>" <span>[<a href="#IANA.cbor-simple-values" class="cite xref">IANA.cbor-simple-values</a>]</span>,
 IANA is requested to allocate the simple values defined in <a href="#tab-simple-values" class="auto internal xref">Table 5</a>.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
 <span id="name-simple-values"></span><div id="tab-simple-values">
 <table class="center" id="table-5">
@@ -2324,6 +2323,7 @@ inputs.  (Note that if external dictionaries are added to cbor-packed,
 this requires additional consideration.)<a href="#section-7-3" class="pilcrow">¶</a></p>
 </section>
 </div>
+<div id="sec-combined-references">
 <section id="section-8">
       <h2 id="name-references">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-references" class="section-name selfRef">References</a>
@@ -2334,21 +2334,27 @@ this requires additional consideration.)<a href="#section-7-3" class="pilcrow">�
 <a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
+<dt id="BCP14">[BCP14]</dt>
+        <dd>
+<div class="refInstance">Best Current Practice 14, <span>&lt;<a href="https://www.rfc-editor.org/info/bcp14">https://www.rfc-editor.org/info/bcp14</a>&gt;</span>.<br><span>At the time of writing, this BCP comprises the following:</span>
+</div>
+<div class="refInstance" id="RFC2119">
+            <span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc2119">https://www.rfc-editor.org/info/rfc2119</a>&gt;</span>. </div>
+<div class="refInstance" id="RFC8174">
+            <span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8174">https://www.rfc-editor.org/info/rfc8174</a>&gt;</span>. </div>
+</dd>
+<dd class="break"></dd>
+<dt id="I-D.ietf-cbor-edn-literals">[I-D.ietf-cbor-edn-literals]</dt>
+        <dd>
+<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"CBOR Extended Diagnostic Notation (EDN)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cbor-edn-literals-12</span>, <time datetime="2024-09-01" class="refDate">1 September 2024</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cbor-edn-literals-12">https://datatracker.ietf.org/doc/html/draft-ietf-cbor-edn-literals-12</a>&gt;</span>. </dd>
+<dd class="break"></dd>
 <dt id="IANA.cbor-simple-values">[IANA.cbor-simple-values]</dt>
         <dd>
-<span class="refAuthor">IANA</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR) Simple Values"</span>, <span>&lt;<a href="http://www.iana.org/assignments/cbor-simple-values">http://www.iana.org/assignments/cbor-simple-values</a>&gt;</span>. </dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR) Simple Values"</span>, <span>&lt;<a href="https://www.iana.org/assignments/cbor-simple-values">https://www.iana.org/assignments/cbor-simple-values</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="IANA.cbor-tags">[IANA.cbor-tags]</dt>
         <dd>
-<span class="refAuthor">IANA</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR) Tags"</span>, <span>&lt;<a href="http://www.iana.org/assignments/cbor-tags">http://www.iana.org/assignments/cbor-tags</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC2119">[RFC2119]</dt>
-        <dd>
-<span class="refAuthor">Bradner, S.</span>, <span class="refTitle">"Key words for use in RFCs to Indicate Requirement Levels"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 2119</span>, <span class="seriesInfo">DOI 10.17487/RFC2119</span>, <time datetime="1997-03" class="refDate">March 1997</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc2119">https://www.rfc-editor.org/rfc/rfc2119</a>&gt;</span>. </dd>
-<dd class="break"></dd>
-<dt id="RFC8174">[RFC8174]</dt>
-        <dd>
-<span class="refAuthor">Leiba, B.</span>, <span class="refTitle">"Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words"</span>, <span class="seriesInfo">BCP 14</span>, <span class="seriesInfo">RFC 8174</span>, <span class="seriesInfo">DOI 10.17487/RFC8174</span>, <time datetime="2017-05" class="refDate">May 2017</time>, <span>&lt;<a href="https://www.rfc-editor.org/rfc/rfc8174">https://www.rfc-editor.org/rfc/rfc8174</a>&gt;</span>. </dd>
+<span class="refAuthor">IANA</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR) Tags"</span>, <span>&lt;<a href="https://www.iana.org/assignments/cbor-tags">https://www.iana.org/assignments/cbor-tags</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC8610">[RFC8610]</dt>
         <dd>
@@ -2356,9 +2362,10 @@ this requires additional consideration.)<a href="#section-7-3" class="pilcrow">�
 <dd class="break"></dd>
 <dt id="STD94">[STD94]</dt>
       <dd>
+<div class="refInstance">Internet Standard 94, <span>&lt;<a href="https://www.rfc-editor.org/info/std94">https://www.rfc-editor.org/info/std94</a>&gt;</span>.<br><span>At the time of writing, this STD comprises the following:</span>
+</div>
 <div class="refInstance" id="RFC8949">
-            <span class="refAuthor">Bormann, C.</span> and <span class="refAuthor">P. Hoffman</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR)"</span>, <span class="seriesInfo">STD 94</span>, <span class="seriesInfo">RFC 8949</span>, <time datetime="2020-12" class="refDate">December 2020</time>. </div>
-<span>&lt;<a href="https://www.rfc-editor.org/info/std94">https://www.rfc-editor.org/info/std94</a>&gt;</span>
+            <span class="refAuthor">Bormann, C.</span> and <span class="refAuthor">P. Hoffman</span>, <span class="refTitle">"Concise Binary Object Representation (CBOR)"</span>, <span class="seriesInfo">STD 94</span>, <span class="seriesInfo">RFC 8949</span>, <span class="seriesInfo">DOI 10.17487/RFC8949</span>, <time datetime="2020-12" class="refDate">December 2020</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc8949">https://www.rfc-editor.org/info/rfc8949</a>&gt;</span>. </div>
 </dd>
 <dd class="break"></dd>
 </dl>
@@ -2400,15 +2407,17 @@ this requires additional consideration.)<a href="#section-7-3" class="pilcrow">�
 <dd class="break"></dd>
 <dt id="STD63">[STD63]</dt>
       <dd>
+<div class="refInstance">Internet Standard 63, <span>&lt;<a href="https://www.rfc-editor.org/info/std63">https://www.rfc-editor.org/info/std63</a>&gt;</span>.<br><span>At the time of writing, this STD comprises the following:</span>
+</div>
 <div class="refInstance" id="RFC3629">
-            <span class="refAuthor">Yergeau, F.</span>, <span class="refTitle">"UTF-8, a transformation format of ISO 10646"</span>, <span class="seriesInfo">STD 63</span>, <span class="seriesInfo">RFC 3629</span>, <time datetime="2003-11" class="refDate">November 2003</time>. </div>
-<span>&lt;<a href="https://www.rfc-editor.org/info/std63">https://www.rfc-editor.org/info/std63</a>&gt;</span>
+            <span class="refAuthor">Yergeau, F.</span>, <span class="refTitle">"UTF-8, a transformation format of ISO 10646"</span>, <span class="seriesInfo">STD 63</span>, <span class="seriesInfo">RFC 3629</span>, <span class="seriesInfo">DOI 10.17487/RFC3629</span>, <time datetime="2003-11" class="refDate">November 2003</time>, <span>&lt;<a href="https://www.rfc-editor.org/info/rfc3629">https://www.rfc-editor.org/info/rfc3629</a>&gt;</span>. </div>
 </dd>
 <dd class="break"></dd>
 </dl>
 </section>
 </div>
 </section>
+</div>
 <div id="sec-examples">
 <section id="appendix-A">
       <h2 id="name-examples">
