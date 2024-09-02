@@ -84,7 +84,7 @@ informative:
 [^abs2a-] (RFC 1951) [^abs2b-]
 
 [^abs2b-]: can work well for CBOR encoded data items, their disadvantage is
-    that the receiver needs to decompress the compressed form to make
+    that the recipient needs to decompress the compressed form to make
     use of the data.
 
 [^abs3-]
@@ -92,15 +92,15 @@ informative:
 [^abs3-]: This specification describes Packed CBOR, a simple transformation of a
     CBOR data item into another CBOR data item that is almost as easy to
     consume as the original CBOR data item.  A separate decompression
-    step is therefore often not required at the receiver.
+    step is therefore often not required at the recipient.
 
 
 
 [^status]
 
 [^status]:
-    The present version (-12) updates the IANA "Values for Tag
-    Numbers" table, sorting it and cleaning up the "Data Item" column.
+    The present version (`-13`) is a refresh of the implementation
+    draft `-12` with minor editorial improvements.
 
 --- middle
 
@@ -150,7 +150,7 @@ Packed CBOR is defined in two parts: Referencing packing tables
 Terminology and Conventions        {#terms}
 ------------
 
-{::boilerplate bcp14-tagged}
+{::boilerplate bcp14-tagged-bcp14}
 
 Original data item:
 : A CBOR data item that is intended to be expressed by a packed data
@@ -220,8 +220,10 @@ from the reader of the plain-text version.
 
 Examples of CBOR data items are shown
 in CBOR Extended Diagnostic Notation ({{Section 8 of RFC8949@-bis}} in
-conjunction with {{Appendix G of -cddl}}).
+conjunction with {{Appendix G of -cddl}} [^update] {{!I-D.ietf-cbor-edn-literals}}).
 <!-- mention edn-literal here if that completes faster -->
+
+[^update]: ➔ possibly update to
 
 # Packed CBOR
 
@@ -820,7 +822,7 @@ should be applied deliberately and sparingly:
   says there should be none.
 
 * A CBOR protocol MAY specify the use of Tag Equivalence, effectively
-  limiting its full use to those generic encoders that implement it.
+  limiting the protocol's full use to those generic encoders that implement it.
   Existing CBOR protocols that do not address Tag Equivalence
   implicitly have a new variant that allows Tag Equivalence
   (e.g., to support Packed CBOR with an existing protocol).
@@ -849,8 +851,8 @@ Tag Equivalence of Packed CBOR Tags
 The reference tags in this specification declare their equivalence to
 the unpacked shared items or function results they represent.
 
-The table setup tags 113 and 1113 declare its equivalence to the unpacked CBOR
-data item represented by it.
+The table setup tags 113 and 1113 declare their equivalence to the unpacked CBOR
+data item represented by them.
 
 IANA Considerations
 ============
