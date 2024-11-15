@@ -1,0 +1,3 @@
+# Automatically generated CODEOWNERS
+# Regenerate with `make update-codeowners`
+draft-ietf-cbor-packed.md cabo@tzi.org mikolai.guetschow@tu-dresden.de
