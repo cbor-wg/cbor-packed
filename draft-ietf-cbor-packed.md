@@ -647,7 +647,7 @@ For an example, we assume this unpacked data item:
 
 ~~~ cbor-diag
 ["https://packed.example/foo.html",
- "coap:://packed.example/bar.cbor",
+ "coap://packed.example/bar.cbor",
  "mailto:support@packed.example"]
 ~~~
 {: check="json"}
@@ -680,7 +680,7 @@ A packed form of an array with many URIs that reference SenML items
 from the same place could be:
 
 ~~~ cbor-diag
-113([[105(["coaps://[2001::db8::1]/s/", ".senml"])],
+113([[105(["coaps://[2001:db8::1]/s/", ".senml"])],
   [6("temp-freezer"),
    6("temp-fridge"),
    6("temp-ambient")]
