@@ -5,8 +5,8 @@
 Network Working Group                                         C. Bormann
 Internet-Draft                                    Universität Bremen TZI
 Intended status: Standards Track                             M. Gütschow
-Expires: 6 March 2025                                         TU Dresden
-                                                        2 September 2024
+Expires: 19 May 2025                                          TU Dresden
+                                                        15 November 2024
 
 
                               Packed CBOR
@@ -53,9 +53,9 @@ About This Document
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                  [Page 1]
+Bormann & Gütschow         Expires 19 May 2025                  [Page 1]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
 Status of This Memo
@@ -73,7 +73,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 6 March 2025.
+   This Internet-Draft will expire on 19 May 2025.
 
 Copyright Notice
 
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                  [Page 2]
+Bormann & Gütschow         Expires 19 May 2025                  [Page 2]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
      5.2.  Tag Equivalence of Packed CBOR Tags . . . . . . . . . . .  18
@@ -165,9 +165,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                  [Page 3]
+Bormann & Gütschow         Expires 19 May 2025                  [Page 3]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
    *  argument sharing: application of a function with two arguments,
@@ -221,9 +221,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                  [Page 4]
+Bormann & Gütschow         Expires 19 May 2025                  [Page 4]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
    Function tag:  A tag used in an argument reference for the argument
@@ -277,9 +277,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                  [Page 5]
+Bormann & Gütschow         Expires 19 May 2025                  [Page 5]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
    There are two packing tables in an active set:
@@ -333,9 +333,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                  [Page 6]
+Bormann & Gütschow         Expires 19 May 2025                  [Page 6]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
                +===========================+==============+
@@ -389,9 +389,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                  [Page 7]
+Bormann & Gütschow         Expires 19 May 2025                  [Page 7]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
           +==================================+=================+
@@ -445,9 +445,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                  [Page 8]
+Bormann & Gütschow         Expires 19 May 2025                  [Page 8]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
    A straight reference uses the argument as the provisional left-hand
@@ -501,9 +501,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                  [Page 9]
+Bormann & Gütschow         Expires 19 May 2025                  [Page 9]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
       |  Rationale: Experience suggests that straight (prefix) packing
@@ -557,9 +557,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 10]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 10]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
    *  If one side is one of the string types, and the other side is an
@@ -613,9 +613,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 11]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 11]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
       |  In general, loop detection can be handled in a similar way in
@@ -669,9 +669,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 12]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 12]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
       parts), while references in any existing, inherited (higher-
@@ -725,9 +725,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 13]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 13]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
    to the entire tag (by default empty tables).  As discussed in the
@@ -773,7 +773,7 @@ Internet-Draft                 Packed CBOR                September 2024
    For an example, we assume this unpacked data item:
 
    ["https://packed.example/foo.html",
-    "coap:://packed.example/bar.cbor",
+    "coap://packed.example/bar.cbor",
     "mailto:support@packed.example"]
 
    A packed form of this using straight references could be:
@@ -781,9 +781,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 14]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 14]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
    113([[106("packed.example")],
@@ -808,7 +808,7 @@ Internet-Draft                 Packed CBOR                September 2024
    A packed form of an array with many URIs that reference SenML items
    from the same place could be:
 
-   113([[105(["coaps://[2001::db8::1]/s/", ".senml"])],
+   113([[105(["coaps://[2001:db8::1]/s/", ".senml"])],
      [6("temp-freezer"),
       6("temp-fridge"),
       6("temp-ambient")]
@@ -837,9 +837,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 15]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 15]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
    The value item array MAY be shorter than the key item array, in which
@@ -893,9 +893,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 16]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 16]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
    In Packed CBOR, a reference tag might be "standing in" for the actual
@@ -949,9 +949,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 17]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 17]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
    A number of limitations apply to Tag Equivalence, which therefore
@@ -1005,9 +1005,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 18]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 18]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
    +========================+=================+===========+===========+
@@ -1061,9 +1061,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 19]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 19]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
    |                   1113 | array (shared-  | Packed    | draft-    |
@@ -1117,9 +1117,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 20]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 20]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
 7.  Security Considerations
@@ -1153,9 +1153,9 @@ Internet-Draft                 Packed CBOR                September 2024
    [I-D.ietf-cbor-edn-literals]
               Bormann, C., "CBOR Extended Diagnostic Notation (EDN)",
               Work in Progress, Internet-Draft, draft-ietf-cbor-edn-
-              literals-12, 1 September 2024,
+              literals-13, 3 November 2024,
               <https://datatracker.ietf.org/doc/html/draft-ietf-cbor-
-              edn-literals-12>.
+              edn-literals-13>.
 
    [IANA.cbor-simple-values]
               IANA, "Concise Binary Object Representation (CBOR) Simple
@@ -1173,9 +1173,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 21]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 21]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
    [RFC8610]  Birkholz, H., Vigano, C., and C. Bormann, "Concise Data
@@ -1229,9 +1229,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 22]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 22]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
    [STD63]    Internet Standard 63,
@@ -1285,9 +1285,9 @@ Appendix A.  Examples
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 23]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 23]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
    { "store": {
@@ -1341,9 +1341,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 24]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 24]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
    113([["price", "category", "author", "title", "fiction", 8.95,
@@ -1397,9 +1397,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 25]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 25]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
    {
@@ -1453,9 +1453,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 26]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 26]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
          ],
@@ -1509,9 +1509,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 27]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 27]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
          ]
@@ -1565,9 +1565,9 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 28]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 28]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
    1113([/shared/["name", "@type", "links", "href", "mediaType",
@@ -1621,9 +1621,9 @@ Authors' Addresses
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 29]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 29]
 
-Internet-Draft                 Packed CBOR                September 2024
+Internet-Draft                 Packed CBOR                 November 2024
 
 
    Carsten Bormann
@@ -1677,4 +1677,4 @@ Internet-Draft                 Packed CBOR                September 2024
 
 
 
-Bormann & Gütschow        Expires 6 March 2025                 [Page 30]
+Bormann & Gütschow         Expires 19 May 2025                 [Page 30]
