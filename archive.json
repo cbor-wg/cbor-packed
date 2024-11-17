@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2023-01-24T01:01:34.463882+00:00",
+  "timestamp": "2024-11-17T01:41:14.173274+00:00",
   "repo": "cbor-wg/cbor-packed",
   "labels": [
     {
@@ -47,6 +47,16 @@
       "name": "wontfix",
       "description": "This will not be worked on",
       "color": "ffffff"
+    },
+    {
+      "name": "has-pr",
+      "description": "",
+      "color": "B9E62C"
+    },
+    {
+      "name": "chore",
+      "description": "",
+      "color": "885B1C"
     }
   ],
   "issues": [
@@ -96,6 +106,196 @@
           "updatedAt": "2023-01-23T18:18:05Z"
         }
       ]
+    },
+    {
+      "number": 8,
+      "id": "I_kwDOEeCKP85kq2rI",
+      "title": "Indexing into unpopulated table positions",
+      "url": "https://github.com/cbor-wg/cbor-packed/issues/8",
+      "state": "CLOSED",
+      "author": "chrysn",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [
+        "has-pr"
+      ],
+      "body": "From an extensibility PoV (eg. recent CoRAL discussions) it'd be good to optionally tolerate references into unpopulated areas of the table.\r\n\r\nFor example, a media type may indicate that the table(s) are pre-populated with some values. It'd be forward and backward compatible to extend that list over time, as long as consumers of the packed document tolerate that a table index may point into a position in the table that contains no entry.\r\n\r\nTo provide some decoupling between packed and the users of packed, it may be practical to describe a mode of unpacking where unpopulated table positions can be unpacked successfully with some special value (`undefined` comes to mind; there may or may not be applications that need some different value in there). Specifications using cbor-packed should then describe whether it is acceptable for an entry to be missing, or whether a reference into a missing table entry is an error instantly. Thus, graceful degradation is enabled.\r\n\r\nIn particular, CoRAL could make use of this, and would then simply state something like that undefined is allowed in many positions, and that statements containing an undefined would be ignored (or maybe the undefineds would create blank nodes, not sure yet). The table setup through which CoRAL would encounter such unpopulated table entries would not only be media type predefined tables (those would be used as well), but also externally referenced table parts that would be referenced in such a way that even when that table is unknown, the consumer will at least know how many items there are in that table, thus handling the index numbers correctly even when the total table becomes sparse.",
+      "createdAt": "2023-04-28T18:13:19Z",
+      "updatedAt": "2023-07-10T18:45:39Z",
+      "closedAt": "2023-07-10T18:45:39Z",
+      "comments": [
+        {
+          "author": "chrysn",
+          "authorAssociation": "MEMBER",
+          "body": "An alternative value to expand unpopulated access into is tag 65535(index number) (\"always invalid\"). This would be a bit more explicit, less prone to conflict with a format that legitimately uses `undefined`, and would also mean that we might get away without describing \"careful\" and \"fail-fast\" unpacking (for if the consumer doesn't place a guard around an element, this will eventually fail ingestion anyway).",
+          "createdAt": "2023-05-01T14:32:07Z",
+          "updatedAt": "2023-05-01T14:32:07Z"
+        },
+        {
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I would not mix this kind of \"always invalid\" with 65535 -- the latter was meant to be for implementations to use internally, and giving this value a second meaning is likely yo interfere with that.\r\n\r\nNote that we have to cater not only for missing shared items, but also for missing argument items.\r\n\r\nI have been toying with just leaving the references in (making a reference invalid outside of unpacking processes), but it is not quite clear which number would be in the reference when nested table setup is in use.",
+          "createdAt": "2023-07-10T12:56:42Z",
+          "updatedAt": "2023-07-10T12:56:42Z"
+        },
+        {
+          "author": "chrysn",
+          "authorAssociation": "MEMBER",
+          "body": "Leaving them around doesn't sound appealing to me, eliciting questions like \"which iteration of unpacking do i need to process this in\" (of which there is generally just 1, at least with the currently defined way of setting up the tables in the course of which references are linked to table entries).\r\n\r\n65535 was just an idea, I'm happy with anything that downstream documents can hook into and say that it's OK to find however we described unpacking errors.",
+          "createdAt": "2023-07-10T14:35:14Z",
+          "updatedAt": "2023-07-10T14:35:14Z"
+        },
+        {
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> which iteration of unpacking do i need to process this in\r\n\r\nYes, that is the kind of mind-boggling I also have.\r\n\r\nProbably the answer is 4711(undefined), where 4711 is a tag of our choice (similar to 31, which also provides specific semantics to undefined).\r\n",
+          "createdAt": "2023-07-10T14:38:29Z",
+          "updatedAt": "2023-07-10T14:38:29Z"
+        },
+        {
+          "author": "chrysn",
+          "authorAssociation": "MEMBER",
+          "body": "Works for me.\r\n\r\n(Did we ever say what \"undefined\" means, or that it is the JSON compatibility \"undefined\" and whether or not applications or modules such as packing should use it?)",
+          "createdAt": "2023-07-10T14:49:03Z",
+          "updatedAt": "2023-07-10T14:49:03Z"
+        },
+        {
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Sure:\r\n\r\n```\r\n5.7.  Undefined Values\r\n\r\n   In some CBOR-based protocols, the simple value (Section 3.3) of\r\n   \"undefined\" might be used by an encoder as a substitute for a data\r\n   item with an encoding problem, in order to allow the rest of the\r\n   enclosing data items to be encoded without harm.\r\n```\r\n\r\nJSON doesn't have undefined.  But the semantics are clearly to point to a substitute item, so this is fine -- adding a tag just allows us to refine that semantics.",
+          "createdAt": "2023-07-10T14:56:47Z",
+          "updatedAt": "2023-07-10T14:56:47Z"
+        }
+      ]
+    },
+    {
+      "number": 15,
+      "id": "I_kwDOEeCKP86AUfjT",
+      "title": "Recheck all size numbers",
+      "url": "https://github.com/cbor-wg/cbor-packed/issues/15",
+      "state": "CLOSED",
+      "author": "cabo",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [
+        "cabo"
+      ],
+      "labels": [
+        "has-pr",
+        "chore"
+      ],
+      "body": "",
+      "createdAt": "2024-02-25T17:08:48Z",
+      "updatedAt": "2024-02-27T08:21:58Z",
+      "closedAt": "2024-02-27T08:21:58Z",
+      "comments": []
+    },
+    {
+      "number": 17,
+      "id": "I_kwDOEeCKP86Adh_D",
+      "title": "Check exact values of the \"data item\" column for the tag registrations.",
+      "url": "https://github.com/cbor-wg/cbor-packed/issues/17",
+      "state": "CLOSED",
+      "author": "cabo",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The tag content for some of these can *be* function tags as well as things that go into concatenation, for some of them the tag content actually is the right-hand side, which is \"any\".",
+      "createdAt": "2024-02-26T21:51:45Z",
+      "updatedAt": "2024-02-27T09:08:04Z",
+      "closedAt": "2024-02-27T09:08:04Z",
+      "comments": []
+    },
+    {
+      "number": 19,
+      "id": "I_kwDOEeCKP86AjkTD",
+      "title": "Reconsider function name \"record\"?",
+      "url": "https://github.com/cbor-wg/cbor-packed/issues/19",
+      "state": "CLOSED",
+      "author": "mguetschow",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "In [RFC8610](https://www.rfc-editor.org/rfc/rfc8610.html#section-2), the term \"record\" is used for fixed-size arrays where the semantics of the array items are given by their position in the array. This description matches both the key and the value item array that we have defined for the \"record\" function in this draft, but not the result of the function application: This is a type of map that is described as \"struct\" in the same document, where the semantics of the value items are determined by the key items.\r\n\r\nThe other two functions (\"join\"/\"ijoin\") are named rather after their action than their outcome, but to me it would feel more natural if the function name referred to the outcome rather than to the type of the function arguments.\r\n\r\nWhen I proposed the function tag and the name \"record\", I was inspired by [CBOR-records](https://github.com/kriszyp/cbor-records). I think \"record\" and \"struct\" are used interchangeably in general, or might have different meaning depending on the programming language or context, but maybe we should reconsider the name for packed CBOR to be consistent with what is described in RFC8610 for CDDL?\r\n\r\n(tag 115 's' is also still unassigned, and it would give room for the adjacent tag 114 for an \"reference\" table setup form such as the one proposed in https://datatracker.ietf.org/doc/draft-amsuess-cbor-packed-by-reference/)",
+      "createdAt": "2024-02-27T14:56:18Z",
+      "updatedAt": "2024-03-03T17:54:22Z",
+      "closedAt": "2024-03-03T17:54:22Z",
+      "comments": [
+        {
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Good point.  I'm not sure, though, we'll find terminology that isn't confusing at least for someone.\r\nSection 2 of RFC 8610 was at least in part inspired by Erlang and the way Elixir makes Erlang's records more accessible.\r\nThe term \"record\" is not meant as a verb (as in to record), like \"join\" is; the verb for what happens during unpacking would be \"structify\" (\ud83e\udd13).\r\n\"Record\" is indeed describing what the packed form is, not the original form.\r\n\r\nDo we need to be consistent here?",
+          "createdAt": "2024-02-27T16:14:39Z",
+          "updatedAt": "2024-02-27T16:14:39Z"
+        },
+        {
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I don't have a strong opinion on this one, just wanted to mention it so we are aware of the slight inconsistency.\r\n\r\nIf we wanted a verb, how would \"[structuralize](https://en.wiktionary.org/wiki/structuralize)\" sound to you?",
+          "createdAt": "2024-02-28T09:36:29Z",
+          "updatedAt": "2024-02-28T09:36:29Z"
+        },
+        {
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> If we wanted a verb, how would \"[structuralize](https://en.wiktionary.org/wiki/structuralize)\" sound to you?\r\n\r\nThere was a reason why RFC 8610 called them \"struct\", not \"structure\"...\r\nThat is just too general a word.",
+          "createdAt": "2024-02-28T10:16:00Z",
+          "updatedAt": "2024-02-28T10:16:00Z"
+        },
+        {
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "I submitted -12 without having addressed this.\r\nDo we want to continue the search for a better word or close this?",
+          "createdAt": "2024-03-02T21:58:36Z",
+          "updatedAt": "2024-03-02T21:58:36Z"
+        },
+        {
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "body": "I'm fine with keeping it as is.",
+          "createdAt": "2024-03-03T17:54:22Z",
+          "updatedAt": "2024-03-03T17:54:22Z"
+        }
+      ]
+    },
+    {
+      "number": 20,
+      "id": "I_kwDOEeCKP86BJxLd",
+      "title": "1112(undefined) may be useful with payload",
+      "url": "https://github.com/cbor-wg/cbor-packed/issues/20",
+      "state": "OPEN",
+      "author": "chrysn",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Processing [packed-by-reference#5](https://codeberg.org/chrysn/packed-by-reference/issues/5), I noticed that `1112(undefined)` can cause problems:\r\n\r\n* When an application compares unprocessable elements for identity, 1112(undefined) will show up as identical. (Granted, \"don't do that, then\")\r\n* If an unpacker has two unpopulated entries in a single dict's keys, and thus produces two `1112(undefined)`, all of a sudden the dictionary has duplicate keys.",
+      "createdAt": "2024-03-04T13:13:08Z",
+      "updatedAt": "2024-03-04T13:16:58Z",
+      "closedAt": null,
+      "comments": [
+        {
+          "author": "chrysn",
+          "authorAssociation": "MEMBER",
+          "body": "Possible mitigation would be to allow decoder defined payload in the 1112 (which would be ignored by the recipient but is stuctured as the decoder needs it), or doing away with 1112 altogether and instead leaving the references as they are (resulting, once more, in a tag that is not processable by the recipient, but it is already a bit disambiguated).\r\n\r\nEither of those solves dictionary key issue. The compare-by-identity issue is just mitigated a bit, but not solved for good, because when comparing across positions in different documents, 1112's payload would need to encode everything the decoder knows about the chain of tables that led to this, which is very verbose.",
+          "createdAt": "2024-03-04T13:16:56Z",
+          "updatedAt": "2024-03-04T13:16:56Z"
+        }
+      ]
+    },
+    {
+      "number": 21,
+      "id": "I_kwDOEeCKP86a7yrk",
+      "title": "seccons: What if implementations disagree on what is implied by a media type?",
+      "url": "https://github.com/cbor-wg/cbor-packed/issues/21",
+      "state": "OPEN",
+      "author": "chrysn",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "I think this should be added.\r\n\r\n\u2026 and if you think I only want this to be in there to simplify the work of packed-by-reference that would say that same considerations apply, you'd be totally right.\r\n\r\n(If you like, I can sketch some text later).",
+      "createdAt": "2024-10-19T16:22:58Z",
+      "updatedAt": "2024-10-19T16:22:58Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -340,6 +540,757 @@
           "updatedAt": "2022-07-24T14:56:48Z"
         }
       ],
+      "reviews": []
+    },
+    {
+      "number": 9,
+      "id": "PR_kwDOEeCKP85VGSmv",
+      "title": "Input for 117",
+      "url": "https://github.com/cbor-wg/cbor-packed/pull/9",
+      "state": "MERGED",
+      "author": "cabo",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Close #8",
+      "createdAt": "2023-07-10T15:08:03Z",
+      "updatedAt": "2023-07-10T18:45:38Z",
+      "baseRepository": "cbor-wg/cbor-packed",
+      "baseRefName": "main",
+      "baseRefOid": "620cc2e568c7d6935dc4c7406cf55a4120c6abb2",
+      "headRepository": "cbor-wg/cbor-packed",
+      "headRefName": "input-for-117",
+      "headRefOid": "57143949f85e859904250698d181bed6868addb2",
+      "closedAt": "2023-07-10T18:45:37Z",
+      "mergedAt": "2023-07-10T18:45:37Z",
+      "mergedBy": "cabo",
+      "mergeCommit": {
+        "oid": "029d765c71b48b9e90d474303896f924af5720f4"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEeCKP85awi_h",
+          "commit": {
+            "abbreviatedOid": "ae988f7"
+          },
+          "author": "chrysn",
+          "authorAssociation": "MEMBER",
+          "state": "APPROVED",
+          "body": "LGTM, with small comments.\r\n\r\nIf everything else goes very fast, I may yet submit a very small document defining 1114 :-)",
+          "createdAt": "2023-07-10T18:16:43Z",
+          "updatedAt": "2023-07-10T18:22:00Z",
+          "comments": [
+            {
+              "originalPosition": 33,
+              "body": "```suggestion\r\nchosen.\r\nCBOR based protocols that include the use of packed CBOR\r\nMAY require that unpacking errors are tolerated in some positions.\r\n```",
+              "createdAt": "2023-07-10T18:16:43Z",
+              "updatedAt": "2023-07-10T18:22:00Z"
+            },
+            {
+              "originalPosition": 165,
+              "body": "Should there be any extra text that defines the tag in declarative language, or does the registration alone and the mention in the text suffice?",
+              "createdAt": "2023-07-10T18:20:16Z",
+              "updatedAt": "2023-07-10T18:22:00Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP85awtht",
+          "commit": {
+            "abbreviatedOid": "ae988f7"
+          },
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2023-07-10T18:44:59Z",
+          "updatedAt": "2023-07-10T18:44:59Z",
+          "comments": [
+            {
+              "originalPosition": 165,
+              "body": "I think the mention in the text and the registration suffices.",
+              "createdAt": "2023-07-10T18:44:59Z",
+              "updatedAt": "2023-07-10T18:44:59Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 10,
+      "id": "PR_kwDOEeCKP85njfnw",
+      "title": "Add author",
+      "url": "https://github.com/cbor-wg/cbor-packed/pull/10",
+      "state": "MERGED",
+      "author": "cabo",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-02-21T17:39:29Z",
+      "updatedAt": "2024-02-22T11:23:46Z",
+      "baseRepository": "cbor-wg/cbor-packed",
+      "baseRefName": "main",
+      "baseRefOid": "53744d6c3d4f2605e2b149cce3dff28369ed9881",
+      "headRepository": "cbor-wg/cbor-packed",
+      "headRefName": "add-author",
+      "headRefOid": "7c9c68b24b6a0efede88e8053c07d918ba65a53e",
+      "closedAt": "2024-02-22T11:23:46Z",
+      "mergedAt": "2024-02-22T11:23:46Z",
+      "mergedBy": "cabo",
+      "mergeCommit": {
+        "oid": "341e4be7aeaeaece20262bb1e387172cf86a31ac"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEeCKP85w-wbJ",
+          "commit": {
+            "abbreviatedOid": "7c9c68b"
+          },
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-02-22T10:34:55Z",
+          "updatedAt": "2024-02-22T10:34:55Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 11,
+      "id": "PR_kwDOEeCKP85npopV",
+      "title": "Add record function tag definition",
+      "url": "https://github.com/cbor-wg/cbor-packed/pull/11",
+      "state": "CLOSED",
+      "author": "mguetschow",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "As discussed [on the mailing list](https://mailarchive.ietf.org/arch/msg/cbor/-sgR9-RrgXlAY9LZj8mzk-6fDKU/) and the [last interim](https://datatracker.ietf.org/doc/minutes-interim-2024-cbor-04-202402211500/).\r\n\r\nI've also added example usage of the record function as an alternative for the first example. The second example would probably also benefit from it, but it might also make the example even harder to understand?",
+      "createdAt": "2024-02-22T13:53:55Z",
+      "updatedAt": "2024-02-26T13:41:58Z",
+      "baseRepository": "cbor-wg/cbor-packed",
+      "baseRefName": "main",
+      "baseRefOid": "0b4dbfaa82cd82d6d8beb143103f2d9b6a01f1ec",
+      "headRepository": "cbor-wg/cbor-packed",
+      "headRefName": "function-tag-record",
+      "headRefOid": "f2da64694a5211cf49a494ec67906af7979eb806",
+      "closedAt": "2024-02-26T13:41:58Z",
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [
+        {
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Sorry, messed up the merge.\r\n",
+          "createdAt": "2024-02-26T13:26:10Z",
+          "updatedAt": "2024-02-26T13:26:10Z"
+        },
+        {
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Closing this branch -- the actual state is in function-tag-record-fixed.",
+          "createdAt": "2024-02-26T13:41:58Z",
+          "updatedAt": "2024-02-26T13:41:58Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEeCKP85xAWaA",
+          "commit": {
+            "abbreviatedOid": "b7b629c"
+          },
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-22T13:55:51Z",
+          "updatedAt": "2024-02-22T13:55:51Z",
+          "comments": [
+            {
+              "originalPosition": 81,
+              "body": "Why is this given as an approximate of 309 bytes? cbor.me actually gives me 308 bytes, see [here](https://cbor.me/?diag=113([[%22price%22,%20%22category%22,%20%22author%22,%20%22title%22,%20%22fiction%22,%208.95,%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%20%22isbn%22],%20%20%20%20/%20%200%20%20%20%20%20%20%20%20%20%201%20%20%20%20%20%20%20%20%202%20%20%20%20%20%20%20%20%203%20%20%20%20%20%20%20%20%204%20%20%20%20%20%20%20%20%205%20%20%20%206%20%20%20/%20%20%20%20%20{%22store%22:%20{%20%20%20%20%20%20%20%22book%22:%20[%20%20%20%20%20%20%20%20%20{simple(1):%20%22reference%22,%20simple(2):%20%22Nigel%20Rees%22,%20%20%20%20%20%20%20%20%20%20simple(3):%20%22Sayings%20of%20the%20Century%22,%20simple(0):%20simple(5)},%20%20%20%20%20%20%20%20%20{simple(1):%20simple(4),%20simple(2):%20%22Evelyn%20Waugh%22,%20%20%20%20%20%20%20%20%20%20simple(3):%20%22Sword%20of%20Honour%22,%20simple(0):%2012.99},%20%20%20%20%20%20%20%20%20{simple(1):%20simple(4),%20simple(2):%20%22Herman%20Melville%22,%20%20%20%20%20%20%20%20%20%20simple(3):%20%22Moby%20Dick%22,%20simple(6):%20%220-553-21311-3%22,%20%20%20%20%20%20%20%20%20%20simple(0):%20simple(5)},%20%20%20%20%20%20%20%20%20{simple(1):%20simple(4),%20simple(2):%20%22J.%20R.%20R.%20Tolkien%22,%20%20%20%20%20%20%20%20%20%20simple(3):%20%22The%20Lord%20of%20the%20Rings%22,%20%20%20%20%20%20%20%20%20%20simple(6):%20%220-395-19395-8%22,%20simple(0):%2022.99}],%20%20%20%20%20%20%20%22bicycle%22:%20{%22color%22:%20%22red%22,%20simple(0):%2019.95}}}])).",
+              "createdAt": "2024-02-22T13:55:51Z",
+              "updatedAt": "2024-02-22T13:55:51Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP85xAlFV",
+          "commit": {
+            "abbreviatedOid": "b7b629c"
+          },
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-22T14:18:52Z",
+          "updatedAt": "2024-02-22T14:18:52Z",
+          "comments": [
+            {
+              "originalPosition": 26,
+              "body": "If we adopt these semantics for >undefined< here, we could also allow deleting keys from default maps when combining two maps via concatenation: Having >undefined< in a value overriding a default could simply remove the corresponding pair.",
+              "createdAt": "2024-02-22T14:18:52Z",
+              "updatedAt": "2024-02-22T14:18:53Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP85xNyRc",
+          "commit": {
+            "abbreviatedOid": "b7b629c"
+          },
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-24T13:53:34Z",
+          "updatedAt": "2024-02-24T14:26:48Z",
+          "comments": [
+            {
+              "originalPosition": 98,
+              "body": "Why are we using simple(1) here and not \"price\" directly?  Item 1 is not used at all, is it?",
+              "createdAt": "2024-02-24T13:53:34Z",
+              "updatedAt": "2024-02-24T14:26:48Z"
+            },
+            {
+              "originalPosition": 114,
+              "body": "Maybe the caption should explicitly call out the record function (which might enable removing \"argument sharing\" to keep the size in check)",
+              "createdAt": "2024-02-24T13:54:37Z",
+              "updatedAt": "2024-02-24T14:26:48Z"
+            },
+            {
+              "originalPosition": 27,
+              "body": "Well, maybe there is no resulting pair if the value doesn't exist?\r\nMaybe we can factor absence and \"undefined\" together, as in \"in the value array, items of value \"undefined\" are treated as absent\"?",
+              "createdAt": "2024-02-24T13:57:58Z",
+              "updatedAt": "2024-02-24T14:26:48Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP85xOEHE",
+          "commit": {
+            "abbreviatedOid": "b7b629c"
+          },
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-24T15:02:48Z",
+          "updatedAt": "2024-02-24T15:02:48Z",
+          "comments": [
+            {
+              "originalPosition": 26,
+              "body": "I wrote this up in https://github.com/cbor-wg/cbor-packed/pull/13 now.",
+              "createdAt": "2024-02-24T15:02:48Z",
+              "updatedAt": "2024-02-24T15:02:48Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP85xO2Ha",
+          "commit": {
+            "abbreviatedOid": "b7b629c"
+          },
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-25T17:09:04Z",
+          "updatedAt": "2024-02-25T17:09:04Z",
+          "comments": [
+            {
+              "originalPosition": 81,
+              "body": "I think we need to go through all these numbers after we have whittled down all the small fixes.\r\nNow https://github.com/cbor-wg/cbor-packed/issues/15",
+              "createdAt": "2024-02-25T17:09:04Z",
+              "updatedAt": "2024-02-25T17:09:04Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP85xRZk4",
+          "commit": {
+            "abbreviatedOid": "b7b629c"
+          },
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-26T09:41:41Z",
+          "updatedAt": "2024-02-26T09:41:42Z",
+          "comments": [
+            {
+              "originalPosition": 98,
+              "body": "Oh, good catch, the second entry in \"bicycle\" was supposed to be `simple(1)`. Will change!",
+              "createdAt": "2024-02-26T09:41:42Z",
+              "updatedAt": "2024-02-26T09:41:42Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP85xS7fL",
+          "commit": {
+            "abbreviatedOid": "b7b629c"
+          },
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-26T12:44:41Z",
+          "updatedAt": "2024-02-26T12:50:10Z",
+          "comments": [
+            {
+              "originalPosition": 27,
+              "body": "How about\r\n> The value item array may be shorter than the key item array, in which case one or more value items towards the end are absent.\r\n> Additionally, value items that are `undefined` (0xf7) are treated as absent.\r\n> Key items whose matching value items are absent are not included in the resulting map. ",
+              "createdAt": "2024-02-26T12:44:41Z",
+              "updatedAt": "2024-02-26T12:50:10Z"
+            },
+            {
+              "originalPosition": 114,
+              "body": "Done.",
+              "createdAt": "2024-02-26T12:49:33Z",
+              "updatedAt": "2024-02-26T12:50:10Z"
+            },
+            {
+              "originalPosition": 98,
+              "body": "Done.",
+              "createdAt": "2024-02-26T12:49:40Z",
+              "updatedAt": "2024-02-26T12:50:10Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP85xTKx8",
+          "commit": {
+            "abbreviatedOid": "b7b629c"
+          },
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-26T13:16:34Z",
+          "updatedAt": "2024-02-26T13:16:35Z",
+          "comments": [
+            {
+              "originalPosition": 27,
+              "body": "I put in a slightly edited version of this.\r\n\r\nWe don't say yet what happpens if the value item array is *longer* than the key item array.\r\nShould this be a \"MUST NOT\"?",
+              "createdAt": "2024-02-26T13:16:34Z",
+              "updatedAt": "2024-02-26T13:16:35Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP85xTL3i",
+          "commit": {
+            "abbreviatedOid": "b7b629c"
+          },
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-26T13:18:43Z",
+          "updatedAt": "2024-02-26T13:18:44Z",
+          "comments": [
+            {
+              "originalPosition": 27,
+              "body": "> I put in a slightly edited version of this.\r\n\r\nReads good to me, thanks!\r\n\r\n> We don't say yet what happens if the value item array is _longer_ than the key item array.\r\n> Should this be a \"MUST NOT\"?\r\n\r\nYes, I would say so.\r\n",
+              "createdAt": "2024-02-26T13:18:44Z",
+              "updatedAt": "2024-02-26T13:18:44Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP85xTUW0",
+          "commit": {
+            "abbreviatedOid": "b7b629c"
+          },
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-26T13:32:20Z",
+          "updatedAt": "2024-02-26T13:32:20Z",
+          "comments": [
+            {
+              "originalPosition": 27,
+              "body": "OK, I pushed this MUST NOT directly to main, as the merge is now confused...\r\n0b4dbfa",
+              "createdAt": "2024-02-26T13:32:20Z",
+              "updatedAt": "2024-02-26T13:32:20Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 12,
+      "id": "PR_kwDOEeCKP85nptFu",
+      "title": "fix typos: matching parantheses",
+      "url": "https://github.com/cbor-wg/cbor-packed/pull/12",
+      "state": "MERGED",
+      "author": "mguetschow",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "three instances I have been pointed to by my text editor",
+      "createdAt": "2024-02-22T14:03:37Z",
+      "updatedAt": "2024-02-22T14:06:22Z",
+      "baseRepository": "cbor-wg/cbor-packed",
+      "baseRefName": "main",
+      "baseRefOid": "341e4be7aeaeaece20262bb1e387172cf86a31ac",
+      "headRepository": "cbor-wg/cbor-packed",
+      "headRefName": "fix-typos",
+      "headRefOid": "7b1e2a9061d4b0cee3a7917c5bd472a21fd9646b",
+      "closedAt": "2024-02-22T14:06:22Z",
+      "mergedAt": "2024-02-22T14:06:22Z",
+      "mergedBy": "cabo",
+      "mergeCommit": {
+        "oid": "6db04bf262f41803512df9e00e9650c0deba12f2"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEeCKP85xAcZI",
+          "commit": {
+            "abbreviatedOid": "7b1e2a9"
+          },
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Thanks!\r\n",
+          "createdAt": "2024-02-22T14:06:01Z",
+          "updatedAt": "2024-02-22T14:06:01Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 13,
+      "id": "PR_kwDOEeCKP85n0kzm",
+      "title": "Use `undefined` to remove map entries during concatenation",
+      "url": "https://github.com/cbor-wg/cbor-packed/pull/13",
+      "state": "MERGED",
+      "author": "cabo",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "This is text that could be used to have member values of `undefined` in RHS maps during concatenation remove members instead.\r\n\r\nI'm not yet sure this additional wart is worth the complexity, but with tag 114 (\"r\") already special-casing `undefined` in a similar way, this becomes less of an additional pain.\r\n",
+      "createdAt": "2024-02-24T14:28:48Z",
+      "updatedAt": "2024-02-26T13:42:34Z",
+      "baseRepository": "cbor-wg/cbor-packed",
+      "baseRefName": "main",
+      "baseRefOid": "6db04bf262f41803512df9e00e9650c0deba12f2",
+      "headRepository": "cbor-wg/cbor-packed",
+      "headRefName": "undefined-remove",
+      "headRefOid": "ef4b31bb6f8e1813812a1d0bdec17b3781df74fe",
+      "closedAt": "2024-02-26T13:42:34Z",
+      "mergedAt": "2024-02-26T13:42:34Z",
+      "mergedBy": "cabo",
+      "mergeCommit": {
+        "oid": "a7ad4e58ed8343c71bf7e17ffde94e80c9094b0e"
+      },
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEeCKP85xTIsX",
+          "commit": {
+            "abbreviatedOid": "ef4b31b"
+          },
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-26T13:12:16Z",
+          "updatedAt": "2024-02-26T13:12:17Z",
+          "comments": [
+            {
+              "originalPosition": 34,
+              "body": "That's most probably not realistic at this point anymore, but it feels like it would have been nice to assign these special semantics to `undefined` values in a map from the beginning on: something along the lines of \"a map entry whose value is `undefined` is treated as non-existing\". This would avoid all the special casing here and for the record tag.\r\n\r\nThis would imply that an encoding error could not be conveyed anymore to the decoding side, if it happened while encoding the value item (see [RFC8949, Section 5.7](https://www.rfc-editor.org/rfc/rfc8949.html#section-5.7)). But that means that the decoder anyway has to include special handling for this case which could instead simply explicitly handle missing map items. For application-provided \"absent\" values, there is still `null` available.\r\n\r\nWas there a reason back then to not prohibit `undefined` from \"application-level\", i.e., not encoding-specific, usage?",
+              "createdAt": "2024-02-26T13:12:16Z",
+              "updatedAt": "2024-02-26T13:12:17Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP85xTMVq",
+          "commit": {
+            "abbreviatedOid": "ef4b31b"
+          },
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-26T13:19:37Z",
+          "updatedAt": "2024-02-26T13:19:37Z",
+          "comments": [
+            {
+              "originalPosition": 34,
+              "body": "The encoding example was just one use case.\r\nIf undefined can ever be a valid member value, we can't make it auto-vanish.\r\nGiven that undefined is a valid JavaScript value, this was foreseen to be possible.",
+              "createdAt": "2024-02-26T13:19:37Z",
+              "updatedAt": "2024-02-26T13:19:37Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP85xTT4J",
+          "commit": {
+            "abbreviatedOid": "ef4b31b"
+          },
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-26T13:31:53Z",
+          "updatedAt": "2024-02-26T13:31:53Z",
+          "comments": [
+            {
+              "originalPosition": 34,
+              "body": "Well I see, too late to change that now.",
+              "createdAt": "2024-02-26T13:31:53Z",
+              "updatedAt": "2024-02-26T13:31:54Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP85xTT_e",
+          "commit": {
+            "abbreviatedOid": "ef4b31b"
+          },
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "",
+          "createdAt": "2024-02-26T13:32:01Z",
+          "updatedAt": "2024-02-26T13:32:01Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 14,
+      "id": "PR_kwDOEeCKP85n17xA",
+      "title": "Addressing editorial suggestions from mguetschow",
+      "url": "https://github.com/cbor-wg/cbor-packed/pull/14",
+      "state": "MERGED",
+      "author": "cabo",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2024-02-25T14:34:21Z",
+      "updatedAt": "2024-02-26T13:13:19Z",
+      "baseRepository": "cbor-wg/cbor-packed",
+      "baseRefName": "main",
+      "baseRefOid": "6db04bf262f41803512df9e00e9650c0deba12f2",
+      "headRepository": "cbor-wg/cbor-packed",
+      "headRefName": "editorial-mg",
+      "headRefOid": "553154067231235f069a0d78bba059aa2e3f9029",
+      "closedAt": "2024-02-26T13:05:45Z",
+      "mergedAt": "2024-02-26T13:05:45Z",
+      "mergedBy": "cabo",
+      "mergeCommit": {
+        "oid": "ac4b7a84f36d277a9288c5b4b8d74480a5f88691"
+      },
+      "comments": [
+        {
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Please see <https://mailarchive.ietf.org/arch/msg/cbor/50HzmFo41eWMVG0mvmz20nANEcU>\r\nfor details\r\n",
+          "createdAt": "2024-02-25T14:36:08Z",
+          "updatedAt": "2024-02-25T14:36:08Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEeCKP85xRgoP",
+          "commit": {
+            "abbreviatedOid": "46718a1"
+          },
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "LGTM, thanks! Just one typo and a suggestion below.",
+          "createdAt": "2024-02-26T09:54:47Z",
+          "updatedAt": "2024-02-26T10:43:04Z",
+          "comments": [
+            {
+              "originalPosition": 29,
+              "body": "```suggestion\r\n: A CBOR data item that is intended to be expressed by a packed data\r\n```\r\n\r\nOr, if it is intentionally upper-cased here to refer to the term definition, the same should apply to other definitions too. E.g., \"Rump\" in \"Straight reference\".",
+              "createdAt": "2024-02-26T09:54:47Z",
+              "updatedAt": "2024-02-26T10:43:04Z"
+            },
+            {
+              "originalPosition": 64,
+              "body": "```suggestion\r\n  application of a function indicated by the function tag during\r\n  reconstruction of the data item.\r\n```",
+              "createdAt": "2024-02-26T10:34:36Z",
+              "updatedAt": "2024-02-26T10:43:04Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP85xTEi6",
+          "commit": {
+            "abbreviatedOid": "46718a1"
+          },
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-26T13:03:52Z",
+          "updatedAt": "2024-02-26T13:03:53Z",
+          "comments": [
+            {
+              "originalPosition": 64,
+              "body": "The old text (which I just embellished by \"in order to\") was a bit clearer that the reconstruction is the aim of the function application; and not just something that happens at the same time.",
+              "createdAt": "2024-02-26T13:03:53Z",
+              "updatedAt": "2024-02-26T13:05:36Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP85xTJNP",
+          "commit": {
+            "abbreviatedOid": "46718a1"
+          },
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2024-02-26T13:13:19Z",
+          "updatedAt": "2024-02-26T13:13:19Z",
+          "comments": [
+            {
+              "originalPosition": 64,
+              "body": "That makes it indeed clearer, thanks!",
+              "createdAt": "2024-02-26T13:13:19Z",
+              "updatedAt": "2024-02-26T13:13:19Z"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "number": 16,
+      "id": "PR_kwDOEeCKP85n940O",
+      "title": "Counting bytes, figures",
+      "url": "https://github.com/cbor-wg/cbor-packed/pull/16",
+      "state": "MERGED",
+      "author": "cabo",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Close #15 ",
+      "createdAt": "2024-02-26T21:08:16Z",
+      "updatedAt": "2024-02-27T08:21:57Z",
+      "baseRepository": "cbor-wg/cbor-packed",
+      "baseRefName": "main",
+      "baseRefOid": "a7ad4e58ed8343c71bf7e17ffde94e80c9094b0e",
+      "headRepository": "cbor-wg/cbor-packed",
+      "headRefName": "counting-bytes-figures",
+      "headRefOid": "d3e3c90eebfe6dd1f4f024028e634daa59f8625e",
+      "closedAt": "2024-02-27T08:21:57Z",
+      "mergedAt": "2024-02-27T08:21:57Z",
+      "mergedBy": "cabo",
+      "mergeCommit": {
+        "oid": "8ff1c45b331707013844649d9791129b09947dc8"
+      },
+      "comments": [
+        {
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Submitted -11 from this branch (nasty, nasty).",
+          "createdAt": "2024-02-26T21:14:05Z",
+          "updatedAt": "2024-02-26T21:14:05Z"
+        }
+      ],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEeCKP85xallq",
+          "commit": {
+            "abbreviatedOid": "d3e3c90"
+          },
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "state": "APPROVED",
+          "body": "I double-checked the bytes with cbor.me (but I guess that or the same underlying software is where you took them from, too).",
+          "createdAt": "2024-02-27T08:11:06Z",
+          "updatedAt": "2024-02-27T08:11:06Z",
+          "comments": []
+        }
+      ]
+    },
+    {
+      "number": 18,
+      "id": "PR_kwDOEeCKP85oAzSH",
+      "title": "Fix data item column in IANA tag registrations",
+      "url": "https://github.com/cbor-wg/cbor-packed/pull/18",
+      "state": "MERGED",
+      "author": "mguetschow",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "straight reference tags contain the right-hand side - aka any; while inverted reference tags are allowed to contain function tags or anything that can go into concatenation as left hand side\r\n\r\nfixes #17 ",
+      "createdAt": "2024-02-27T08:34:56Z",
+      "updatedAt": "2024-02-27T09:08:03Z",
+      "baseRepository": "cbor-wg/cbor-packed",
+      "baseRefName": "main",
+      "baseRefOid": "8ff1c45b331707013844649d9791129b09947dc8",
+      "headRepository": "cbor-wg/cbor-packed",
+      "headRefName": "iana-registrations",
+      "headRefOid": "f5c979f7396ed1391c5fe19e146a00baf15fb4c6",
+      "closedAt": "2024-02-27T09:08:03Z",
+      "mergedAt": "2024-02-27T09:08:03Z",
+      "mergedBy": "cabo",
+      "mergeCommit": {
+        "oid": "2ad49886cf3f36a4603b481864d877acdc07e6e1"
+      },
+      "comments": [
+        {
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "Thanks!\r\nI sorted the table by tag number; it is easier to see the inverted/straight pairings that way.",
+          "createdAt": "2024-02-27T09:04:27Z",
+          "updatedAt": "2024-02-27T09:04:27Z"
+        },
+        {
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Makes sense, thank you :)",
+          "createdAt": "2024-02-27T09:05:18Z",
+          "updatedAt": "2024-02-27T09:05:18Z"
+        }
+      ],
+      "reviews": []
+    },
+    {
+      "number": 22,
+      "id": "PR_kwDOEeCKP86CCNLf",
+      "title": "Remove erroneously doubled colons in example URIs",
+      "url": "https://github.com/cbor-wg/cbor-packed/pull/22",
+      "state": "MERGED",
+      "author": "hw0lff",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "The first double colon was noticed due to a failing unit test.\r\nThe second one was noticed just now by grepping through the file.\r\nThe IPv6 documentation prefix is 2001:db8::/32 and the IPv6 address is also invalid since it contains two `::` making it ambiguous where to fill how many zeroes in.",
+      "createdAt": "2024-11-15T11:18:17Z",
+      "updatedAt": "2024-11-15T11:23:52Z",
+      "baseRepository": "cbor-wg/cbor-packed",
+      "baseRefName": "main",
+      "baseRefOid": "37d0aba08154c9b6b78f2e74a49d52bbda567b2e",
+      "headRepository": "hw0lff/cbor-packed",
+      "headRefName": "main",
+      "headRefOid": "785e652ab20f2f386ba2ab3d43467cbd42f40549",
+      "closedAt": "2024-11-15T11:23:52Z",
+      "mergedAt": "2024-11-15T11:23:52Z",
+      "mergedBy": "cabo",
+      "mergeCommit": {
+        "oid": "ee441713fd95d37af6290c8c8ce1f0ebdcaaa746"
+      },
+      "comments": [],
       "reviews": []
     }
   ]
