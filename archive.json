@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-01-09T01:25:03.951189+00:00",
+  "timestamp": "2025-01-12T01:40:14.018642+00:00",
   "repo": "cbor-wg/cbor-packed",
   "labels": [
     {
@@ -294,6 +294,22 @@
       "body": "I think this should be added.\r\n\r\n\u2026 and if you think I only want this to be in there to simplify the work of packed-by-reference that would say that same considerations apply, you'd be totally right.\r\n\r\n(If you like, I can sketch some text later).",
       "createdAt": "2024-10-19T16:22:58Z",
       "updatedAt": "2024-10-19T16:22:58Z",
+      "closedAt": null,
+      "comments": []
+    },
+    {
+      "number": 23,
+      "id": "I_kwDOEeCKP86lu9TY",
+      "title": "Properties of the tables that table setup tags can rely on",
+      "url": "https://github.com/cbor-wg/cbor-packed/issues/23",
+      "state": "OPEN",
+      "author": "chrysn",
+      "authorAssociation": "MEMBER",
+      "assignees": [],
+      "labels": [],
+      "body": "Someone somewhere (@cabo might fill in details) suggested that table setup could also add tags after the table rather than prepending.\r\n\r\nI think this has applications, but at the same time I've always thought of the tables as a possibly sparse array where not all parties might agree on what is present (as long as it is not used) -- for example, a media type might evolve by growing a larger provided packing table.\r\n\r\nThe properties of the table that packing setups (i.e. transformations of that table) can rely on should be described. Alternatively, we may need to acknowledge that not all packing methods can be composed. (One method may map all existing elements n to 2*n and assign meaning to all odd table entries, and around that, a table setup method that inserts elements after the last element can't work any more).",
+      "createdAt": "2025-01-10T16:13:35Z",
+      "updatedAt": "2025-01-10T16:13:35Z",
       "closedAt": null,
       "comments": []
     }
