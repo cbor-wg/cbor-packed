@@ -55,6 +55,7 @@ informative:
   RFC6920: ni
   RFC1951: deflate
   RFC8746: array
+  I-D.bormann-cbor-notable-tags: notable
   ARB-EXP:
     -: arb
     target: http://peteroupc.github.io/CBOR/bigfrac.html
@@ -89,8 +90,9 @@ informative:
 
 [^abs3-]
 
-[^abs3-]: This specification describes Packed CBOR, a simple transformation of a
-    CBOR data item into another CBOR data item that is almost as easy to
+[^abs3-]: This specification describes Packed CBOR, a set of CBOR tags
+    and simple values that enable a simple transformation of an original
+    CBOR data item into a Packed CBOR data item that is almost as easy to
     consume as the original CBOR data item.  A separate decompression
     step is therefore often not required at the recipient.
 
@@ -99,8 +101,8 @@ informative:
 [^status]
 
 [^status]:
-    The present version (`-13`) is a refresh of the implementation
-    draft `-12` with minor editorial improvements.
+    The present version (`-14`) adds additional stand-in items to the previously updated implementation
+    draft `-13`, with minor editorial improvements.
 
 --- middle
 
@@ -186,6 +188,13 @@ Function tag:
   references) or the rump (inverted references), causing the
   application of a function indicated by the function tag in order to
   reconstruct the data item.
+
+Stand-in item:
+: A data item (a tag or a simple value) defined by an
+  application protocol to stand in for a more complex data item.
+  Stand-in items are fundamentally independent of Packed CBOR but can
+  be employed by the application protocol as part of a Packed CBOR
+  argument reference.
 
 Packing tables:
 : The pair of a shared item table and an argument table.
@@ -278,10 +287,10 @@ in {{tab-shared}}.  When reconstructing the original data item, such a
 reference is replaced by the referenced data item, which is then
 recursively unpacked.
 
-| reference                 | table index   |
-| Simple value 0..15        | 0..15         |
-| Tag 6(unsigned integer N) | 16 + 2\*N     |
-| Tag 6(negative integer N) | 16 - 2\*N - 1 |
+| reference                 | table index  |
+| Simple value 0..15        | 0..15        |
+| Tag 6(unsigned integer N) | 16 + 2×N     |
+| Tag 6(negative integer N) | 16 − 2×N − 1 |
 {: #tab-shared title="Referencing Shared Values"}
 
 As examples,
@@ -300,8 +309,8 @@ there is no practical limit to how many shared items might be used in
 a Packed CBOR item.
 
 Note that the semantics of Tag 6 depend on its tag content: An integer
-turns the tag into a shared item reference, whereas a string or
-container (map or array) turns it into a straight (prefix) reference (see
+turns the tag into a shared item reference, whereas a string,
+container (map or array), tag, or simple value turns it into a straight (prefix) reference (see
 {{tab-straight}}).
 Note also that the tag content of Tag 6 may itself be packed, so it
 may need to be unpacked to make this determination.
@@ -363,7 +372,12 @@ kept as the unwrapped left-hand side.
 If the provisional left-hand side is not a tag, it is kept as the
 unwrapped left-hand side, and the function to be applied is
 concatenation, as defined below.
-The right-hand side is taken as is as the unwrapped right-hand side.
+
+{:#use-standin}
+The right-hand side is examined whether it is a stand-in item
+({{sec-standin}}), in which case item the stand-in item stands for is
+taken as the unwrapped right-hand-side; if the right-hand side is not
+a stand-in item, it is taken as is as the unwrapped right-hand side.
 
 If a function tag was given, the reference is replaced by the result
 of applying the indicated unpacking function with the left-hand side
@@ -742,6 +756,31 @@ A slightly more concise packed form can be achieved by manipulating the key item
 ])
 ~~~
 
+Additional Stand-in Items {#sec-standin}
+=========================
+
+Application specifications that employ Packed CBOR may also enable the
+use of additional "stand-in" items (tags or simple values) beyond the
+reference items defined by Packed CBOR.
+These are data items used in place of original representation items
+such as strings or arrays, where the tag or simple value is defined to
+stand for a data item that can actually be used in the position of the stand-in
+item.
+Examples would be tags such as 21 to 23 (base64url, base64, uppercase
+hex: {{Section 3.4.5.2 of
+RFC8949@-bis}}) or 108 (lowercase hex: {{Section 2.1 of -notable}}), which stand for
+text string items but internally employ more compact byte string
+representations that may also be more natural as application data items.
+
+These additional stand-in items are fundamentally independent of
+Packed CBOR, but they also can be used as the right-hand-side of
+reference items (see {{use-standin}}).
+
+Note that application specifications need to be explicit about which
+stand-in items are provided for; otherwise, inconsistent
+interpretations at different places in a system can lead to check/use
+vulnerabilities.
+
 
 Tag Validity: Tag Equivalence Principle
 ===================================
@@ -893,8 +932,8 @@ Security Considerations
 
 The security considerations of {{-bis}} apply.
 
-Loops in the Packed CBOR can be used as a denial of service attack,
-see {{sec-discussion}}.
+Loops in the Packed CBOR can be used as a denial of service attack
+unless mitigated, see {{sec-discussion}}.
 
 As the unpacking is deterministic, packed forms can be used as signing
 inputs.  (Note that if external dictionaries are added to cbor-packed,
