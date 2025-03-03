@@ -19,12 +19,13 @@ compression.
 While traditional data compression techniques such as DEFLATE (RFC 1951) can work well for CBOR encoded data items, their disadvantage is
 that the recipient needs to decompress the compressed form to make
 use of the data. 
-       This specification describes Packed CBOR, a simple transformation of a
-CBOR data item into another CBOR data item that is almost as easy to
+       This specification describes Packed CBOR, a set of CBOR tags
+and simple values that enable a simple transformation of an original
+CBOR data item into a Packed CBOR data item that is almost as easy to
 consume as the original CBOR data item.  A separate decompression
 step is therefore often not required at the recipient. 
-       The present version ( -13 ) is a refresh of the implementation
-draft  -12  with minor editorial improvements. 
+       The present version ( -14 ) adds additional stand-in items to the previously updated implementation
+draft  -13 , with minor editorial improvements. 
     " name="description">
 <meta content="xml2rfc 3.28.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
@@ -1111,12 +1112,13 @@ compression.
 While traditional data compression techniques such as DEFLATE (RFC 1951) can work well for CBOR encoded data items, their disadvantage is
 that the recipient needs to decompress the compressed form to make
 use of the data.<a href="#section-abstract-2" class="pilcrow">¶</a></p>
-<p id="section-abstract-3">This specification describes Packed CBOR, a simple transformation of a
-CBOR data item into another CBOR data item that is almost as easy to
+<p id="section-abstract-3">This specification describes Packed CBOR, a set of CBOR tags
+and simple values that enable a simple transformation of an original
+CBOR data item into a Packed CBOR data item that is almost as easy to
 consume as the original CBOR data item.  A separate decompression
 step is therefore often not required at the recipient.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
-<p id="section-abstract-4"><span class="cref" id="status">The present version (<code>-13</code>) is a refresh of the implementation
-draft <code>-12</code> with minor editorial improvements.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
+<p id="section-abstract-4"><span class="cref" id="status">The present version (<code>-14</code>) adds additional stand-in items to the previously updated implementation
+draft <code>-13</code>, with minor editorial improvements.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1229,49 +1231,52 @@ draft <code>-12</code> with minor editorial improvements.</span><a href="#sectio
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5">
-            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-tag-validity-tag-equivalenc" class="internal xref">Tag Validity: Tag Equivalence Principle</a></p>
-<ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.1">
-                <p id="section-toc.1-1.5.2.1.1"><a href="#section-5.1" class="auto internal xref">5.1</a>.  <a href="#name-tag-equivalence" class="internal xref">Tag Equivalence</a></p>
-</li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.5.2.2">
-                <p id="section-toc.1-1.5.2.2.1"><a href="#section-5.2" class="auto internal xref">5.2</a>.  <a href="#name-tag-equivalence-of-packed-c" class="internal xref">Tag Equivalence of Packed CBOR Tags</a></p>
-</li>
-            </ul>
+            <p id="section-toc.1-1.5.1"><a href="#section-5" class="auto internal xref">5</a>.  <a href="#name-additional-stand-in-items" class="internal xref">Additional Stand-in Items</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6">
-            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
+            <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-tag-validity-tag-equivalenc" class="internal xref">Tag Validity: Tag Equivalence Principle</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.1">
-                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-cbor-tags-registry" class="internal xref">CBOR Tags Registry</a></p>
+                <p id="section-toc.1-1.6.2.1.1"><a href="#section-6.1" class="auto internal xref">6.1</a>.  <a href="#name-tag-equivalence" class="internal xref">Tag Equivalence</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.6.2.2">
-                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-cbor-simple-values-registry" class="internal xref">CBOR Simple Values Registry</a></p>
+                <p id="section-toc.1-1.6.2.2.1"><a href="#section-6.2" class="auto internal xref">6.2</a>.  <a href="#name-tag-equivalence-of-packed-c" class="internal xref">Tag Equivalence of Packed CBOR Tags</a></p>
 </li>
             </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
-</li>
-          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
-            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-references" class="internal xref">References</a></p>
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-iana-considerations" class="internal xref">IANA Considerations</a></p>
 <ul class="compact toc ulBare ulEmpty">
-<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.1">
-                <p id="section-toc.1-1.8.2.1.1"><a href="#section-8.1" class="auto internal xref">8.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-cbor-tags-registry" class="internal xref">CBOR Tags Registry</a></p>
 </li>
-              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8.2.2">
-                <p id="section-toc.1-1.8.2.2.1"><a href="#section-8.2" class="auto internal xref">8.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-cbor-simple-values-registry" class="internal xref">CBOR Simple Values Registry</a></p>
 </li>
             </ul>
 </li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.8">
+            <p id="section-toc.1-1.8.1"><a href="#section-8" class="auto internal xref">8</a>.  <a href="#name-security-considerations" class="internal xref">Security Considerations</a></p>
+</li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9">
-            <p id="section-toc.1-1.9.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-examples" class="internal xref">Examples</a></p>
+            <p id="section-toc.1-1.9.1"><a href="#section-9" class="auto internal xref">9</a>.  <a href="#name-references" class="internal xref">References</a></p>
+<ul class="compact toc ulBare ulEmpty">
+<li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.1">
+                <p id="section-toc.1-1.9.2.1.1"><a href="#section-9.1" class="auto internal xref">9.1</a>.  <a href="#name-normative-references" class="internal xref">Normative References</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.9.2.2">
+                <p id="section-toc.1-1.9.2.2.1"><a href="#section-9.2" class="auto internal xref">9.2</a>.  <a href="#name-informative-references" class="internal xref">Informative References</a></p>
+</li>
+            </ul>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.10">
-            <p id="section-toc.1-1.10.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-acknowledgements" class="internal xref">Acknowledgements</a></p>
+            <p id="section-toc.1-1.10.1"><a href="#appendix-A" class="auto internal xref">Appendix A</a>.  <a href="#name-examples" class="internal xref">Examples</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.11">
-            <p id="section-toc.1-1.11.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
+            <p id="section-toc.1-1.11.1"><a href="#appendix-B" class="auto internal xref"></a><a href="#name-acknowledgements" class="internal xref">Acknowledgements</a></p>
+</li>
+          <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.12">
+            <p id="section-toc.1-1.12.1"><a href="#appendix-C" class="auto internal xref"></a><a href="#name-authors-addresses" class="internal xref">Authors' Addresses</a></p>
 </li>
         </ul>
 </nav>
@@ -1293,8 +1298,9 @@ compression.
 While traditional data compression techniques such as DEFLATE <span>[<a href="#RFC1951" class="cite xref">RFC1951</a>]</span> can work well for CBOR encoded data items, their disadvantage is
 that the recipient needs to decompress the compressed form to make
 use of the data.<a href="#section-1-2" class="pilcrow">¶</a></p>
-<p id="section-1-3">This specification describes Packed CBOR, a simple transformation of a
-CBOR data item into another CBOR data item that is almost as easy to
+<p id="section-1-3">This specification describes Packed CBOR, a set of CBOR tags
+and simple values that enable a simple transformation of an original
+CBOR data item into a Packed CBOR data item that is almost as easy to
 consume as the original CBOR data item.  A separate decompression
 step is therefore often not required at the recipient.<a href="#section-1-3" class="pilcrow">¶</a></p>
 <p id="section-1-4">This document defines the Packed CBOR format by specifying the
@@ -1394,21 +1400,30 @@ application of a function indicated by the function tag in order to
 reconstruct the data item.<a href="#section-1.1-2.18.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-1.1-2.19">Packing tables:</dt>
+<dt id="section-1.1-2.19">Stand-in item:</dt>
           <dd style="margin-left: 1.5em" id="section-1.1-2.20">
-            <p id="section-1.1-2.20.1">The pair of a shared item table and an argument table.<a href="#section-1.1-2.20.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-2.20.1">A data item (a tag or a simple value) defined by an
+application protocol to stand in for a more complex data item.
+Stand-in items are fundamentally independent of Packed CBOR but can
+be employed by the application protocol as part of a Packed CBOR
+argument reference.<a href="#section-1.1-2.20.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-1.1-2.21">Active set (of packing tables):</dt>
+<dt id="section-1.1-2.21">Packing tables:</dt>
           <dd style="margin-left: 1.5em" id="section-1.1-2.22">
-            <p id="section-1.1-2.22.1">The packing tables in effect at the data item under consideration.<a href="#section-1.1-2.22.1" class="pilcrow">¶</a></p>
+            <p id="section-1.1-2.22.1">The pair of a shared item table and an argument table.<a href="#section-1.1-2.22.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-1.1-2.23">Reconstruction:</dt>
+<dt id="section-1.1-2.23">Active set (of packing tables):</dt>
           <dd style="margin-left: 1.5em" id="section-1.1-2.24">
-            <p id="section-1.1-2.24.1">The result of applying a packed reference in the context of given
+            <p id="section-1.1-2.24.1">The packing tables in effect at the data item under consideration.<a href="#section-1.1-2.24.1" class="pilcrow">¶</a></p>
+</dd>
+          <dd class="break"></dd>
+<dt id="section-1.1-2.25">Reconstruction:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.1-2.26">
+            <p id="section-1.1-2.26.1">The result of applying a packed reference in the context of given
 packing tables; we speak of the <em>reconstruction of a packed reference</em>
-as that result.<a href="#section-1.1-2.24.1" class="pilcrow">¶</a></p>
+as that result.<a href="#section-1.1-2.26.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
@@ -1514,11 +1529,11 @@ recursively unpacked.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Tag 6(unsigned integer N)</td>
-              <td class="text-left" rowspan="1" colspan="1">16 + 2*N</td>
+              <td class="text-left" rowspan="1" colspan="1">16 + 2×N</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Tag 6(negative integer N)</td>
-              <td class="text-left" rowspan="1" colspan="1">16 - 2*N - 1</td>
+              <td class="text-left" rowspan="1" colspan="1">16 − 2×N − 1</td>
             </tr>
           </tbody>
         </table>
@@ -1537,8 +1552,8 @@ As CBOR integers can grow to very large (or very negative) values,
 there is no practical limit to how many shared items might be used in
 a Packed CBOR item.<a href="#section-2.2-5" class="pilcrow">¶</a></p>
 <p id="section-2.2-6">Note that the semantics of Tag 6 depend on its tag content: An integer
-turns the tag into a shared item reference, whereas a string or
-container (map or array) turns it into a straight (prefix) reference (see
+turns the tag into a shared item reference, whereas a string,
+container (map or array), tag, or simple value turns it into a straight (prefix) reference (see
 <a href="#tab-straight" class="auto internal xref">Table 2</a>).
 Note also that the tag content of Tag 6 may itself be packed, so it
 may need to be unpacked to make this determination.<a href="#section-2.2-6" class="pilcrow">¶</a></p>
@@ -1641,30 +1656,35 @@ is used to indicate the function to be applied, and the tag content is
 kept as the unwrapped left-hand side.
 If the provisional left-hand side is not a tag, it is kept as the
 unwrapped left-hand side, and the function to be applied is
-concatenation, as defined below.
-The right-hand side is taken as is as the unwrapped right-hand side.<a href="#section-2.3-10" class="pilcrow">¶</a></p>
-<p id="section-2.3-11">If a function tag was given, the reference is replaced by the result
+concatenation, as defined below.<a href="#section-2.3-10" class="pilcrow">¶</a></p>
+<div id="use-standin">
+<p id="section-2.3-11">The right-hand side is examined whether it is a stand-in item
+(<a href="#sec-standin" class="auto internal xref">Section 5</a>), in which case item the stand-in item stands for is
+taken as the unwrapped right-hand-side; if the right-hand side is not
+a stand-in item, it is taken as is as the unwrapped right-hand side.<a href="#section-2.3-11" class="pilcrow">¶</a></p>
+</div>
+<p id="section-2.3-12">If a function tag was given, the reference is replaced by the result
 of applying the indicated unpacking function with the left-hand side
 as its first argument and the right-hand side as its second.
 The unpacking function is defined by the definition of the tag number
 supplied.
 If that definition does not define an unpacking function, the result
-of the unpacking is not valid.<a href="#section-2.3-11" class="pilcrow">¶</a></p>
-<p id="section-2.3-12">If no function tag was given, the reference is replaced by the
+of the unpacking is not valid.<a href="#section-2.3-12" class="pilcrow">¶</a></p>
+<p id="section-2.3-13">If no function tag was given, the reference is replaced by the
 left-hand side "concatenated" with the right-hand side, where
-concatenation is defined as in <a href="#sec-concatenation" class="auto internal xref">Section 2.4</a>.<a href="#section-2.3-12" class="pilcrow">¶</a></p>
-<p id="section-2.3-13">As a contrived (but short) example, if the argument table is
+concatenation is defined as in <a href="#sec-concatenation" class="auto internal xref">Section 2.4</a>.<a href="#section-2.3-13" class="pilcrow">¶</a></p>
+<p id="section-2.3-14">As a contrived (but short) example, if the argument table is
 <code>["foobar", h'666f6f62', "fo"]</code>, each of the following straight (prefix)
 references will unpack to <code>"foobart"</code>: <code>6("t")</code>, <code>225("art")</code>,
 <code>226("obart")</code> (the byte string h'666f6f62' == 'foob' is concatenated
-into a text string, and the last example is not an optimization).<a href="#section-2.3-13" class="pilcrow">¶</a></p>
-<p id="section-2.3-14">Note that table index 0 of the argument table can be referenced both
+into a text string, and the last example is not an optimization).<a href="#section-2.3-14" class="pilcrow">¶</a></p>
+<p id="section-2.3-15">Note that table index 0 of the argument table can be referenced both
 with tag 6 and tag 224,
 however tag 6 with an integer content is used for shared item
 references (see <a href="#tab-shared" class="auto internal xref">Table 1</a>), so to combine index 0 with an integer
 rump, tag 224 needs to be used.
-The preferred encoding uses tag 6 if that is not necessary.<a href="#section-2.3-14" class="pilcrow">¶</a></p>
-<p id="section-2.3-15">Taking into account the encoding and ignoring the less optimal tag
+The preferred encoding uses tag 6 if that is not necessary.<a href="#section-2.3-15" class="pilcrow">¶</a></p>
+<p id="section-2.3-16">Taking into account the encoding and ignoring the less optimal tag
 224, there is one single-byte straight (prefix)
 reference, 31 (2<sup>5</sup><code>-</code>2<sup>0</sup>) two-byte references, 4064
 (2<sup>12</sup><code>-</code>2<sup>5</sup>) three-byte references, and 26843160
@@ -1673,12 +1693,12 @@ reference, 31 (2<sup>5</sup><code>-</code>2<sup>0</sup>) two-byte references, 40
 enough that there, again, is no practical limit to how many prefix
 items might be used in a Packed CBOR item.
 The numbers for inverted (suffix) references are one quarter of those, except
-that there is no single-byte reference and 8 two-byte references.<a href="#section-2.3-15" class="pilcrow">¶</a></p>
-<aside id="section-2.3-16">
-          <p id="section-2.3-16.1">Rationale:
+that there is no single-byte reference and 8 two-byte references.<a href="#section-2.3-16" class="pilcrow">¶</a></p>
+<aside id="section-2.3-17">
+          <p id="section-2.3-17.1">Rationale:
 Experience suggests that straight (prefix) packing might be more
 likely than inverted (suffix) packing.  Also for this reason, there is no intent
-to spend a 1+0 tag value for inverted packing.<a href="#section-2.3-16.1" class="pilcrow">¶</a></p>
+to spend a 1+0 tag value for inverted packing.<a href="#section-2.3-17.1" class="pilcrow">¶</a></p>
 </aside>
 </section>
 </div>
@@ -2051,132 +2071,157 @@ Key items whose matching value items are absent are not included in the resultin
 </div>
 </section>
 </div>
-<div id="sec-tag-validity-tag-equivalence-principle">
+<div id="sec-standin">
 <section id="section-5">
-      <h2 id="name-tag-validity-tag-equivalenc">
-<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-tag-validity-tag-equivalenc" class="section-name selfRef">Tag Validity: Tag Equivalence Principle</a>
+      <h2 id="name-additional-stand-in-items">
+<a href="#section-5" class="section-number selfRef">5. </a><a href="#name-additional-stand-in-items" class="section-name selfRef">Additional Stand-in Items</a>
       </h2>
-<p id="section-5-1">In Section <a href="https://rfc-editor.org/rfc/rfc8949#section-5.3.2" class="relref">5.3.2</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>, the validity of tags is defined in terms
+<p id="section-5-1">Application specifications that employ Packed CBOR may also enable the
+use of additional "stand-in" items (tags or simple values) beyond the
+reference items defined by Packed CBOR.
+These are data items used in place of original representation items
+such as strings or arrays, where the tag or simple value is defined to
+stand for a data item that can actually be used in the position of the stand-in
+item.
+Examples would be tags such as 21 to 23 (base64url, base64, uppercase
+hex: Section <a href="https://rfc-editor.org/rfc/rfc8949#section-3.4.5.2" class="relref">3.4.5.2</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>) or 108 (lowercase hex: <span><a href="https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-12#section-2.1" class="relref">Section 2.1</a> of [<a href="#I-D.bormann-cbor-notable-tags" class="cite xref">I-D.bormann-cbor-notable-tags</a>]</span>), which stand for
+text string items but internally employ more compact byte string
+representations that may also be more natural as application data items.<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">These additional stand-in items are fundamentally independent of
+Packed CBOR, but they also can be used as the right-hand-side of
+reference items (see <a href="#use-standin" class="auto internal xref">Section 2.3, Paragraph 11</a>).<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-3">Note that application specifications need to be explicit about which
+stand-in items are provided for; otherwise, inconsistent
+interpretations at different places in a system can lead to check/use
+vulnerabilities.<a href="#section-5-3" class="pilcrow">¶</a></p>
+</section>
+</div>
+<div id="sec-tag-validity-tag-equivalence-principle">
+<section id="section-6">
+      <h2 id="name-tag-validity-tag-equivalenc">
+<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-tag-validity-tag-equivalenc" class="section-name selfRef">Tag Validity: Tag Equivalence Principle</a>
+      </h2>
+<p id="section-6-1">In Section <a href="https://rfc-editor.org/rfc/rfc8949#section-5.3.2" class="relref">5.3.2</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>, the validity of tags is defined in terms
 of type and value of their tag content.
 The CBOR Tag registry (<span>[<a href="#IANA.cbor-tags" class="cite xref">IANA.cbor-tags</a>]</span> as defined in Section <a href="https://rfc-editor.org/rfc/rfc8949#section-9.2" class="relref">9.2</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>) allows
 recording the "data item" for a registered tag, which is usually an
 abbreviated description of the top-level data type allowed for the tag
-content.<a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">In other words, in the registry, the validity of a tag of a given tag
+content.<a href="#section-6-1" class="pilcrow">¶</a></p>
+<p id="section-6-2">In other words, in the registry, the validity of a tag of a given tag
 number is described in terms of the top-level structure of the data
 carried in the tag content.
 The description of a tag might add further constraints for the data
 item.
 But in any case, a tag definition can only specify validity based on
-the structure of its tag content.<a href="#section-5-2" class="pilcrow">¶</a></p>
-<p id="section-5-3">In Packed CBOR, a reference tag might be "standing in" for the actual
+the structure of its tag content.<a href="#section-6-2" class="pilcrow">¶</a></p>
+<p id="section-6-3">In Packed CBOR, a reference tag might be "standing in" for the actual
 tag content of an outer tag, or for a structural component of that.
 In this case, the formal structure of the outer tag's content before
 unpacking usually no longer fulfills the validity conditions of the
-outer tag.<a href="#section-5-3" class="pilcrow">¶</a></p>
-<p id="section-5-4">The underlying problem is not unique to Packed CBOR.
+outer tag.<a href="#section-6-3" class="pilcrow">¶</a></p>
+<p id="section-6-4">The underlying problem is not unique to Packed CBOR.
 For instance, <span>[<a href="#RFC8746" class="cite xref">RFC8746</a>]</span> describes tags 64..87 that "stand in" for CBOR
 arrays (the native form of which has major type 4).
 For the other tags defined in this specification, which require some
-array structure of the tag content, a footnote was added:<a href="#section-5-4" class="pilcrow">¶</a></p>
-<blockquote id="section-5-5">
-        <p id="section-5-5.1">[...] The second element of the outer array in the data item is a
-   native CBOR array (major type 4) or Typed Array (one of tag 64..87)<a href="#section-5-5.1" class="pilcrow">¶</a></p>
+array structure of the tag content, a footnote was added:<a href="#section-6-4" class="pilcrow">¶</a></p>
+<blockquote id="section-6-5">
+        <p id="section-6-5.1">[...] The second element of the outer array in the data item is a
+   native CBOR array (major type 4) or Typed Array (one of tag 64..87)<a href="#section-6-5.1" class="pilcrow">¶</a></p>
 </blockquote>
-<p id="section-5-6">The top-down approach to handle the "rendezvous" between the outer and
+<p id="section-6-6">The top-down approach to handle the "rendezvous" between the outer and
 inner tags does not support extensibility: any further Typed Array
 tags being defined do not inherit the exception granted to tag number
 64..87; they would need to formally update all existing tag
 definitions that can accept typed arrays or be of limited use with
-these existing tags.<a href="#section-5-6" class="pilcrow">¶</a></p>
-<p id="section-5-7">Instead, the tag validity mechanism needs to be extended by a
+these existing tags.<a href="#section-6-6" class="pilcrow">¶</a></p>
+<p id="section-6-7">Instead, the tag validity mechanism needs to be extended by a
 bottom-up component: A tag definition needs to be able to declare that
 the tag can "stand in" for, (is, in terms of tag validity, equivalent
-to) some structure.<a href="#section-5-7" class="pilcrow">¶</a></p>
-<p id="section-5-8">E.g., tag 64..87 could have declared their equivalence to the CBOR major
-type 4 arrays they stand in for.<a href="#section-5-8" class="pilcrow">¶</a></p>
-<aside id="section-5-9">
-        <p id="section-5-9.1">Note that not all domain extensions to tags can be addressed using
+to) some structure.<a href="#section-6-7" class="pilcrow">¶</a></p>
+<p id="section-6-8">E.g., tag 64..87 could have declared their equivalence to the CBOR major
+type 4 arrays they stand in for.<a href="#section-6-8" class="pilcrow">¶</a></p>
+<aside id="section-6-9">
+        <p id="section-6-9.1">Note that not all domain extensions to tags can be addressed using
 the equivalence principle: E.g., on a data model level, numbers with
 arbitrary exponents (<span>[<a href="#ARB-EXP" class="cite xref">ARB-EXP</a>]</span>, tags 264 and 265) are strictly a
 superset of CBOR's predefined fractional types, tags 4 and 5.
 They could not simply declare that they are equivalent to tags 4 and 5
 as a tag requiring a fractional value may have no way to handle the
-extended range of tag 264 and 265.<a href="#section-5-9.1" class="pilcrow">¶</a></p>
+extended range of tag 264 and 265.<a href="#section-6-9.1" class="pilcrow">¶</a></p>
 </aside>
 <div id="sec-tag-equivalence">
-<section id="section-5.1">
+<section id="section-6.1">
         <h3 id="name-tag-equivalence">
-<a href="#section-5.1" class="section-number selfRef">5.1. </a><a href="#name-tag-equivalence" class="section-name selfRef">Tag Equivalence</a>
+<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-tag-equivalence" class="section-name selfRef">Tag Equivalence</a>
         </h3>
-<p id="section-5.1-1">A tag definition <span class="bcp14">MAY</span> declare Tag Equivalence to some existing
+<p id="section-6.1-1">A tag definition <span class="bcp14">MAY</span> declare Tag Equivalence to some existing
 structure for the tag, under some conditions defined by the new tag
 definition.
 This, in effect, extends all existing tag definitions that accept the
 named structure to accept the newly defined tag under the conditions
-given for the Tag Equivalence.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
-<p id="section-5.1-2">A number of limitations apply to Tag Equivalence, which therefore
-should be applied deliberately and sparingly:<a href="#section-5.1-2" class="pilcrow">¶</a></p>
+given for the Tag Equivalence.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<p id="section-6.1-2">A number of limitations apply to Tag Equivalence, which therefore
+should be applied deliberately and sparingly:<a href="#section-6.1-2" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-5.1-3.1">
-            <p id="section-5.1-3.1.1">Tag Equivalence is a new concept, which may not be implemented by an
+<li class="normal" id="section-6.1-3.1">
+            <p id="section-6.1-3.1.1">Tag Equivalence is a new concept, which may not be implemented by an
 existing generic decoder.  A generic decoder not implementing tag
 equivalence might raise tag validity errors where Tag Equivalence
-says there should be none.<a href="#section-5.1-3.1.1" class="pilcrow">¶</a></p>
+says there should be none.<a href="#section-6.1-3.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-3.2">
-            <p id="section-5.1-3.2.1">A CBOR protocol <span class="bcp14">MAY</span> specify the use of Tag Equivalence, effectively
+          <li class="normal" id="section-6.1-3.2">
+            <p id="section-6.1-3.2.1">A CBOR protocol <span class="bcp14">MAY</span> specify the use of Tag Equivalence, effectively
 limiting the protocol's full use to those generic encoders that implement it.
 Existing CBOR protocols that do not address Tag Equivalence
 implicitly have a new variant that allows Tag Equivalence
 (e.g., to support Packed CBOR with an existing protocol).
 A CBOR protocol that does address Tag Equivalence <span class="bcp14">MAY</span> be explicit
 about what kinds of Tag Equivalence it supports (e.g., only the
-reference tags employed by Packed CBOR and certain table setup tags).<a href="#section-5.1-3.2.1" class="pilcrow">¶</a></p>
+reference tags employed by Packed CBOR and certain table setup tags).<a href="#section-6.1-3.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-3.3">
-            <p id="section-5.1-3.3.1">There is currently no way to express Tag Equivalence in CDDL.
+          <li class="normal" id="section-6.1-3.3">
+            <p id="section-6.1-3.3.1">There is currently no way to express Tag Equivalence in CDDL.
 For Packed CBOR, CDDL would typically be used to describe the
 unpacked CBOR represented by it; further restricting the Packed CBOR
 is likely to lead to interoperability problems.
 (Note that, by definition, there is no need to describe Tag
 Equivalence on the receptacle side; only for the tag that declares
-Tag Equivalence.)<a href="#section-5.1-3.3.1" class="pilcrow">¶</a></p>
+Tag Equivalence.)<a href="#section-6.1-3.3.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-5.1-3.4">
-            <p id="section-5.1-3.4.1">The registry "<a href="https://www.iana.org/assignments/cbor-tags#cbor-tags" class="relref">CBOR Tags</a>" <span>[<a href="#IANA.cbor-tags" class="cite xref">IANA.cbor-tags</a>]</span>
+          <li class="normal" id="section-6.1-3.4">
+            <p id="section-6.1-3.4.1">The registry "<a href="https://www.iana.org/assignments/cbor-tags#cbor-tags" class="relref">CBOR Tags</a>" <span>[<a href="#IANA.cbor-tags" class="cite xref">IANA.cbor-tags</a>]</span>
 currently does not have a way to record any equivalence claimed
 for a tag.  A convention would be to alert to Tag Equivalence in the
-"Semantics (short form)" field of the registry.<span class="cref" id="todo">Needs to be done for the tag registrations here.</span><a href="#section-5.1-3.4.1" class="pilcrow">¶</a></p>
+"Semantics (short form)" field of the registry.<span class="cref" id="todo">Needs to be done for the tag registrations here.</span><a href="#section-6.1-3.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
 </div>
 <div id="sec-tag-equivalence-of-packed-cbor-tags">
-<section id="section-5.2">
+<section id="section-6.2">
         <h3 id="name-tag-equivalence-of-packed-c">
-<a href="#section-5.2" class="section-number selfRef">5.2. </a><a href="#name-tag-equivalence-of-packed-c" class="section-name selfRef">Tag Equivalence of Packed CBOR Tags</a>
+<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-tag-equivalence-of-packed-c" class="section-name selfRef">Tag Equivalence of Packed CBOR Tags</a>
         </h3>
-<p id="section-5.2-1">The reference tags in this specification declare their equivalence to
-the unpacked shared items or function results they represent.<a href="#section-5.2-1" class="pilcrow">¶</a></p>
-<p id="section-5.2-2">The table setup tags 113 and 1113 declare their equivalence to the unpacked CBOR
-data item represented by them.<a href="#section-5.2-2" class="pilcrow">¶</a></p>
+<p id="section-6.2-1">The reference tags in this specification declare their equivalence to
+the unpacked shared items or function results they represent.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+<p id="section-6.2-2">The table setup tags 113 and 1113 declare their equivalence to the unpacked CBOR
+data item represented by them.<a href="#section-6.2-2" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
 </div>
 <div id="sec-iana-considerations">
-<section id="section-6">
+<section id="section-7">
       <h2 id="name-iana-considerations">
-<a href="#section-6" class="section-number selfRef">6. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
 <div id="sec-cbor-tags-registry">
-<section id="section-6.1">
+<section id="section-7.1">
         <h3 id="name-cbor-tags-registry">
-<a href="#section-6.1" class="section-number selfRef">6.1. </a><a href="#name-cbor-tags-registry" class="section-name selfRef">CBOR Tags Registry</a>
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-cbor-tags-registry" class="section-name selfRef">CBOR Tags Registry</a>
         </h3>
-<p id="section-6.1-1">In the registry "<a href="https://www.iana.org/assignments/cbor-tags#cbor-tags" class="relref">CBOR Tags</a>" <span>[<a href="#IANA.cbor-tags" class="cite xref">IANA.cbor-tags</a>]</span>,
-IANA is requested to allocate the tags defined in <a href="#tab-tag-values" class="auto internal xref">Table 4</a>.<a href="#section-6.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1-1">In the registry "<a href="https://www.iana.org/assignments/cbor-tags#cbor-tags" class="relref">CBOR Tags</a>" <span>[<a href="#IANA.cbor-tags" class="cite xref">IANA.cbor-tags</a>]</span>,
+IANA is requested to allocate the tags defined in <a href="#tab-tag-values" class="auto internal xref">Table 4</a>.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
 <span id="name-values-for-tag-numbers"></span><div id="tab-tag-values">
 <table class="center" id="table-4">
           <caption>
@@ -2276,12 +2321,12 @@ IANA is requested to allocate the tags defined in <a href="#tab-tag-values" clas
 </section>
 </div>
 <div id="sec-cbor-simple-values-registry">
-<section id="section-6.2">
+<section id="section-7.2">
         <h3 id="name-cbor-simple-values-registry">
-<a href="#section-6.2" class="section-number selfRef">6.2. </a><a href="#name-cbor-simple-values-registry" class="section-name selfRef">CBOR Simple Values Registry</a>
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-cbor-simple-values-registry" class="section-name selfRef">CBOR Simple Values Registry</a>
         </h3>
-<p id="section-6.2-1">In the registry "<a href="https://www.iana.org/assignments/cbor-simple-values#simple" class="relref">CBOR Simple Values</a>" <span>[<a href="#IANA.cbor-simple-values" class="cite xref">IANA.cbor-simple-values</a>]</span>,
-IANA is requested to allocate the simple values defined in <a href="#tab-simple-values" class="auto internal xref">Table 5</a>.<a href="#section-6.2-1" class="pilcrow">¶</a></p>
+<p id="section-7.2-1">In the registry "<a href="https://www.iana.org/assignments/cbor-simple-values#simple" class="relref">CBOR Simple Values</a>" <span>[<a href="#IANA.cbor-simple-values" class="cite xref">IANA.cbor-simple-values</a>]</span>,
+IANA is requested to allocate the simple values defined in <a href="#tab-simple-values" class="auto internal xref">Table 5</a>.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 <span id="name-simple-values"></span><div id="tab-simple-values">
 <table class="center" id="table-5">
           <caption>
@@ -2309,27 +2354,27 @@ IANA is requested to allocate the simple values defined in <a href="#tab-simple-
 </section>
 </div>
 <div id="sec-security-considerations">
-<section id="section-7">
+<section id="section-8">
       <h2 id="name-security-considerations">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
+<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-security-considerations" class="section-name selfRef">Security Considerations</a>
       </h2>
-<p id="section-7-1">The security considerations of <span>[<a href="#STD94" class="cite xref">STD94</a>]</span> apply.<a href="#section-7-1" class="pilcrow">¶</a></p>
-<p id="section-7-2">Loops in the Packed CBOR can be used as a denial of service attack,
-see <a href="#sec-discussion" class="auto internal xref">Section 2.5</a>.<a href="#section-7-2" class="pilcrow">¶</a></p>
-<p id="section-7-3">As the unpacking is deterministic, packed forms can be used as signing
+<p id="section-8-1">The security considerations of <span>[<a href="#STD94" class="cite xref">STD94</a>]</span> apply.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-2">Loops in the Packed CBOR can be used as a denial of service attack
+unless mitigated, see <a href="#sec-discussion" class="auto internal xref">Section 2.5</a>.<a href="#section-8-2" class="pilcrow">¶</a></p>
+<p id="section-8-3">As the unpacking is deterministic, packed forms can be used as signing
 inputs.  (Note that if external dictionaries are added to cbor-packed,
-this requires additional consideration.)<a href="#section-7-3" class="pilcrow">¶</a></p>
+this requires additional consideration.)<a href="#section-8-3" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-combined-references">
-<section id="section-8">
+<section id="section-9">
       <h2 id="name-references">
-<a href="#section-8" class="section-number selfRef">8. </a><a href="#name-references" class="section-name selfRef">References</a>
+<a href="#section-9" class="section-number selfRef">9. </a><a href="#name-references" class="section-name selfRef">References</a>
       </h2>
 <div id="sec-normative-references">
-<section id="section-8.1">
+<section id="section-9.1">
         <h3 id="name-normative-references">
-<a href="#section-8.1" class="section-number selfRef">8.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
+<a href="#section-9.1" class="section-number selfRef">9.1. </a><a href="#name-normative-references" class="section-name selfRef">Normative References</a>
         </h3>
 <dl class="references">
 <dt id="BCP14">[BCP14]</dt>
@@ -2370,14 +2415,18 @@ this requires additional consideration.)<a href="#section-7-3" class="pilcrow">�
 </section>
 </div>
 <div id="sec-informative-references">
-<section id="section-8.2">
+<section id="section-9.2">
         <h3 id="name-informative-references">
-<a href="#section-8.2" class="section-number selfRef">8.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
+<a href="#section-9.2" class="section-number selfRef">9.2. </a><a href="#name-informative-references" class="section-name selfRef">Informative References</a>
         </h3>
 <dl class="references">
 <dt id="ARB-EXP">[ARB-EXP]</dt>
         <dd>
 <span class="refAuthor">Occil, P.</span>, <span class="refTitle">"Arbitrary-Exponent Numbers"</span>, <span class="refContent">Specification for Registration of CBOR Tags 264 and 265</span>, <span>&lt;<a href="http://peteroupc.github.io/CBOR/bigfrac.html">http://peteroupc.github.io/CBOR/bigfrac.html</a>&gt;</span>. </dd>
+<dd class="break"></dd>
+<dt id="I-D.bormann-cbor-notable-tags">[I-D.bormann-cbor-notable-tags]</dt>
+        <dd>
+<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"Notable CBOR Tags"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-bormann-cbor-notable-tags-12</span>, <time datetime="2025-02-12" class="refDate">12 February 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-12">https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-12</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC1951">[RFC1951]</dt>
         <dd>
