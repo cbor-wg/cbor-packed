@@ -985,8 +985,9 @@ In the registry "{{simple (CBOR Simple Values)<IANA.cbor-simple-values}}" {{IANA
 IANA is requested to allocate the simple values defined in {{tab-simple-values}}.
 
 | Value    | Semantics           |
+|----------|---------------------|
 | 0..(A-1) | Packed CBOR: shared |
-{: #tab-simple-values cols='r l l' title="Simple Values"}
+{: #tab-simple-values cols='r l' title="Simple Values"}
 
 Security Considerations
 ============
