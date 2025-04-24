@@ -5,8 +5,8 @@
 Network Working Group                                         C. Bormann
 Internet-Draft                                    Universität Bremen TZI
 Intended status: Standards Track                             M. Gütschow
-Expires: 23 October 2025                                      TU Dresden
-                                                           21 April 2025
+Expires: 26 October 2025                                      TU Dresden
+                                                           24 April 2025
 
 
                               Packed CBOR
@@ -53,7 +53,7 @@ About This Document
 
 
 
-Bormann & Gütschow       Expires 23 October 2025                [Page 1]
+Bormann & Gütschow       Expires 26 October 2025                [Page 1]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
@@ -76,7 +76,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 23 October 2025.
+   This Internet-Draft will expire on 26 October 2025.
 
 Copyright Notice
 
@@ -109,20 +109,20 @@ Table of Contents
 
 
 
-Bormann & Gütschow       Expires 23 October 2025                [Page 2]
+Bormann & Gütschow       Expires 26 October 2025                [Page 2]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
 
      4.1.  Join Function Tags  . . . . . . . . . . . . . . . . . . .  15
      4.2.  Record Function Tag . . . . . . . . . . . . . . . . . . .  16
-   5.  Additional Stand-in Items . . . . . . . . . . . . . . . . . .  17
+   5.  Additional Stand-in Items . . . . . . . . . . . . . . . . . .  18
    6.  Tag Validity: Tag Equivalence Principle . . . . . . . . . . .  18
      6.1.  Tag Equivalence . . . . . . . . . . . . . . . . . . . . .  19
      6.2.  Tag Equivalence of Packed CBOR Tags . . . . . . . . . . .  20
    7.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  20
      7.1.  CBOR Tags Registry  . . . . . . . . . . . . . . . . . . .  20
-     7.2.  CBOR Simple Values Registry . . . . . . . . . . . . . . .  21
+     7.2.  CBOR Simple Values Registry . . . . . . . . . . . . . . .  22
    8.  Security Considerations . . . . . . . . . . . . . . . . . . .  22
    9.  References  . . . . . . . . . . . . . . . . . . . . . . . . .  22
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .  22
@@ -165,7 +165,7 @@ Internet-Draft                 Packed CBOR                    April 2025
 
 
 
-Bormann & Gütschow       Expires 23 October 2025                [Page 3]
+Bormann & Gütschow       Expires 26 October 2025                [Page 3]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
@@ -221,7 +221,7 @@ Internet-Draft                 Packed CBOR                    April 2025
 
 
 
-Bormann & Gütschow       Expires 23 October 2025                [Page 4]
+Bormann & Gütschow       Expires 26 October 2025                [Page 4]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
@@ -277,7 +277,7 @@ Internet-Draft                 Packed CBOR                    April 2025
 
 
 
-Bormann & Gütschow       Expires 23 October 2025                [Page 5]
+Bormann & Gütschow       Expires 26 October 2025                [Page 5]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
@@ -300,7 +300,7 @@ Internet-Draft                 Packed CBOR                    April 2025
    parameters: A, B, and C.  These specification parameters enable
    creating a precise specification while the quantitative allocation
    discussion is ongoing.  They will be replaced by specific chosen
-   numbers when the present specification is finalized.
+   numbers when the present specification is finalized (Section 2.6).
 
 2.1.  Packing Tables
 
@@ -333,7 +333,7 @@ Internet-Draft                 Packed CBOR                    April 2025
 
 
 
-Bormann & Gütschow       Expires 23 October 2025                [Page 6]
+Bormann & Gütschow       Expires 26 October 2025                [Page 6]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
@@ -389,7 +389,7 @@ Internet-Draft                 Packed CBOR                    April 2025
 
 
 
-Bormann & Gütschow       Expires 23 October 2025                [Page 7]
+Bormann & Gütschow       Expires 26 October 2025                [Page 7]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
@@ -445,7 +445,7 @@ Internet-Draft                 Packed CBOR                    April 2025
 
 
 
-Bormann & Gütschow       Expires 23 October 2025                [Page 8]
+Bormann & Gütschow       Expires 26 October 2025                [Page 8]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
@@ -501,7 +501,7 @@ Internet-Draft                 Packed CBOR                    April 2025
 
 
 
-Bormann & Gütschow       Expires 23 October 2025                [Page 9]
+Bormann & Gütschow       Expires 26 October 2025                [Page 9]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
@@ -557,7 +557,7 @@ Internet-Draft                 Packed CBOR                    April 2025
 
 
 
-Bormann & Gütschow       Expires 23 October 2025               [Page 10]
+Bormann & Gütschow       Expires 26 October 2025               [Page 10]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
@@ -578,9 +578,9 @@ Internet-Draft                 Packed CBOR                    April 2025
 
 2.5.  Discussion
 
-   This specification uses up a large number of Simple Values and Tags,
-   in particular one of the rare one-byte tags and two thirds of the
-   one-byte simple values.  Since the objective is compression, this is
+   This specification uses up a number of Simple Values and Tags, in
+   particular one of the rare one-byte tags and a good chunk of the one-
+   byte simple values.  Since the objective is compression, this is
    warranted only based on a consensus that this specific format could
    be useful for a wide area of applications, while maintaining
    reasonable simplicity in particular at the side of the consumer.
@@ -613,7 +613,7 @@ Internet-Draft                 Packed CBOR                    April 2025
 
 
 
-Bormann & Gütschow       Expires 23 October 2025               [Page 11]
+Bormann & Gütschow       Expires 26 October 2025               [Page 11]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
@@ -645,10 +645,10 @@ Internet-Draft                 Packed CBOR                    April 2025
    allocated to Packed CBOR, the representation of packed references is
    described in terms of three specification parameters: A, B, and C.
 
-   These specification parameters enable creating a precise
-   specification while the quantitative allocation discussion is
-   ongoing.  They will be replaced by specific chosen numbers when the
-   present specification is finalized.
+   These specification parameters allow the current specification to be
+   precise while the quantitative allocation discussion is ongoing.
+   They will be replaced by specific chosen numbers when the present
+   specification is finalized.
 
    The sense of the WG has been to be more conservative in allocating
    CBOR resources to Packed CBOR than the previous draft of this
@@ -664,22 +664,26 @@ Internet-Draft                 Packed CBOR                    April 2025
    of indefinite length encoding, 20..23).  No further allocation has
    been performed in this space in the 12 years since.
 
-   Given that indefinite length encoding effectively took away 4
-   possible 1+0 simple values, it appears conservative to set A=12.
 
 
 
-Bormann & Gütschow       Expires 23 October 2025               [Page 12]
+
+
+Bormann & Gütschow       Expires 26 October 2025               [Page 12]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
+
+   Given that indefinite length encoding effectively took away 4
+   possible 1+0 simple values, it appears conservative to reduce A to
+   A=12.
 
    B is the number of 1+1 tags allocated to straight argument
    references, and C is the number of 1+1 tags allocated to inverted
    argument references.  A rationale for choosing C < B might be that
    straight (prefix) packing might be more likely than inverted (suffix)
-   packing, hence the previous draft was comparable to setting B=32 and
-   C=8.
+   packing, hence the choices of the previous draft were comparable to
+   setting B=32 and C=8.
 
    This draft proposes to conservatively set B=8, but to stay at C=8, as
    inverted references seem to occur more often than previously thought.
@@ -718,17 +722,18 @@ Internet-Draft                 Packed CBOR                    April 2025
       Note that it may be useful to leave a particular efficiency tier
       alone and only prepend to a higher tier; e.g., a tag could insert
       shared items at table index 16 and shift anything that was already
+
+
+
+Bormann & Gütschow       Expires 26 October 2025               [Page 13]
+
+Internet-Draft                 Packed CBOR                    April 2025
+
+
       there further along in the array while leaving index 0 to 15
       alone.  Explicit additions by tag can combine with application-
       environment supplied tables that apply to the entire CBOR data
       item.
-
-
-
-Bormann & Gütschow       Expires 23 October 2025               [Page 13]
-
-Internet-Draft                 Packed CBOR                    April 2025
-
 
       Packed item references in the newly constructed (low-numbered)
       parts of the table are usually interpreted in the number space of
@@ -772,20 +777,21 @@ Internet-Draft                 Packed CBOR                    April 2025
 
                        Figure 1: Packed CBOR in CDDL
 
+
+
+
+
+Bormann & Gütschow       Expires 26 October 2025               [Page 14]
+
+Internet-Draft                 Packed CBOR                    April 2025
+
+
    (This assumes the allocation of tag numbers 113 ('q') and 1113 for
    these tags.)
 
    The array given as the first element of the content of tag 113
    ("Basic-Packed-CBOR") is prepended to both the tables for shared
    items and arguments that apply to the entire tag (by default empty
-
-
-
-Bormann & Gütschow       Expires 23 October 2025               [Page 14]
-
-Internet-Draft                 Packed CBOR                    April 2025
-
-
    tables).  The arrays given as the first and second element of the
    content of the tag 1113 ("Split-Basic-Packed-CBOR") are prepended to
    the tables for shared items and arguments, respectively, that apply
@@ -797,8 +803,8 @@ Internet-Draft                 Packed CBOR                    April 2025
    action of inheritance).
 
    The original CBOR data item can be reconstructed by recursively
-   replacing shared and argument references encountered in the rump by
-   their reconstructions.
+   replacing shared item and argument references encountered in the rump
+   by their reconstructions.
 
 4.  Function Tags
 
@@ -829,18 +835,18 @@ Internet-Draft                 Packed CBOR                    April 2025
    the joiner (empty text/byte string for a text/byte string, empty
    array for an array, empty map for a map).
 
+
+
+Bormann & Gütschow       Expires 26 October 2025               [Page 15]
+
+Internet-Draft                 Packed CBOR                    April 2025
+
+
    For an example, we assume this unpacked data item:
 
    ["https://packed.example/foo.html",
     "coap://packed.example/bar.cbor",
     "mailto:support@packed.example"]
-
-
-
-Bormann & Gütschow       Expires 23 October 2025               [Page 15]
-
-Internet-Draft                 Packed CBOR                    April 2025
-
 
    A packed form of this using straight references could be:
 
@@ -882,6 +888,16 @@ Internet-Draft                 Packed CBOR                    April 2025
    Tag 114 ('r') defines the "record" function, which combines an array
    of keys with an array of values into a map.
 
+
+
+
+
+
+Bormann & Gütschow       Expires 26 October 2025               [Page 16]
+
+Internet-Draft                 Packed CBOR                    April 2025
+
+
    The record function expects an array as its left-hand side, whose
    items are treated as key items for the resulting map, and an array of
    equal or shorter length as its right-hand side, whose items are
@@ -890,13 +906,6 @@ Internet-Draft                 Packed CBOR                    April 2025
    The map is constructed by grouping key and value items with equal
    position in the provided arrays into pairs that constitute the
    resulting map.
-
-
-
-Bormann & Gütschow       Expires 23 October 2025               [Page 16]
-
-Internet-Draft                 Packed CBOR                    April 2025
-
 
    The value item array MUST NOT be longer than the key item array.
 
@@ -932,6 +941,19 @@ Internet-Draft                 Packed CBOR                    April 2025
       6(["", 0])]
    ])
 
+
+
+
+
+
+
+
+
+Bormann & Gütschow       Expires 26 October 2025               [Page 17]
+
+Internet-Draft                 Packed CBOR                    April 2025
+
+
 5.  Additional Stand-in Items
 
    Application specifications that employ Packed CBOR may also enable
@@ -946,13 +968,6 @@ Internet-Draft                 Packed CBOR                    April 2025
    string items but internally employ more compact byte string
    representations that may also be more natural as application data
    items.
-
-
-
-Bormann & Gütschow       Expires 23 October 2025               [Page 17]
-
-Internet-Draft                 Packed CBOR                    April 2025
-
 
    These additional stand-in items are fundamentally independent of
    Packed CBOR, but they also can be used as the right-hand-side of
@@ -985,6 +1000,16 @@ Internet-Draft                 Packed CBOR                    April 2025
    unpacking usually no longer fulfills the validity conditions of the
    outer tag.
 
+
+
+
+
+
+Bormann & Gütschow       Expires 26 October 2025               [Page 18]
+
+Internet-Draft                 Packed CBOR                    April 2025
+
+
    The underlying problem is not unique to Packed CBOR.  For instance,
    [RFC8746] describes tags 64..87 that "stand in" for CBOR arrays (the
    native form of which has major type 4).  For the other tags defined
@@ -1001,14 +1026,6 @@ Internet-Draft                 Packed CBOR                    April 2025
    number 64..87; they would need to formally update all existing tag
    definitions that can accept typed arrays or be of limited use with
    these existing tags.
-
-
-
-
-Bormann & Gütschow       Expires 23 October 2025               [Page 18]
-
-Internet-Draft                 Packed CBOR                    April 2025
-
 
    Instead, the tag validity mechanism needs to be extended by a bottom-
    up component: A tag definition needs to be able to declare that the
@@ -1038,6 +1055,17 @@ Internet-Draft                 Packed CBOR                    April 2025
    A number of limitations apply to Tag Equivalence, which therefore
    should be applied deliberately and sparingly:
 
+
+
+
+
+
+
+Bormann & Gütschow       Expires 26 October 2025               [Page 19]
+
+Internet-Draft                 Packed CBOR                    April 2025
+
+
    *  Tag Equivalence is a new concept, which may not be implemented by
       an existing generic decoder.  A generic decoder not implementing
       tag equivalence might raise tag validity errors where Tag
@@ -1052,19 +1080,6 @@ Internet-Draft                 Packed CBOR                    April 2025
       be explicit about what kinds of Tag Equivalence it supports (e.g.,
       only the reference tags employed by Packed CBOR and certain table
       setup tags).
-
-
-
-
-
-
-
-
-
-Bormann & Gütschow       Expires 23 October 2025               [Page 19]
-
-Internet-Draft                 Packed CBOR                    April 2025
-
 
    *  There is currently no way to express Tag Equivalence in CDDL.  For
       Packed CBOR, CDDL would typically be used to describe the unpacked
@@ -1089,72 +1104,79 @@ Internet-Draft                 Packed CBOR                    April 2025
 
 7.  IANA Considerations
 
+   For all assignments described in this section, the "reference" column
+   is the present draft, i.e., draft-ietf-cbor-packed.
+
 7.1.  CBOR Tags Registry
 
    In the registry "CBOR Tags" [IANA.cbor-tags], IANA is requested to
    allocate the tags defined in Table 4.
 
-   +======================+====================+===========+===========+
-   |                  Tag | Data Item          | Semantics | Reference |
-   +======================+====================+===========+===========+
-   |                    6 | int (for           | Packed    | draft-    |
-   |                      | shared); [int,     | CBOR:     | ietf-     |
-   |                      | any] (for          | shared/   | cbor-     |
-   |                      | argument)          | straight  | packed    |
-   +----------------------+--------------------+-----------+-----------+
-   |                  105 | concatenation      | Packed    | draft-    |
-   |                      | item (text         | CBOR:     | ietf-     |
-   |                      | string, byte       | ijoin     | cbor-     |
-   |                      | string, array,     | function  | packed    |
-   |                      | or map)            |           |           |
-   +----------------------+--------------------+-----------+-----------+
-   |                  106 | array of           | Packed    | draft-    |
-   |                      | concatenation      | CBOR:     | ietf-     |
-   |                      | item (text         | join      | cbor-     |
-   |                      | string, byte       | function  | packed    |
-   |                      | string, array,     |           |           |
-   |                      | or map)            |           |           |
 
 
 
-Bormann & Gütschow       Expires 23 October 2025               [Page 20]
+
+
+Bormann & Gütschow       Expires 26 October 2025               [Page 20]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
 
-   +----------------------+--------------------+-----------+-----------+
-   |                  113 | array (shared-     | Packed    | draft-    |
-   |                      | and-argument-      | CBOR:     | ietf-     |
-   |                      | items, rump)       | table     | cbor-     |
-   |                      |                    | setup     | packed    |
-   +----------------------+--------------------+-----------+-----------+
-   |                  114 | array              | Packed    | draft-    |
-   |                      |                    | CBOR:     | ietf-     |
-   |                      |                    | record    | cbor-     |
-   |                      |                    | function  | packed    |
-   +----------------------+--------------------+-----------+-----------+
-   | (256-B-C)..(256-B-1) | function tag or    | Packed    | draft-    |
-   |                      | concatenation      | CBOR:     | ietf-     |
-   |                      | item (text         | inverted  | cbor-     |
-   |                      | string, byte       |           | packed    |
-   |                      | string, array,     |           |           |
-   |                      | or map)            |           |           |
-   +----------------------+--------------------+-----------+-----------+
-   |         (256-B)..255 | any                | Packed    | draft-    |
-   |                      |                    | CBOR:     | ietf-     |
-   |                      |                    | straight  | cbor-     |
-   |                      |                    |           | packed    |
-   +----------------------+--------------------+-----------+-----------+
-   |                 1112 | undefined          | Packed    | draft-    |
-   |                      | (0xf7)             | CBOR:     | ietf-     |
-   |                      |                    | reference | cbor-     |
-   |                      |                    | error     | packed    |
-   +----------------------+--------------------+-----------+-----------+
-   |                 1113 | array (shared-     | Packed    | draft-    |
-   |                      | items,             | CBOR:     | ietf-     |
-   |                      | argument-items,    | table     | cbor-     |
-   |                      | rump)              | setup     | packed    |
-   +----------------------+--------------------+-----------+-----------+
+   +======================+=============================+==============+
+   |                  Tag | Data Item                   | Semantics    |
+   +======================+=============================+==============+
+   |                    6 | int (for shared); [int,     | Packed       |
+   |                      | any] (for argument)         | CBOR:        |
+   |                      |                             | shared/      |
+   |                      |                             | argument     |
+   +----------------------+-----------------------------+--------------+
+   |                  105 | concatenation item (text    | Packed       |
+   |                      | string, byte string, array, | CBOR:        |
+   |                      | or map)                     | ijoin        |
+   |                      |                             | function     |
+   +----------------------+-----------------------------+--------------+
+   |                  106 | array of concatenation item | Packed       |
+   |                      | (text string, byte string,  | CBOR:        |
+   |                      | array, or map)              | join         |
+   |                      |                             | function     |
+   +----------------------+-----------------------------+--------------+
+   |                  113 | array (shared-and-argument- | Packed       |
+   |                      | items, rump)                | CBOR:        |
+   |                      |                             | table        |
+   |                      |                             | setup        |
+   +----------------------+-----------------------------+--------------+
+   |                  114 | array                       | Packed       |
+   |                      |                             | CBOR:        |
+   |                      |                             | record       |
+   |                      |                             | function     |
+   +----------------------+-----------------------------+--------------+
+   | (256-B-C)..(256-B-1) | function tag or             | Packed       |
+   |                      | concatenation item (text    | CBOR:        |
+   |                      | string, byte string, array, | inverted     |
+   |                      | or map)                     |              |
+   +----------------------+-----------------------------+--------------+
+   |         (256-B)..255 | any                         | Packed       |
+   |                      |                             | CBOR:        |
+   |                      |                             | straight     |
+   +----------------------+-----------------------------+--------------+
+   |                 1112 | undefined (0xf7)            | Packed       |
+   |                      |                             | CBOR:        |
+   |                      |                             | reference    |
+   |                      |                             | error        |
+   +----------------------+-----------------------------+--------------+
+   |                 1113 | array (shared-items,        | Packed       |
+   |                      | argument-items, rump)       | CBOR:        |
+   |                      |                             | table        |
+   |                      |                             | setup        |
+   +----------------------+-----------------------------+--------------+
+
+
+
+
+Bormann & Gütschow       Expires 26 October 2025               [Page 21]
+
+Internet-Draft                 Packed CBOR                    April 2025
+
 
                       Table 4: Values for Tag Numbers
 
@@ -1163,20 +1185,13 @@ Internet-Draft                 Packed CBOR                    April 2025
    In the registry "CBOR Simple Values" [IANA.cbor-simple-values], IANA
    is requested to allocate the simple values defined in Table 5.
 
-        +==========+=====================+========================+
-        |    Value | Semantics           | Reference              |
-        +==========+=====================+========================+
-        | 0..(A-1) | Packed CBOR: shared | draft-ietf-cbor-packed |
-        +----------+---------------------+------------------------+
+                    +==========+=====================+
+                    |    Value | Semantics           |
+                    +==========+=====================+
+                    | 0..(A-1) | Packed CBOR: shared |
+                    +----------+---------------------+
 
-                           Table 5: Simple Values
-
-
-
-Bormann & Gütschow       Expires 23 October 2025               [Page 21]
-
-Internet-Draft                 Packed CBOR                    April 2025
-
+                          Table 5: Simple Values
 
 8.  Security Considerations
 
@@ -1206,6 +1221,19 @@ Internet-Draft                 Packed CBOR                    April 2025
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
+
+
+
+
+
+
+
+
+Bormann & Gütschow       Expires 26 October 2025               [Page 22]
+
+Internet-Draft                 Packed CBOR                    April 2025
+
+
    [I-D.ietf-cbor-edn-literals]
               Bormann, C., "CBOR Extended Diagnostic Notation (EDN)",
               Work in Progress, Internet-Draft, draft-ietf-cbor-edn-
@@ -1221,18 +1249,6 @@ Internet-Draft                 Packed CBOR                    April 2025
    [IANA.cbor-tags]
               IANA, "Concise Binary Object Representation (CBOR) Tags",
               <https://www.iana.org/assignments/cbor-tags>.
-
-
-
-
-
-
-
-
-Bormann & Gütschow       Expires 23 October 2025               [Page 22]
-
-Internet-Draft                 Packed CBOR                    April 2025
-
 
    [RFC8610]  Birkholz, H., Vigano, C., and C. Bormann, "Concise Data
               Definition Language (CDDL): A Notational Convention to
@@ -1265,6 +1281,15 @@ Internet-Draft                 Packed CBOR                    April 2025
               version 1.3", RFC 1951, DOI 10.17487/RFC1951, May 1996,
               <https://www.rfc-editor.org/rfc/rfc1951>.
 
+
+
+
+
+Bormann & Gütschow       Expires 26 October 2025               [Page 23]
+
+Internet-Draft                 Packed CBOR                    April 2025
+
+
    [RFC6920]  Farrell, S., Kutscher, D., Dannewitz, C., Ohlman, B.,
               Keranen, A., and P. Hallam-Baker, "Naming Things with
               Hashes", RFC 6920, DOI 10.17487/RFC6920, April 2013,
@@ -1281,14 +1306,6 @@ Internet-Draft                 Packed CBOR                    April 2025
    [RFC8742]  Bormann, C., "Concise Binary Object Representation (CBOR)
               Sequences", RFC 8742, DOI 10.17487/RFC8742, February 2020,
               <https://www.rfc-editor.org/rfc/rfc8742>.
-
-
-
-
-Bormann & Gütschow       Expires 23 October 2025               [Page 23]
-
-Internet-Draft                 Packed CBOR                    April 2025
-
 
    [RFC8746]  Bormann, C., Ed., "Concise Binary Object Representation
               (CBOR) Tags for Typed Arrays", RFC 8746,
@@ -1324,24 +1341,7 @@ Appendix A.  Examples
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Bormann & Gütschow       Expires 23 October 2025               [Page 24]
+Bormann & Gütschow       Expires 26 October 2025               [Page 24]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
@@ -1397,7 +1397,7 @@ Internet-Draft                 Packed CBOR                    April 2025
 
 
 
-Bormann & Gütschow       Expires 23 October 2025               [Page 25]
+Bormann & Gütschow       Expires 26 October 2025               [Page 25]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
@@ -1453,7 +1453,7 @@ Internet-Draft                 Packed CBOR                    April 2025
 
 
 
-Bormann & Gütschow       Expires 23 October 2025               [Page 26]
+Bormann & Gütschow       Expires 26 October 2025               [Page 26]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
@@ -1509,7 +1509,7 @@ Internet-Draft                 Packed CBOR                    April 2025
 
 
 
-Bormann & Gütschow       Expires 23 October 2025               [Page 27]
+Bormann & Gütschow       Expires 26 October 2025               [Page 27]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
@@ -1565,7 +1565,7 @@ Internet-Draft                 Packed CBOR                    April 2025
 
 
 
-Bormann & Gütschow       Expires 23 October 2025               [Page 28]
+Bormann & Gütschow       Expires 26 October 2025               [Page 28]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
@@ -1621,7 +1621,7 @@ Internet-Draft                 Packed CBOR                    April 2025
 
 
 
-Bormann & Gütschow       Expires 23 October 2025               [Page 29]
+Bormann & Gütschow       Expires 26 October 2025               [Page 29]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
@@ -1677,7 +1677,7 @@ Authors' Addresses
 
 
 
-Bormann & Gütschow       Expires 23 October 2025               [Page 30]
+Bormann & Gütschow       Expires 26 October 2025               [Page 30]
 
 Internet-Draft                 Packed CBOR                    April 2025
 
@@ -1733,4 +1733,4 @@ Internet-Draft                 Packed CBOR                    April 2025
 
 
 
-Bormann & Gütschow       Expires 23 October 2025               [Page 31]
+Bormann & Gütschow       Expires 26 October 2025               [Page 31]
