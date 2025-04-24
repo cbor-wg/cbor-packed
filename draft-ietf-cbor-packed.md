@@ -253,7 +253,7 @@ parameters: `A`, `B`, and `C`.
 These specification parameters enable creating a precise specification
 while the quantitative allocation discussion is ongoing.
 They will be replaced by specific chosen numbers when the present
-specification is finalized.
+specification is finalized ({{sec-allocation}}).
 
 ## Packing Tables
 
@@ -354,13 +354,13 @@ suffix out of the argument table.
 | Straight Reference       | Table Index |
 |--------------------------|-------------|
 | Tag (256-`B`)..255(rump) | 0..(B-1)    |
-| Tag 6([N, rump]) (N ≥ 0) | B + N       |
+| Tag 6(\[N, rump]) (N ≥ 0) | B + N       |
 {: #tab-straight cols='l r' title="Straight Referencing (e.g., Prefix) Arguments"}
 
 | Inverted Reference                   | Table Index |
 |--------------------------------------|-------------|
 | Tag (256-`B`-`C`)..(256-`B`-1)(rump) | 0..(C-1)    |
-| Tag 6([-N-1, rump]) (N ≥ 0)          | C + N       |
+| Tag 6(\[-N-1, rump]) (N ≥ 0)         | C + N       |
 {: #tab-inverted cols='l r' title="Inverted Referencing (e.g., Suffix) Arguments"}
 
 Argument data items are referenced by using the reference data items
@@ -491,8 +491,8 @@ The concatenation function is defined as follows:
 
 ## Discussion
 
-This specification uses up a large number of Simple Values and Tags,
-in particular one of the rare one-byte tags and two thirds of the one-byte
+This specification uses up a number of Simple Values and Tags,
+in particular one of the rare one-byte tags and a good chunk of the one-byte
 simple values.  Since the objective is compression, this is warranted
 only based on a consensus that this specific format could be
 useful for a wide area of applications, while maintaining reasonable
@@ -545,7 +545,7 @@ allocated to Packed CBOR, the representation of packed references is
 described in terms of three specification parameters: `A`, `B`, and
 `C`.
 
-These specification parameters enable creating a precise specification
+These specification parameters allow the current specification to be precise
 while the quantitative allocation discussion is ongoing.
 They will be replaced by specific chosen numbers when the present
 specification is finalized.
@@ -567,14 +567,14 @@ No further allocation has been performed in this space in the 12 years
 since.
 
 Given that indefinite length encoding effectively took away 4 possible
-1+0 simple values, it appears conservative to set `A=12`.
+1+0 simple values, it appears conservative to reduce `A` to `A=12`.
 
 `B` is the number of 1+1 tags allocated to straight argument
 references, and `C` is the number of 1+1 tags allocated to inverted
 argument references.
 A rationale for choosing `C` < `B` might be that straight (prefix)
 packing might be more likely than inverted (suffix) packing, hence the
-previous draft was comparable to setting `B=32` and `C=8`.
+choices of the previous draft were comparable to setting `B=32` and `C=8`.
 
 This draft proposes to conservatively set `B=8`, but to stay at `C=8`,
 as inverted references seem to occur more often than previously
@@ -686,7 +686,7 @@ themselves use the inherited number space (so their semantics do not
 change by the mere action of inheritance).
 
 The original CBOR data item can be reconstructed by recursively
-replacing shared and argument references encountered in the rump by
+replacing shared item and argument references encountered in the rump by
 their reconstructions.
 
 # Function Tags
@@ -958,21 +958,24 @@ data item represented by them.
 IANA Considerations
 ============
 
+For all assignments described in this section, the "reference" column
+is the present draft, i.e., draft-ietf-cbor-packed.
+
 ## CBOR Tags Registry
 
 In the registry "{{cbor-tags (CBOR Tags)<IANA.cbor-tags}}" {{IANA.cbor-tags}},
 IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 
-|                        Tag | Data Item                                                                    | Semantics                    | Reference              |
-|                          6 | int (for shared); [int, any] (for argument)                                  | Packed CBOR: shared/straight | draft-ietf-cbor-packed |
-|                        105 | concatenation item (text string, byte string, array, or map)                 | Packed CBOR: ijoin function  | draft-ietf-cbor-packed |
-|                        106 | array of concatenation item (text string, byte string, array, or map)        | Packed CBOR: join function   | draft-ietf-cbor-packed |
-|                        113 | array (shared-and-argument-items, rump)                                      | Packed CBOR: table setup     | draft-ietf-cbor-packed |
-|                        114 | array                                                                        | Packed CBOR: record function | draft-ietf-cbor-packed |
-| (256-`B`-`C`)..(256-`B`-1) | function tag or concatenation item (text string, byte string, array, or map) | Packed CBOR: inverted        | draft-ietf-cbor-packed |
-|             (256-`B`)..255 | any                                                                          | Packed CBOR: straight        | draft-ietf-cbor-packed |
-|                       1112 | undefined (0xf7)                                                             | Packed CBOR: reference error | draft-ietf-cbor-packed |
-|                       1113 | array (shared-items, argument-items, rump)                                   | Packed CBOR: table setup     | draft-ietf-cbor-packed |
+|                        Tag | Data Item                                                                    | Semantics                    |
+|                          6 | int (for shared); \[int, any] (for argument)                                 | Packed CBOR: shared/argument |
+|                        105 | concatenation item (text string, byte string, array, or map)                 | Packed CBOR: ijoin function  |
+|                        106 | array of concatenation item (text string, byte string, array, or map)        | Packed CBOR: join function   |
+|                        113 | array (shared-and-argument-items, rump)                                      | Packed CBOR: table setup     |
+|                        114 | array                                                                        | Packed CBOR: record function |
+| (256-`B`-`C`)..(256-`B`-1) | function tag or concatenation item (text string, byte string, array, or map) | Packed CBOR: inverted        |
+|             (256-`B`)..255 | any                                                                          | Packed CBOR: straight        |
+|                       1112 | undefined (0xf7)                                                             | Packed CBOR: reference error |
+|                       1113 | array (shared-items, argument-items, rump)                                   | Packed CBOR: table setup     |
 {: #tab-tag-values cols='r l l' title="Values for Tag Numbers"}
 
 
@@ -981,8 +984,8 @@ IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 In the registry "{{simple (CBOR Simple Values)<IANA.cbor-simple-values}}" {{IANA.cbor-simple-values}},
 IANA is requested to allocate the simple values defined in {{tab-simple-values}}.
 
-| Value    | Semantics           | Reference              |
-| 0..(A-1) | Packed CBOR: shared | draft-ietf-cbor-packed |
+| Value    | Semantics           |
+| 0..(A-1) | Packed CBOR: shared |
 {: #tab-simple-values cols='r l l' title="Simple Values"}
 
 Security Considerations
