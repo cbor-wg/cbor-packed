@@ -101,9 +101,8 @@ informative:
 [^status]
 
 [^status]:
-    This pull request based on –14 attempts to pick up the results of the
-    2025-04-16 CBOR interim meeting by documenting the "radical" set
-    of proposals.
+    This revision -15 is intended to serve as the input for the 2025-05-14
+    CBOR interim meeting; it still has the tunables A/B/C to be tuned.
 
 --- middle
 
