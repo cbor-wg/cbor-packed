@@ -1262,6 +1262,7 @@ item, 1210 bytes"}
 ~~~
 {: #fig-example-out2 title="Example packed CBOR data item, 507 bytes"}
 
+{::include-all lists.md}
 
 Acknowledgements
 ================
