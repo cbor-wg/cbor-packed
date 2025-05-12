@@ -128,8 +128,10 @@ Internet-Draft                 Packed CBOR                      May 2025
      9.1.  Normative References  . . . . . . . . . . . . . . . . . .  22
      9.2.  Informative References  . . . . . . . . . . . . . . . . .  23
    Appendix A.  Examples . . . . . . . . . . . . . . . . . . . . . .  24
-   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  30
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  30
+   List of Figures . . . . . . . . . . . . . . . . . . . . . . . . .  30
+   List of Tables  . . . . . . . . . . . . . . . . . . . . . . . . .  30
+   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  31
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  31
 
 1.  Introduction
 
@@ -160,8 +162,6 @@ Internet-Draft                 Packed CBOR                      May 2025
    natural for a specific application.
 
    Packed CBOR can make use of two kinds of optimization:
-
-
 
 
 
@@ -1659,6 +1659,33 @@ Internet-Draft                 Packed CBOR                      May 2025
 
              Figure 6: Example packed CBOR data item, 507 bytes
 
+List of Figures
+
+   1.  Packed CBOR in CDDL (Figure 1)
+   2.  Example original CBOR data item, 400 bytes (Figure 2)
+   3.  Example packed CBOR data item with item sharing only, 308 bytes
+       (Figure 3)
+   4.  Example packed CBOR data item using item sharing and the record
+       function tag, 302 bytes (Figure 4)
+   5.  Example original CBOR data item, 1210 bytes (Figure 5)
+   6.  Example packed CBOR data item, 507 bytes (Figure 6)
+
+List of Tables
+
+   1.  Referencing Shared Values (Table 1)
+   2.  Straight Referencing (e.g., Prefix) Arguments (Table 2)
+
+
+
+Bormann & Gütschow      Expires 13 November 2025               [Page 30]
+
+Internet-Draft                 Packed CBOR                      May 2025
+
+
+   3.  Inverted Referencing (e.g., Suffix) Arguments (Table 3)
+   4.  Values for Tag Numbers (Table 4)
+   5.  Simple Values (Table 5)
+
 Acknowledgements
 
    CBOR packing was part of the original proposal that turned into CBOR,
@@ -1673,14 +1700,6 @@ Acknowledgements
    Education and Research (BMBF) within the project Concrete Contracts.
 
 Authors' Addresses
-
-
-
-
-Bormann & Gütschow      Expires 13 November 2025               [Page 30]
-
-Internet-Draft                 Packed CBOR                      May 2025
-
 
    Carsten Bormann
    Universität Bremen TZI
@@ -1697,25 +1716,6 @@ Internet-Draft                 Packed CBOR                      May 2025
    D-01069 Dresden
    Germany
    Email: mikolai.guetschow@tu-dresden.de
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
