@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-04-27T01:48:13.924300+00:00",
+  "timestamp": "2025-05-13T01:47:06.489768+00:00",
   "repo": "cbor-wg/cbor-packed",
   "labels": [
     {
@@ -1314,24 +1314,26 @@
       "id": "PR_kwDOEeCKP86TUGcg",
       "title": "Document radical proposal",
       "url": "https://github.com/cbor-wg/cbor-packed/pull/24",
-      "state": "OPEN",
+      "state": "MERGED",
       "author": "cabo",
       "authorAssociation": "CONTRIBUTOR",
       "assignees": [],
       "labels": [],
       "body": "",
       "createdAt": "2025-04-21T15:35:53Z",
-      "updatedAt": "2025-04-25T07:46:25Z",
+      "updatedAt": "2025-05-12T18:51:29Z",
       "baseRepository": "cbor-wg/cbor-packed",
       "baseRefName": "main",
       "baseRefOid": "bd2238369818128ee97f495bb3603bd5384b9404",
       "headRepository": "cbor-wg/cbor-packed",
       "headRefName": "radical",
       "headRefOid": "c1b36b25f8bde621fdf0b6a05ca4c4f92ae2be37",
-      "closedAt": null,
-      "mergedAt": null,
-      "mergedBy": null,
-      "mergeCommit": null,
+      "closedAt": "2025-05-12T18:51:28Z",
+      "mergedAt": "2025-05-12T18:51:28Z",
+      "mergedBy": "cabo",
+      "mergeCommit": {
+        "oid": "c45928ca587f0d9ac4fb41f56f97074b6e9d2b86"
+      },
       "comments": [],
       "reviews": [
         {
