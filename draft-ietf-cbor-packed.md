@@ -55,7 +55,10 @@ informative:
   RFC6920: ni
   RFC1951: deflate
   RFC8746: array
+  I-D.ietf-cbor-cde: cde
   I-D.bormann-cbor-notable-tags: notable
+  I-D.lenders-dns-cbor: dns-cbor
+  I-D.amsuess-cbor-packed-by-reference: extref
   ARB-EXP:
     -: arb
     target: http://peteroupc.github.io/CBOR/bigfrac.html
@@ -85,8 +88,8 @@ informative:
 [^abs2a-] (RFC 1951) [^abs2b-]
 
 [^abs2b-]: can work well for CBOR encoded data items, their disadvantage is
-    that the recipient needs to decompress the compressed form to make
-    use of the data.
+    that the recipient needs to decompress the compressed form before
+    it can make use of the data.
 
 [^abs3-]
 
@@ -101,8 +104,16 @@ informative:
 [^status]
 
 [^status]:
-    This revision -15 is intended to serve as the input for the 2025-05-14
-    CBOR interim meeting; it still has the tunables A/B/C to be tuned.
+    The present pull request is intended to address the discussion about the
+    use of simple values as reference items during the 2025-06-11 CBOR
+    interim meeting.
+    It contains a number of editorial improvements as well as the new
+    concept of an integration tag; it is for discussion whether the
+    latter should or should not be added to Packed CBOR.
+    The wording of the present pull request continues to make use of
+    the tunables A/B/C to be set to specific numbers before completing
+    the Packed CBOR specification; not all the examples may fully
+    align yet.
 
 --- middle
 
@@ -119,7 +130,7 @@ This document defines the Packed CBOR format by specifying the
 transformation from a Packed CBOR data item to the original CBOR data
 item; it does not define an algorithm for a packer.
 Different packers can differ in the amount of effort they invest in
-arriving at a minimal packed form; often, they simply employ the
+arriving at a reduced-redundancy packed form; often, they simply employ the
 sharing that is natural for a specific application.
 
 Packed CBOR can make use of two kinds of optimization:
@@ -128,7 +139,8 @@ Packed CBOR can make use of two kinds of optimization:
   in the original CBOR data item can be collapsed to a simple
   reference to a common representation of that data item.
   The processing required during consumption is limited to following
-  that reference.
+  that reference (plus carrying out integration tags
+  ({{sec-integration-tags}}), if these are in use).
 - argument sharing: application of a function with two arguments, one of which is shared.
   Data items (strings, containers) that share a prefix
   or suffix, or more generally data items that can be
@@ -141,13 +153,24 @@ Packed CBOR can make use of two kinds of optimization:
   string.
 
 A specific application protocol that employs Packed CBOR might employ
-both kinds of optimization or limit the representation to item
+both kinds of optimization or limit its use to item
 sharing only.
 
-Packed CBOR is defined in two parts: Referencing packing tables
-({{sec-packed-cbor}}) and setting up packing tables
-({{sec-table-setup}}).
+Packed CBOR is defined in two main parts:
 
+* Referencing packing tables
+({{sec-packed-cbor}}), which is intended to be the stable, common
+component of all uses of Packed CBOR, and
+
+* setting up packing tables
+({{sec-table-setup}}), which carries the main extension point, populated
+in this document by two table setup tags.
+
+Sections {{<sec-function-tags}}, {{<sec-integration-tags}}, and
+{{<sec-standin}} provide additional extension points, each of which is
+populated by one or more extensions in this document or elsewhere.
+These extensions can be selected by an application protocol that makes
+use of Packed CBOR.
 
 Terminology and Conventions        {#terms}
 ------------
@@ -162,7 +185,14 @@ Packed data item:
 : A CBOR data item that involves packed references (_packed CBOR_).
 
 Packed reference:
-: A shared item reference or an argument reference.
+: A shared item reference or an argument reference, expressed by a
+  reference data item.
+
+Reference data item:
+: A data item (tag or simple value) that serves as a packed reference.
+
+Reference site:
+: The context of a reference data item.
 
 Shared item reference:
 : A reference to a shared item as defined in {{sec-referencing-shared-items}}.
@@ -188,6 +218,11 @@ Function tag:
   references) or the rump (inverted references), causing the
   application of a function indicated by the function tag in order to
   reconstruct the data item.
+
+Integration tag:
+: A tag defined by an application protocol to be used as a shared item
+  table element in order to signal a non-default procedure to
+  integrate the shared item into the reference site.
 
 Stand-in item:
 : A data item (a tag or a simple value) defined by an
@@ -220,9 +255,9 @@ general sense as an argument of a function.
 Where arithmetic is explained, this document uses the notation
 familiar from the programming language C<!-- (including C++14's 0bnnn
 binary literals) -->, except that ".." denotes a range that includes
-both ends given, in the HTML and PDF versions, subtraction and
+both ends given, that in the HTML and PDF forms, subtraction and
 negation are rendered as a hyphen ("-", as are various dashes), and
-superscript notation denotes exponentiation.
+that superscript notation denotes exponentiation.
 For example, 2 to the power of 64 is notated: 2<sup>64</sup>.
 In the plain-text version of this specification, superscript notation
 is not available and therefore is rendered by a surrogate notation.
@@ -276,7 +311,9 @@ Table setup mechanisms (see {{sec-table-setup}}) may include all
 information needed for table setup within the packed CBOR data item, or
 they may refer to external information.  This information may be
 immutable, or it may be intended to potentially grow over time.
-This raises the question of how a reference to a new item should be
+In the latter case, the table setup mechanism needs to define how both
+backward and forward compatibility is addressed, e.g., how a reference
+to a new item should be
 handled when the unpacker uses an older version of the external
 information.
 
@@ -365,7 +402,7 @@ suffix out of the argument table.
 Argument data items are referenced by using the reference data items
 in {{tab-straight}} and {{tab-inverted}}.
 
-The tag number of the reference is used to derive a table index (an
+The tag number (or simple value number) of the reference data item is used to derive a table index (an
 unsigned integer) leading
 to the "argument"; the tag content of the reference is the "rump item".
 
@@ -395,7 +432,7 @@ concatenation, as defined below.
 
 {:#use-standin}
 The right-hand side is examined whether it is a stand-in item
-({{sec-standin}}), in which case item the stand-in item stands for is
+({{sec-standin}}), in which case the item that the stand-in item stands for is
 taken as the unwrapped right-hand-side; if the right-hand side is not
 a stand-in item, it is taken as is as the unwrapped right-hand side.
 
@@ -424,12 +461,12 @@ into a text string, and the last example is not an optimization).
 <!-- (- 65536 256)65280 -->
 
 Taking into account the encoding, there are `B` two-byte references,
-24 three-byte references, 224 four-byte references, 65280 four-byte
+24 three-byte references, 224 four-byte references, 65280 five-byte
 references, etc.
 The numbers for inverted (suffix) references are the same, except that
 there are `C` two-byte references.
 (As CBOR integers can grow to very large (or very negative) values,
-there is no practical limit to how argument items might be used in
+there is no practical limit to how many argument items might be used in
 a Packed CBOR item.)
 
 ## Concatenation
@@ -492,13 +529,17 @@ The concatenation function is defined as follows:
 
 This specification uses up a number of Simple Values and Tags,
 in particular one of the rare one-byte tags and a good chunk of the one-byte
-simple values.  Since the objective is compression, this is warranted
+simple values.  Since the objective is reduced bulk, this is warranted
 only based on a consensus that this specific format could be
 useful for a wide area of applications, while maintaining reasonable
 simplicity in particular at the side of the consumer.
+Instead of evolving the set of reference data items, this
+specification derives its evolvability from treating the table setup
+mechanism as an extension point, which can in effect provide evolved
+semantics to the reference data items as they reference the table.
 
 A maliciously crafted Packed CBOR data item might contain a reference
-loop.  A consumer/decompressor MUST protect against that.
+loop.  A consumer/unpacker MUST protect against that.
 
 <aside markdown="1">
 Different strategies for decoding/consuming Packed CBOR are available.\\
@@ -550,8 +591,8 @@ They will be replaced by specific chosen numbers when the present
 specification is finalized.
 
 The sense of the WG has been to be more conservative in allocating
-CBOR resources to Packed CBOR than the previous draft of this document
-was.
+CBOR resources to Packed CBOR than previous drafts of this document
+were.
 
 `A` is the number of 1+0 simple values allocated to shared item
 references.
@@ -573,7 +614,7 @@ references, and `C` is the number of 1+1 tags allocated to inverted
 argument references.
 A rationale for choosing `C` < `B` might be that straight (prefix)
 packing might be more likely than inverted (suffix) packing, hence the
-choices of the previous draft were comparable to setting `B=32` and `C=8`.
+choices of previous drafts were comparable to setting `B=32` and `C=8`.
 
 This draft proposes to conservatively set `B=8`, but to stay at `C=8`,
 as inverted references seem to occur more often than previously
@@ -582,13 +623,13 @@ thought.
 
 Note the nature of Packed CBOR means that all these allocations can be
 used for pretty much unlimited purposes by simply defining another
-table-building tag.
+table setup mechanism (media type or table-building tag).
 
 
 
 # Table Setup
 
-The packing references described in {{sec-packed-cbor}} assume that
+The reference data items described in {{sec-packed-cbor}} assume that
 packing tables have been set up.
 
 By default, both tables are empty (zero-length arrays).
@@ -621,10 +662,10 @@ Table setup can happen in one of two ways:
   Explicit additions by tag can combine with application-environment
   supplied tables that apply to the entire CBOR data item.
 
-  Packed item references in the newly constructed (low-numbered) parts
+  Reference data items in the newly constructed (low-numbered) parts
   of the table are usually interpreted in the number space of that table
   (which includes the, now higher-numbered, inherited parts), while
-  references in any existing, inherited (higher-numbered) part continue
+  reference data items in any existing, inherited (higher-numbered) part continue
   to use the (more limited) number space of the inherited table.
 
 Where external information is used in a table setup mechanism that is
@@ -654,7 +695,7 @@ combination with an `ni:` URI {{-ni}}.
 ## Basic Packed CBOR
 
 Two tags are predefined by this specification for packing table setup.
-They are defined in CDDL {{-cddl}} as in {{fig-cddl}}:
+They are defined in CDDL {{-cddl}} as in {{fig-cddl}}, [^assume113]:
 
 ~~~ cddl
 Basic-Packed-CBOR = #6.113([[*shared-and-argument-item], rump])
@@ -665,19 +706,24 @@ shared-and-argument-item = any
 argument-item = any
 shared-item = any
 ~~~
-{: #fig-cddl title="Packed CBOR in CDDL"}
+{: #fig-cddl title="CDDL for Packed CBOR Table Setup Tags Defined Here"}
 
-(This assumes the allocation of tag numbers 113 ('q') and 1113 for
-these tags.)
+[^assume113]: assuming the allocation of tag numbers 113 ('q')
+    and 1113 for these tags
 
-The array given as the first element of the content of tag 113
-("Basic-Packed-CBOR") is prepended to both the tables for shared items
-and arguments that apply to the entire tag (by default empty tables).
-The arrays given as the first and second element of the content of the
-tag 1113 ("Split-Basic-Packed-CBOR") are prepended to the tables for
-shared items and arguments, respectively,
-that apply to the entire tag (by default
-empty tables).
+These tags extend the two tables for shared items and for arguments
+that apply to the entire tag, which, unless an enclosing table setup
+tag or table-setting media type applies, are empty tables:
+
+Tag 113 ("Basic-Packed-CBOR"):
+: The array given as the first element of the tag content is prepended
+  to both the tables for shared items and for arguments.
+
+Tag 1113 ("Split-Basic-Packed-CBOR"):
+: The arrays given as the first and second element of the tag content
+  are prepended individually to the tables for shared items and for
+  arguments, respectively.
+
 As discussed in the introduction to this section, references
 in the supplied new arrays use the new number space (where inherited
 items are shifted by the new items given), while the inherited items
@@ -731,9 +777,9 @@ A packed form of this using straight references could be:
 
 ~~~ cbor-diag
 113([[106("packed.example")],
-  [6(["https://", "/foo.html"]),
-   6(["coap://", "/bar.cbor"]),
-   6(["mailto:support@", ""])]
+  [224(["https://", "/foo.html"]),
+   224(["coap://", "/bar.cbor"]),
+   224(["mailto:support@", ""])]
 ])
 ~~~
 
@@ -756,9 +802,9 @@ from the same place could be:
 
 ~~~ cbor-diag
 113([[105(["coaps://[2001:db8::1]/s/", ".senml"])],
-  [6("temp-freezer"),
-   6("temp-fridge"),
-   6("temp-ambient")]
+  [224("temp-freezer"),
+   224("temp-fridge"),
+   224("temp-ambient")]
 ])
 ~~~
 
@@ -800,9 +846,9 @@ A straightforward packed form of this using the record function tag could be:
 
 ~~~ cbor-diag
 113([[114(["key0", "key1", "key2"])],
-  [6([false, "value 1", 2]),
-   6([true, "value -1", -2]),
-   6([undefined, "", 0])]
+  [224([false, "value 1", 2]),
+   224([true, "value -1", -2]),
+   224([undefined, "", 0])]
 ])
 ~~~
 
@@ -811,11 +857,62 @@ A slightly more concise packed form can be achieved by manipulating the key item
 
 ~~~ cbor-diag
 113([[114(["key1", "key2", "key0"])],
-  [6(["value 1", 2, false]),
-   6(["value -1", -2, true]),
-   6(["", 0])]
+  [224(["value 1", 2, false]),
+   224(["value -1", -2, true]),
+   224(["", 0])]
 ])
 ~~~
+
+
+# Integration Tags
+
+[^for-discussion]: This new text addresses discussion during the
+    2025-06-11 CBOR WG interim.
+    It provides additional functionality, but can cause additional
+    complexity, and an explicit decision should be made whether this
+    functionality is included.
+
+[^for-discussion]
+
+Integration tags fulfill a similar purpose for shared item references as
+function tags do for argument references.
+An integration tag can be used as an element of a shared item table, supplying
+extended semantics on how to integrate its tag content into the context
+from which the shared item is referenced.
+A regular shared item reference can be used to reference an
+integration tag.
+(Note that the generation of an integration tag can in turn be
+automatic in the table setup mechanism specified by a media type or a
+table setup tag, so the integration tag may never actually physically
+occur in the interchanged data.)
+
+Application protocol specifications need to be explicit about which
+integration tags are in use; otherwise, the unpacker will not know
+whether a tag in a shared item table position is an integration tag or
+is intended to be shared literally.
+(The set of integration tags in use can also be defined as part of the
+table setup mechanism.)
+
+The present specification defines one integration tag.
+
+## Splicing Integration Tag {#splice}
+
+Tag 1115, the splicing integration tag, can be used with a tag content
+that is an array.
+It specifies that the tag content is "spliced" into the surrounding
+array of a reference item referencing that shared item, i.e. the
+surrounding array is replace by one that enumerates the elements of
+the shared item at the site of the shared item reference.
+
+Example: a rump of `[1, 2, 3, simple(0), 7, 8, 9]`, where the shared
+item table contains `1115([4, 5, 6])` as its first item is unpacked as
+`[1, 2, 3, 4, 5, 6, 7, 8, 9]`.
+
+Example application:
+Splicing integration tags could be generated implicitly in the
+implicit table setup defined in {{Section 4.1 of -dns-cbor}}, removing the
+need to allow nested arrays for names.
+
 
 Additional Stand-in Items {#sec-standin}
 =========================
@@ -837,7 +934,7 @@ These additional stand-in items are fundamentally independent of
 Packed CBOR, but they also can be used as the right-hand-side of
 reference items (see {{use-standin}}).
 
-Note that application specifications need to be explicit about which
+Note that application protocol specifications need to be explicit about which
 stand-in items are provided for; otherwise, inconsistent
 interpretations at different places in a system can lead to check/use
 vulnerabilities.
@@ -862,7 +959,7 @@ item.
 But in any case, a tag definition can only specify validity based on
 the structure of its tag content.
 
-In Packed CBOR, a reference tag might be "standing in" for the actual
+In Packed CBOR, a reference data item might be "standing in" for the actual
 tag content of an outer tag, or for a structural component of that.
 In this case, the formal structure of the outer tag's content before
 unpacking usually no longer fulfills the validity conditions of the
@@ -948,7 +1045,7 @@ should be applied deliberately and sparingly:
 Tag Equivalence of Packed CBOR Tags
 -------------------------------
 
-The reference tags in this specification declare their equivalence to
+The reference data items in this specification declare their equivalence to
 the unpacked shared items or function results they represent.
 
 The table setup tags 113 and 1113 declare their equivalence to the unpacked CBOR
@@ -975,6 +1072,7 @@ IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 |             (256-`B`)..255 | any                                                                          | Packed CBOR: straight        |
 |                       1112 | undefined (0xf7)                                                             | Packed CBOR: reference error |
 |                       1113 | array (shared-items, argument-items, rump)                                   | Packed CBOR: table setup     |
+|                       1115 | any                                                                          | Packed CBOR: splicing integration tag |
 {: #tab-tag-values cols='r l l' title="Values for Tag Numbers"}
 
 
@@ -997,7 +1095,9 @@ Loops in the Packed CBOR can be used as a denial of service attack
 unless mitigated, see {{sec-discussion}}.
 
 As the unpacking is deterministic, packed forms can be used as signing
-inputs.  (Note that if external dictionaries are added to cbor-packed,
+inputs when deterministically encoded {{-cde}}.
+(Note that where external dictionaries are added to
+cbor-packed as in {{-extref}},
 this requires additional consideration.)
 
 
@@ -1236,7 +1336,7 @@ item, 1210 bytes"}
     "number"}}, ["Property"], "writable", "valueType", "type"],
                /   8            9           10           11 /
    /argument/ ["http://192.168.1.10", 224("3:8445/wot/thing"),
-              / 6                        225 /
+              / 224                   225 /
    225("/MyLED/"), 226("rgbValue"), "rgbValue",
      / 226             227           228     /
    {simple(6): simple(7), simple(9): true, simple(1): simple(8)}],
