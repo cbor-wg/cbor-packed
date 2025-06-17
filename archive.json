@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-05-13T01:47:06.489768+00:00",
+  "timestamp": "2025-06-17T01:50:40.902036+00:00",
   "repo": "cbor-wg/cbor-packed",
   "labels": [
     {
@@ -1350,6 +1350,32 @@
           "comments": []
         }
       ]
+    },
+    {
+      "number": 25,
+      "id": "PR_kwDOEeCKP86as9RS",
+      "title": "As discussed in 2025-06-11 CBOR interim meeting",
+      "url": "https://github.com/cbor-wg/cbor-packed/pull/25",
+      "state": "OPEN",
+      "author": "cabo",
+      "authorAssociation": "CONTRIBUTOR",
+      "assignees": [],
+      "labels": [],
+      "body": "",
+      "createdAt": "2025-06-16T11:52:09Z",
+      "updatedAt": "2025-06-16T11:52:10Z",
+      "baseRepository": "cbor-wg/cbor-packed",
+      "baseRefName": "main",
+      "baseRefOid": "53ce6c5eeb46c8a5e979f93c169d2197542ffbc3",
+      "headRepository": "cbor-wg/cbor-packed",
+      "headRefName": "shared-item-integration",
+      "headRefOid": "8afd59cfa52fea57ad812c68c1c4ca95689a581c",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": []
     }
   ]
 }
