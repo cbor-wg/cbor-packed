@@ -1,3 +1,5 @@
+<!-- regenerate: on (set to off if you edit this file) -->
+
 # Packed CBOR
 
 This is the working area for the IETF [CBOR Working Group](https://datatracker.ietf.org/group/cbor/documents/) Internet-Draft, "Packed CBOR".
@@ -7,7 +9,6 @@ This is the working area for the IETF [CBOR Working Group](https://datatracker.i
 * [Working Group Draft](https://datatracker.ietf.org/doc/html/draft-ietf-cbor-packed)
 * [Compare Editor's Copy to Working Group Draft](https://cbor-wg.github.io/cbor-packed/#go.draft-ietf-cbor-packed.diff)
 
-[Access to all branches](https://cbor-wg.github.io/cbor-packed/)
 
 ## Contributing
 
