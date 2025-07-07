@@ -104,13 +104,14 @@ informative:
 [^status]
 
 [^status]:
-    The present pull request is intended to address the discussion about the
-    use of simple values as reference items during the 2025-06-11 CBOR
-    interim meeting.
+    (This cref will be removed by the RFC editor:)\\
+    The present revision `-16` is intended as input to IETF 123, to
+    address the discussion about the use of simple values as reference
+    items during the 2025-06-11 CBOR interim meeting.
     It contains a number of editorial improvements as well as the new
     concept of an integration tag; it is for discussion whether the
     latter should or should not be added to Packed CBOR.
-    The wording of the present pull request continues to make use of
+    The wording of the present revision continues to make use of
     the tunables A/B/C to be set to specific numbers before completing
     the Packed CBOR specification; not all the examples may fully
     align yet.
