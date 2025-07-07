@@ -1829,19 +1829,19 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 List of Figures
 
-   1.  CDDL for Packed CBOR Table Setup Tags Defined Here (Figure 1)
-   2.  Example original CBOR data item, 400 bytes (Figure 2)
-   3.  Example packed CBOR data item with item sharing only, 308 bytes
-       (Figure 3)
-   4.  Example packed CBOR data item using item sharing and the record
-       function tag, 302 bytes (Figure 4)
-   5.  Example original CBOR data item, 1210 bytes (Figure 5)
-   6.  Example packed CBOR data item, 507 bytes (Figure 6)
+   Figure 1:  CDDL for Packed CBOR Table Setup Tags Defined Here
+   Figure 2:  Example original CBOR data item, 400 bytes
+   Figure 3:  Example packed CBOR data item with item sharing only, 308
+              bytes
+   Figure 4:  Example packed CBOR data item using item sharing and the
+              record function tag, 302 bytes
+   Figure 5:  Example original CBOR data item, 1210 bytes
+   Figure 6:  Example packed CBOR data item, 507 bytes
 
 List of Tables
 
-   1.  Referencing Shared Values (Table 1)
-   2.  Straight Referencing (e.g., Prefix) Arguments (Table 2)
+   Table 1:   Referencing Shared Values
+   Table 2:   Straight Referencing (e.g., Prefix) Arguments
 
 
 
@@ -1850,9 +1850,9 @@ Bormann & Gütschow       Expires 8 January 2026                [Page 33]
 Internet-Draft                 Packed CBOR                     July 2025
 
 
-   3.  Inverted Referencing (e.g., Suffix) Arguments (Table 3)
-   4.  Values for Tag Numbers (Table 4)
-   5.  Simple Values (Table 5)
+   Table 3:   Inverted Referencing (e.g., Suffix) Arguments
+   Table 4:   Values for Tag Numbers
+   Table 5:   Simple Values
 
 Acknowledgements
 
