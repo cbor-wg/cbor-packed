@@ -3,7 +3,7 @@
 {:unnumbered}
 
 {:compact}
-1. [Packed CBOR in CDDL](#fig-cddl)
+1. [CDDL for Packed CBOR Table Setup Tags Defined Here](#fig-cddl)
 2. [Example original CBOR data item, 400 bytes](#fig-example-in)
 3. [Example packed CBOR data item with item sharing only, 308 bytes](#fig-example-out)
 4. [Example packed CBOR data item using item sharing and the record function tag, 302 bytes](#fig-example-out-record)
