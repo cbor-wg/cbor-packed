@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-08T01:52:04.316379+00:00",
+  "timestamp": "2025-07-13T02:04:43.702698+00:00",
   "repo": "cbor-wg/cbor-packed",
   "labels": [
     {
@@ -269,7 +269,7 @@
       "labels": [],
       "body": "Processing [packed-by-reference#5](https://codeberg.org/chrysn/packed-by-reference/issues/5), I noticed that `1112(undefined)` can cause problems:\r\n\r\n* When an application compares unprocessable elements for identity, 1112(undefined) will show up as identical. (Granted, \"don't do that, then\")\r\n* If an unpacker has two unpopulated entries in a single dict's keys, and thus produces two `1112(undefined)`, all of a sudden the dictionary has duplicate keys.",
       "createdAt": "2024-03-04T13:13:08Z",
-      "updatedAt": "2024-03-04T13:16:58Z",
+      "updatedAt": "2025-07-11T08:54:49Z",
       "closedAt": null,
       "comments": [
         {
@@ -278,6 +278,27 @@
           "body": "Possible mitigation would be to allow decoder defined payload in the 1112 (which would be ignored by the recipient but is stuctured as the decoder needs it), or doing away with 1112 altogether and instead leaving the references as they are (resulting, once more, in a tag that is not processable by the recipient, but it is already a bit disambiguated).\r\n\r\nEither of those solves dictionary key issue. The compare-by-identity issue is just mitigated a bit, but not solved for good, because when comparing across positions in different documents, 1112's payload would need to encode everything the decoder knows about the chain of tables that led to this, which is very verbose.",
           "createdAt": "2024-03-04T13:16:56Z",
           "updatedAt": "2024-03-04T13:16:56Z"
+        },
+        {
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Interesting point, and I think this is already present in [Section 5.7 of RFC8949](https://www.rfc-editor.org/rfc/rfc8949#section-5.7) with the simple value `undefined` to report decoding problems. One more mitigation I could think of for both cases would be to never treat two `undefined` values as equal, but that clearly clashes with Section 5.6.1 of RFC8949  which states that \"simple values are equal if they simply have the same value\". Could this be an errata in RF8949?\n\nBut adding 1112(undefined) to Packed indeed adds to the problem, as the recipient of the unpacked CBOR might very well be a generic decoder, while already decoded RFC8949 CBOR would usually not be fed back to a decoder.",
+          "createdAt": "2025-07-10T08:51:41Z",
+          "updatedAt": "2025-07-10T08:51:41Z"
+        },
+        {
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> But adding 1112(undefined) to Packed indeed adds to the problem, as the recipient of the unpacked CBOR might very well be a generic decoder, while already decoded RFC8949 CBOR would usually not be fed back to a decoder.\n\nCan you elucidate?\n",
+          "createdAt": "2025-07-10T21:38:38Z",
+          "updatedAt": "2025-07-10T21:38:38Z"
+        },
+        {
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Hum, not sure which part is unclear, but I meant to say that:\n\n1. a generic CBOR decoder returning `undefined` to report decoding problems might, e.g., return two map keys as `undefined` (which would have been invalid CBOR). But this is maybe not much of a problem in practice since the output of a CBOR decoder is usually directly consumed by another application.\n2. In Packed CBOR, the situation is different. While \"integrated\" decoders which can unpack and decode at the same time are possible, a two-step approach is also likely: Here, a \"packed decoder\" would run over the packed CBOR data stream and return an unpacked version. This unpacked version would in turn be decoded by a generic CBOR decoder. In this case, having `1112(undefined)` as two map keys in the unpacked version would turn it into invalid CBOR (as noted by chrysn). That is relevant as it will be decoded in the second step.",
+          "createdAt": "2025-07-11T08:54:49Z",
+          "updatedAt": "2025-07-11T08:54:49Z"
         }
       ]
     },
@@ -293,9 +314,31 @@
       "labels": [],
       "body": "I think this should be added.\r\n\r\n\u2026 and if you think I only want this to be in there to simplify the work of packed-by-reference that would say that same considerations apply, you'd be totally right.\r\n\r\n(If you like, I can sketch some text later).",
       "createdAt": "2024-10-19T16:22:58Z",
-      "updatedAt": "2024-10-19T16:22:58Z",
+      "updatedAt": "2025-07-11T09:18:30Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Do you have specific considerations in mind? I would say: implementations try to unpack according to their understanding of the media type, if they encounter invalid references (e.g., because the assumed packing table is too short), they simply fail to unpack.\n\nI guess implementations should state which assumption they have for a certain media type, should we include that in the text?",
+          "createdAt": "2025-07-10T08:29:45Z",
+          "updatedAt": "2025-07-10T08:29:45Z"
+        },
+        {
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "> if they encounter invalid references (e.g., because the assumed packing table is too short), they simply fail to unpack.\n\nI think the security consideration here mainly is that they need to be able to do this reliable -- no false unpacking.\nThis means that media types that are designed for evolvability also need to be designed to make this possible.",
+          "createdAt": "2025-07-10T09:23:12Z",
+          "updatedAt": "2025-07-10T09:23:12Z"
+        },
+        {
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> This means that media types that are designed for evolvability also need to be designed to make this possible.\n\nBy restricting new media type \"versions\" to append to the packing table, and to instantiate previously reserved entries in the packing table, never prepend to the table or change the meaning of an entry, right? I guess that should indeed be added to the text.",
+          "createdAt": "2025-07-11T09:18:30Z",
+          "updatedAt": "2025-07-11T09:18:30Z"
+        }
+      ]
     },
     {
       "number": 23,
@@ -309,9 +352,31 @@
       "labels": [],
       "body": "Someone somewhere (@cabo might fill in details) suggested that table setup could also add tags after the table rather than prepending.\r\n\r\nI think this has applications, but at the same time I've always thought of the tables as a possibly sparse array where not all parties might agree on what is present (as long as it is not used) -- for example, a media type might evolve by growing a larger provided packing table.\r\n\r\nThe properties of the table that packing setups (i.e. transformations of that table) can rely on should be described. Alternatively, we may need to acknowledge that not all packing methods can be composed. (One method may map all existing elements n to 2*n and assign meaning to all odd table entries, and around that, a table setup method that inserts elements after the last element can't work any more).",
       "createdAt": "2025-01-10T16:13:35Z",
-      "updatedAt": "2025-01-10T16:13:35Z",
+      "updatedAt": "2025-07-11T09:11:53Z",
       "closedAt": null,
-      "comments": []
+      "comments": [
+        {
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "body": "Thanks for raising this!\n\n> The properties of the table that packing setups (i.e. transformations of that table) can rely on should be described. Alternatively, we may need to acknowledge that not all packing methods can be composed. (One method may map all existing elements n to 2*n and assign meaning to all odd table entries, and around that, a table setup method that inserts elements after the last element can't work any more).\n\nFrom my understanding of the draft, table setup tags always work on the \"active set of packing tables\". In your example, the first (outer) table setup tag (`X`) could happily append to the tables, and the new active set of packing tables will then be altered as described by you (let's say it inserts `-1`) by the second (inner) tag (`Y`).\n\nAs an example `X([[2], Y(...))` with initial packing table [1] would result in the packing table `[-1,1,-1,2]` within the rump of `Y`. Composing the other way around would also work: `Y(X([[2], ...))` with initial packing table `[1]` would result in `[-1,1,2]`.",
+          "createdAt": "2025-07-10T08:25:39Z",
+          "updatedAt": "2025-07-10T08:25:39Z"
+        },
+        {
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "body": "We might be better off to describe the default algorithm that makes nested table setup tags work:\nWhen chasing a reference, go upward in the data item tree.\nIf the next up table setup tag fulfills the reference, we are done.\nOtherwise, subtract the width of the table entries added in the relevant table from the reference number and continue upwards (up into the media type, which can bequeath default tables to the CBOR items in them).\n\nTable setup tags can define alternative algorithms.\nWe haven't come up with a really good example for when one is needed; one could say that reserved table entries (for evolvability) already is a different algorithm or I prefer to think that it is the same (just with reserved entries also counting in the width, so the entries can evolve while the width stays the same).\n",
+          "createdAt": "2025-07-10T21:46:42Z",
+          "updatedAt": "2025-07-10T21:46:42Z"
+        },
+        {
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> When chasing a reference, go upward in the data item tree.\n> If the next up table setup tag fulfills the reference, we are done.\n> Otherwise, subtract the width of the table entries added in the relevant table from the reference number and continue upwards (up into the media type, which can bequeath default tables to the CBOR items in them).\n\nThis is only true for table setup tags that _prepend_ to the packing tables. As soon as a setup tag _appends_ to the end, the subtraction would be wrong. And it would clearly fail for more complex table setups as the one proposed by @chrysn above. But yeah, you say so with:\n\n> Table setup tags can define alternative algorithms.\n\n---\n\n> We might be better off to describe the default algorithm that makes nested table setup tags work\n\nI'm not sure which way around is better, or if we should include the description from both angles: The packing table construction down the data item tree (as currently done in the draft), and the reference chase up the data item tree (as proposed by you). They should be equivalent in the sense that one of them is enough to infer the other one, right?\n\nProviding both could ease implementations (which might pick one or the other route), but also need special attention to not introduce inconsistencies.\n\nWhichever way we decide on should be mandated for all future table setup registrations IMO.",
+          "createdAt": "2025-07-11T09:11:53Z",
+          "updatedAt": "2025-07-11T09:11:53Z"
+        }
+      ]
     }
   ],
   "pulls": [
