@@ -35,11 +35,11 @@ the tunables A/B/C to be set to specific numbers before completing
 the Packed CBOR specification; not all the examples may fully
 align yet. 
     " name="description">
-<meta content="xml2rfc 3.28.1" name="generator">
+<meta content="xml2rfc 3.30.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-cbor-packed-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.28.1
+  xml2rfc 3.30.0
     Python 3.12.11
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
@@ -1070,11 +1070,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Packed CBOR</td>
-<td class="right">June 2025</td>
+<td class="right">July 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bormann &amp; Gütschow</td>
-<td class="center">Expires 18 December 2025</td>
+<td class="center">Expires 20 January 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1087,12 +1087,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-cbor-packed-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-06-16" class="published">16 June 2025</time>
+<time datetime="2025-07-19" class="published">19 July 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2025-12-18">18 December 2025</time></dd>
+<dd class="expires"><time datetime="2026-01-20">20 January 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1170,7 +1170,7 @@ align yet.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 18 December 2025.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 20 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1561,7 +1561,7 @@ Such an index may be derived from information in tags and their
 content as well as from CBOR simple values.<a href="#section-2.1-4" class="pilcrow">¶</a></p>
 <p id="section-2.1-5">Table setup mechanisms (see <a href="#sec-table-setup" class="auto internal xref">Section 3</a>) may include all
 information needed for table setup within the packed CBOR data item, or
-they may refer to external information.  This information may be
+they may refer to external information.  This external information may be
 immutable, or it may be intended to potentially grow over time.
 In the latter case, the table setup mechanism needs to define how both
 backward and forward compatibility is addressed, e.g., how a reference
@@ -1608,11 +1608,11 @@ recursively unpacked.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
               <td class="text-left" rowspan="1" colspan="1">0..(A-1)</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Tag 6(unsigned integer N)</td>
+              <td class="text-left" rowspan="1" colspan="1">Tag 6(N) (N ≥ 0)</td>
               <td class="text-left" rowspan="1" colspan="1">A + 2×N</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Tag 6(negative integer N)</td>
+              <td class="text-left" rowspan="1" colspan="1">Tag 6(N) (N &lt; 0)</td>
               <td class="text-left" rowspan="1" colspan="1">A − 2×N − 1</td>
             </tr>
           </tbody>
@@ -1696,15 +1696,15 @@ suffix out of the argument table.<a href="#section-2.3-2" class="pilcrow">¶</a>
               <td class="text-right" rowspan="1" colspan="1">0..(C-1)</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Tag 6([-N-1, rump]) (N ≥ 0)</td>
-              <td class="text-right" rowspan="1" colspan="1">C + N</td>
+              <td class="text-left" rowspan="1" colspan="1">Tag 6([N, rump]) (N &lt; 0)</td>
+              <td class="text-right" rowspan="1" colspan="1">C - N - 1</td>
             </tr>
           </tbody>
         </table>
 </div>
 <p id="section-2.3-5">Argument data items are referenced by using the reference data items
 in <a href="#tab-straight" class="auto internal xref">Table 2</a> and <a href="#tab-inverted" class="auto internal xref">Table 3</a>.<a href="#section-2.3-5" class="pilcrow">¶</a></p>
-<p id="section-2.3-6">The tag number (or simple value number) of the reference data item is used to derive a table index (an
+<p id="section-2.3-6">The tag number of the reference data item is used to derive a table index (an
 unsigned integer) leading
 to the "argument"; the tag content of the reference is the "rump item".<a href="#section-2.3-6" class="pilcrow">¶</a></p>
 <p id="section-2.3-7">When reconstructing the original data item, such a reference is
@@ -1717,31 +1717,35 @@ be involved to supply a function to be used in resolving the
 reference.  It is crucial not to confuse reference tag and, if
 present, function tag.<a href="#section-2.3-8" class="pilcrow">¶</a></p>
 <p id="section-2.3-9">A straight reference uses the argument as the provisional left-hand
-side and the rump data item as the right-hand side.
+side and the rump data item as the provisional right-hand side.
 An inverted reference uses the rump data item as the provisional
-left-hand side and the argument as the right-hand side.<a href="#section-2.3-9" class="pilcrow">¶</a></p>
+left-hand side and the argument as the provisional right-hand side.<a href="#section-2.3-9" class="pilcrow">¶</a></p>
 <p id="section-2.3-10">In both cases, the provisional left-hand side is examined.  If it is a
 tag ("function tag"), it is "unwrapped": The function tag's tag number
-is used to indicate the function to be applied, and the tag content is
-kept as the unwrapped left-hand side.
+is used to indicate the function to be applied, and the tag content
+(which, again, might need to be recursively unpacked)
+is kept as the unwrapped left-hand side.
 If the provisional left-hand side is not a tag, it is kept as the
-unwrapped left-hand side, and the function to be applied is
+final left-hand side, and the function to be applied is
 concatenation, as defined below.<a href="#section-2.3-10" class="pilcrow">¶</a></p>
 <div id="use-standin">
-<p id="section-2.3-11">The right-hand side is examined whether it is a stand-in item
-(<a href="#sec-standin" class="auto internal xref">Section 6</a>), in which case the item that the stand-in item stands for is
-taken as the unwrapped right-hand-side; if the right-hand side is not
-a stand-in item, it is taken as is as the unwrapped right-hand side.<a href="#section-2.3-11" class="pilcrow">¶</a></p>
+<p id="section-2.3-11">The following procedure applies to the data items of both the provisional right-hand side
+and the unwrapped left-hand side (if applicable), independent of each other:
+If the data item is one of the explicitly allowed stand-in items (<a href="#sec-standin" class="auto internal xref">Section 6</a>),
+the item that the stand-in item stands for is recursively unpacked.
+If the resulting unpacked data item is again an allowed stand-in item, the previous step is repeated.
+If the data item is neither a stand-in item, nor further unpackable,
+it is taken as the final right-hand or left-hand side, respectively.<a href="#section-2.3-11" class="pilcrow">¶</a></p>
 </div>
 <p id="section-2.3-12">If a function tag was given, the reference is replaced by the result
-of applying the indicated unpacking function with the left-hand side
-as its first argument and the right-hand side as its second.
+of applying the indicated unpacking function with the final left-hand side
+as its first argument and the final right-hand side as its second.
 The unpacking function is defined by the definition of the tag number
 supplied.
 If that definition does not define an unpacking function, the result
 of the unpacking is not valid.<a href="#section-2.3-12" class="pilcrow">¶</a></p>
 <p id="section-2.3-13">If no function tag was given, the reference is replaced by the
-left-hand side "concatenated" with the right-hand side, where
+final left-hand side "concatenated" with the final right-hand side, where
 concatenation is defined as in <a href="#sec-concatenation" class="auto internal xref">Section 2.4</a>.<a href="#section-2.3-13" class="pilcrow">¶</a></p>
 <p id="section-2.3-14">As a contrived (but short) example <span class="cref" id="B32">assuming <code>B=32</code></span>, if the argument table is
 <code>["foobar", h'666f6f62', "fo"]</code>, each of the following straight (prefix)
@@ -1874,11 +1878,10 @@ also provides accessors that hide (resolve) the packing.  In this
 specific case, the onus of dealing with loops is on the accessors.<a href="#section-2.5-3.2.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-2.5-3.3">In general, loop detection can be handled in a similar way in which
+<p id="section-2.5-3.3">In general, loop detection can be handled similarly to how
 loops of symbolic links are handled in a file system: A system-wide
 limit (often set to a value permitting some 20 to 40 indirections for
-symbolic links) is applied to
-any reference chase.<a href="#section-2.5-3.3" class="pilcrow">¶</a></p>
+symbolic links) is applied to any reference chase.<a href="#section-2.5-3.3" class="pilcrow">¶</a></p>
 </aside>
 <aside id="section-2.5-4">
           <p id="section-2.5-4.1">NOTE:
@@ -2021,12 +2024,13 @@ shared-item = any
 </pre>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
-<a href="#name-cddl-for-packed-cbor-table-" class="selfRef">CDDL for Packed CBOR Table Setup Tags Defined Here</a>
+<a href="#name-cddl-for-packed-cbor-table-" class="selfRef">CDDL for Packed CBOR Table Setup Tags defined in this document</a>
           </figcaption></figure>
 </div>
 <p id="section-3.1-3">These tags extend the two tables for shared items and for arguments
 that apply to the entire tag, which, unless an enclosing table setup
-tag or table-setting media type applies, are empty tables:<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+tag or a table-setting application environment (e.g., a media type) applies,
+are empty tables:<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-3.1-4">
           <dt id="section-3.1-4.1">Tag 113 ("Basic-Packed-CBOR"):</dt>
           <dd style="margin-left: 1.5em" id="section-3.1-4.2">
@@ -2203,8 +2207,8 @@ from which the shared item is referenced.
 A regular shared item reference can be used to reference an
 integration tag.
 (Note that the generation of an integration tag can in turn be
-automatic in the table setup mechanism specified by a media type or a
-table setup tag, so the integration tag may never actually physically
+automatic in the table setup mechanism specified by an application environment
+or a table setup tag, so the integration tag may never actually physically
 occur in the interchanged data.)<a href="#section-5-2" class="pilcrow">¶</a></p>
 <p id="section-5-3">Application protocol specifications need to be explicit about which
 integration tags are in use; otherwise, the unpacker will not know
@@ -2222,14 +2226,14 @@ table setup mechanism.)<a href="#section-5-3" class="pilcrow">¶</a></p>
 that is an array.
 It specifies that the tag content is "spliced" into the surrounding
 array of a reference item referencing that shared item, i.e. the
-surrounding array is replace by one that enumerates the elements of
+surrounding array is replaced by one that enumerates the elements of
 the shared item at the site of the shared item reference.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.1-2">Example: a rump of <code>[1, 2, 3, simple(0), 7, 8, 9]</code>, where the shared
 item table contains <code>1115([4, 5, 6])</code> as its first item is unpacked as
 <code>[1, 2, 3, 4, 5, 6, 7, 8, 9]</code>.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
 <p id="section-5.1-3">Example application:
 Splicing integration tags could be generated implicitly in the
-implicit table setup defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-lenders-dns-cbor-13#section-4.1" class="relref">Section 4.1</a> of [<a href="#I-D.lenders-dns-cbor" class="cite xref">I-D.lenders-dns-cbor</a>]</span>, removing the
+implicit table setup defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-lenders-dns-cbor-14#section-4.1" class="relref">Section 4.1</a> of [<a href="#I-D.lenders-dns-cbor" class="cite xref">I-D.lenders-dns-cbor</a>]</span>, removing the
 need to allow nested arrays for names.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2526,7 +2530,7 @@ this requires additional consideration.)<a href="#section-9-3" class="pilcrow">�
 <dd class="break"></dd>
 <dt id="I-D.ietf-cbor-edn-literals">[I-D.ietf-cbor-edn-literals]</dt>
         <dd>
-<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"CBOR Extended Diagnostic Notation (EDN)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cbor-edn-literals-17</span>, <time datetime="2025-05-12" class="refDate">12 May 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cbor-edn-literals-17">https://datatracker.ietf.org/doc/html/draft-ietf-cbor-edn-literals-17</a>&gt;</span>. </dd>
+<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"CBOR Extended Diagnostic Notation (EDN)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cbor-edn-literals-18</span>, <time datetime="2025-07-07" class="refDate">7 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cbor-edn-literals-18">https://datatracker.ietf.org/doc/html/draft-ietf-cbor-edn-literals-18</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="IANA.cbor-simple-values">[IANA.cbor-simple-values]</dt>
         <dd>
@@ -2571,11 +2575,11 @@ this requires additional consideration.)<a href="#section-9-3" class="pilcrow">�
 <dd class="break"></dd>
 <dt id="I-D.ietf-cbor-cde">[I-D.ietf-cbor-cde]</dt>
         <dd>
-<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"CBOR Common Deterministic Encoding (CDE)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cbor-cde-11</span>, <time datetime="2025-05-12" class="refDate">12 May 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cbor-cde-11">https://datatracker.ietf.org/doc/html/draft-ietf-cbor-cde-11</a>&gt;</span>. </dd>
+<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"CBOR Common Deterministic Encoding (CDE)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cbor-cde-12</span>, <time datetime="2025-07-07" class="refDate">7 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cbor-cde-12">https://datatracker.ietf.org/doc/html/draft-ietf-cbor-cde-12</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.lenders-dns-cbor">[I-D.lenders-dns-cbor]</dt>
         <dd>
-<span class="refAuthor">Lenders, M. S.</span>, <span class="refAuthor">Bormann, C.</span>, <span class="refAuthor">Schmidt, T. C.</span>, and <span class="refAuthor">M. Wählisch</span>, <span class="refTitle">"A Concise Binary Object Representation (CBOR) of DNS Messages"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-lenders-dns-cbor-13</span>, <time datetime="2025-04-16" class="refDate">16 April 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-lenders-dns-cbor-13">https://datatracker.ietf.org/doc/html/draft-lenders-dns-cbor-13</a>&gt;</span>. </dd>
+<span class="refAuthor">Lenders, M. S.</span>, <span class="refAuthor">Bormann, C.</span>, <span class="refAuthor">Schmidt, T. C.</span>, and <span class="refAuthor">M. Wählisch</span>, <span class="refTitle">"A Concise Binary Object Representation (CBOR) of DNS Messages"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-lenders-dns-cbor-14</span>, <time datetime="2025-07-07" class="refDate">7 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-lenders-dns-cbor-14">https://datatracker.ietf.org/doc/html/draft-lenders-dns-cbor-14</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC1951">[RFC1951]</dt>
         <dd>
@@ -2904,26 +2908,44 @@ setup form (tag 1113).<a href="#appendix-A-6" class="pilcrow">¶</a></p>
       <h2 id="name-list-of-figures">
 <a href="#name-list-of-figures" class="section-name selfRef">List of Figures</a>
       </h2>
-<ol start="1" type="1" class="compact type-1" id="appendix-B-1">
-<li id="appendix-B-1.1">
-          <p id="appendix-B-1.1.1"><span><a href="#fig-cddl" class="internal xref">CDDL for Packed CBOR Table Setup Tags Defined Here</a> (<a href="#fig-cddl" class="auto internal xref">Figure 1</a>)</span><a href="#appendix-B-1.1.1" class="pilcrow">¶</a></p>
-</li>
-        <li id="appendix-B-1.2">
-          <p id="appendix-B-1.2.1"><span><a href="#fig-example-in" class="internal xref">Example original CBOR data item, 400 bytes</a> (<a href="#fig-example-in" class="auto internal xref">Figure 2</a>)</span><a href="#appendix-B-1.2.1" class="pilcrow">¶</a></p>
-</li>
-        <li id="appendix-B-1.3">
-          <p id="appendix-B-1.3.1"><span><a href="#fig-example-out" class="internal xref">Example packed CBOR data item with item sharing only, 308 bytes</a> (<a href="#fig-example-out" class="auto internal xref">Figure 3</a>)</span><a href="#appendix-B-1.3.1" class="pilcrow">¶</a></p>
-</li>
-        <li id="appendix-B-1.4">
-          <p id="appendix-B-1.4.1"><span><a href="#fig-example-out-record" class="internal xref">Example packed CBOR data item using item sharing and the record function tag, 302 bytes</a> (<a href="#fig-example-out-record" class="auto internal xref">Figure 4</a>)</span><a href="#appendix-B-1.4.1" class="pilcrow">¶</a></p>
-</li>
-        <li id="appendix-B-1.5">
-          <p id="appendix-B-1.5.1"><span><a href="#fig-example-in2" class="internal xref">Example original CBOR data item, 1210 bytes</a> (<a href="#fig-example-in2" class="auto internal xref">Figure 5</a>)</span><a href="#appendix-B-1.5.1" class="pilcrow">¶</a></p>
-</li>
-        <li id="appendix-B-1.6">
-          <p id="appendix-B-1.6.1"><span><a href="#fig-example-out2" class="internal xref">Example packed CBOR data item, 507 bytes</a> (<a href="#fig-example-out2" class="auto internal xref">Figure 6</a>)</span><a href="#appendix-B-1.6.1" class="pilcrow">¶</a></p>
-</li>
-      </ol>
+<span class="break"></span><dl class="dlCompact dlParallel" id="appendix-B-1">
+        <dt id="appendix-B-1.1">
+<a href="#fig-cddl" class="auto internal xref">Figure 1</a>:</dt>
+        <dd style="margin-left: 5.5em" id="appendix-B-1.2">
+          <p id="appendix-B-1.2.1"><a href="#fig-cddl" class="internal xref">CDDL for Packed CBOR Table Setup Tags defined in this document</a><a href="#appendix-B-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="appendix-B-1.3">
+<a href="#fig-example-in" class="auto internal xref">Figure 2</a>:</dt>
+        <dd style="margin-left: 5.5em" id="appendix-B-1.4">
+          <p id="appendix-B-1.4.1"><a href="#fig-example-in" class="internal xref">Example original CBOR data item, 400 bytes</a><a href="#appendix-B-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="appendix-B-1.5">
+<a href="#fig-example-out" class="auto internal xref">Figure 3</a>:</dt>
+        <dd style="margin-left: 5.5em" id="appendix-B-1.6">
+          <p id="appendix-B-1.6.1"><a href="#fig-example-out" class="internal xref">Example packed CBOR data item with item sharing only, 308 bytes</a><a href="#appendix-B-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="appendix-B-1.7">
+<a href="#fig-example-out-record" class="auto internal xref">Figure 4</a>:</dt>
+        <dd style="margin-left: 5.5em" id="appendix-B-1.8">
+          <p id="appendix-B-1.8.1"><a href="#fig-example-out-record" class="internal xref">Example packed CBOR data item using item sharing and the record function tag, 302 bytes</a><a href="#appendix-B-1.8.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="appendix-B-1.9">
+<a href="#fig-example-in2" class="auto internal xref">Figure 5</a>:</dt>
+        <dd style="margin-left: 5.5em" id="appendix-B-1.10">
+          <p id="appendix-B-1.10.1"><a href="#fig-example-in2" class="internal xref">Example original CBOR data item, 1210 bytes</a><a href="#appendix-B-1.10.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="appendix-B-1.11">
+<a href="#fig-example-out2" class="auto internal xref">Figure 6</a>:</dt>
+        <dd style="margin-left: 5.5em" id="appendix-B-1.12">
+          <p id="appendix-B-1.12.1"><a href="#fig-example-out2" class="internal xref">Example packed CBOR data item, 507 bytes</a><a href="#appendix-B-1.12.1" class="pilcrow">¶</a></p>
+</dd>
+      <dd class="break"></dd>
+</dl>
 </section>
 </div>
 <div id="sec-list-of-tables">
@@ -2931,23 +2953,38 @@ setup form (tag 1113).<a href="#appendix-A-6" class="pilcrow">¶</a></p>
       <h2 id="name-list-of-tables">
 <a href="#name-list-of-tables" class="section-name selfRef">List of Tables</a>
       </h2>
-<ol start="1" type="1" class="compact type-1" id="appendix-C-1">
-<li id="appendix-C-1.1">
-          <p id="appendix-C-1.1.1"><span><a href="#tab-shared" class="internal xref">Referencing Shared Values</a> (<a href="#tab-shared" class="auto internal xref">Table 1</a>)</span><a href="#appendix-C-1.1.1" class="pilcrow">¶</a></p>
-</li>
-        <li id="appendix-C-1.2">
-          <p id="appendix-C-1.2.1"><span><a href="#tab-straight" class="internal xref">Straight Referencing (e.g., Prefix) Arguments</a> (<a href="#tab-straight" class="auto internal xref">Table 2</a>)</span><a href="#appendix-C-1.2.1" class="pilcrow">¶</a></p>
-</li>
-        <li id="appendix-C-1.3">
-          <p id="appendix-C-1.3.1"><span><a href="#tab-inverted" class="internal xref">Inverted Referencing (e.g., Suffix) Arguments</a> (<a href="#tab-inverted" class="auto internal xref">Table 3</a>)</span><a href="#appendix-C-1.3.1" class="pilcrow">¶</a></p>
-</li>
-        <li id="appendix-C-1.4">
-          <p id="appendix-C-1.4.1"><span><a href="#tab-tag-values" class="internal xref">Values for Tag Numbers</a> (<a href="#tab-tag-values" class="auto internal xref">Table 4</a>)</span><a href="#appendix-C-1.4.1" class="pilcrow">¶</a></p>
-</li>
-        <li id="appendix-C-1.5">
-          <p id="appendix-C-1.5.1"><span><a href="#tab-simple-values" class="internal xref">Simple Values</a> (<a href="#tab-simple-values" class="auto internal xref">Table 5</a>)</span><a href="#appendix-C-1.5.1" class="pilcrow">¶</a></p>
-</li>
-      </ol>
+<span class="break"></span><dl class="dlCompact dlParallel" id="appendix-C-1">
+        <dt id="appendix-C-1.1">
+<a href="#tab-shared" class="auto internal xref">Table 1</a>:</dt>
+        <dd style="margin-left: 5.5em" id="appendix-C-1.2">
+          <p id="appendix-C-1.2.1"><a href="#tab-shared" class="internal xref">Referencing Shared Values</a><a href="#appendix-C-1.2.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="appendix-C-1.3">
+<a href="#tab-straight" class="auto internal xref">Table 2</a>:</dt>
+        <dd style="margin-left: 5.5em" id="appendix-C-1.4">
+          <p id="appendix-C-1.4.1"><a href="#tab-straight" class="internal xref">Straight Referencing (e.g., Prefix) Arguments</a><a href="#appendix-C-1.4.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="appendix-C-1.5">
+<a href="#tab-inverted" class="auto internal xref">Table 3</a>:</dt>
+        <dd style="margin-left: 5.5em" id="appendix-C-1.6">
+          <p id="appendix-C-1.6.1"><a href="#tab-inverted" class="internal xref">Inverted Referencing (e.g., Suffix) Arguments</a><a href="#appendix-C-1.6.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="appendix-C-1.7">
+<a href="#tab-tag-values" class="auto internal xref">Table 4</a>:</dt>
+        <dd style="margin-left: 5.5em" id="appendix-C-1.8">
+          <p id="appendix-C-1.8.1"><a href="#tab-tag-values" class="internal xref">Values for Tag Numbers</a><a href="#appendix-C-1.8.1" class="pilcrow">¶</a></p>
+</dd>
+        <dd class="break"></dd>
+<dt id="appendix-C-1.9">
+<a href="#tab-simple-values" class="auto internal xref">Table 5</a>:</dt>
+        <dd style="margin-left: 5.5em" id="appendix-C-1.10">
+          <p id="appendix-C-1.10.1"><a href="#tab-simple-values" class="internal xref">Simple Values</a><a href="#appendix-C-1.10.1" class="pilcrow">¶</a></p>
+</dd>
+      <dd class="break"></dd>
+</dl>
 </section>
 </div>
 <div id="sec-acknowledgements">
