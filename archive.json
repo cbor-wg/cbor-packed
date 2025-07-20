@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-13T02:04:43.702698+00:00",
+  "timestamp": "2025-07-20T02:06:05.313447+00:00",
   "repo": "cbor-wg/cbor-packed",
   "labels": [
     {
@@ -377,6 +377,22 @@
           "updatedAt": "2025-07-11T09:11:53Z"
         }
       ]
+    },
+    {
+      "number": 27,
+      "id": "I_kwDOEeCKP87Bca6H",
+      "title": "Switch order of section 6 and 7",
+      "url": "https://github.com/cbor-wg/cbor-packed/issues/27",
+      "state": "OPEN",
+      "author": "mguetschow",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "As non-packed stand-in items are another instance of tag equivalence, it would make sense to talk about them after having introduced the tag equivalence concept. As they are not new or unique to Packed CBOR, we discussed offline that they should not be moved to a subsection.",
+      "createdAt": "2025-07-19T16:59:10Z",
+      "updatedAt": "2025-07-19T16:59:10Z",
+      "closedAt": null,
+      "comments": []
     }
   ],
   "pulls": [
@@ -1443,6 +1459,53 @@
       },
       "comments": [],
       "reviews": []
+    },
+    {
+      "number": 26,
+      "id": "PR_kwDOEeCKP86fsMkD",
+      "title": "Editorial improvements and some clarifications",
+      "url": "https://github.com/cbor-wg/cbor-packed/pull/26",
+      "state": "OPEN",
+      "author": "mguetschow",
+      "authorAssociation": "COLLABORATOR",
+      "assignees": [],
+      "labels": [],
+      "body": "Mostly clarifying the interplay between non-packed stand-in items and nested packed CBOR in argument references, as discussed offline at the IETF hackathon.\r\n\r\nApart from that:\r\n- unifying the tables defining reference items with tag 6 (cc @miri64 who was also confused about the differing syntax)\r\n- clarifying that media-type supplied tables are only an _example_ of application-dependent initial tables\r\n- fixing two typos",
+      "createdAt": "2025-07-19T16:55:00Z",
+      "updatedAt": "2025-07-19T18:42:26Z",
+      "baseRepository": "cbor-wg/cbor-packed",
+      "baseRefName": "main",
+      "baseRefOid": "3b29989b1f70086c01df238926a8bcf8a47d29ac",
+      "headRepository": "cbor-wg/cbor-packed",
+      "headRefName": "editorial-clarifications",
+      "headRefOid": "ac010d611ec84a20edfc76116ca0c8aef265b966",
+      "closedAt": null,
+      "mergedAt": null,
+      "mergedBy": null,
+      "mergeCommit": null,
+      "comments": [],
+      "reviews": [
+        {
+          "id": "PRR_kwDOEeCKP8607fwO",
+          "commit": {
+            "abbreviatedOid": "ac010d6"
+          },
+          "author": "miri64",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-19T18:42:06Z",
+          "updatedAt": "2025-07-19T18:42:26Z",
+          "comments": [
+            {
+              "originalPosition": 41,
+              "body": ":+1:",
+              "createdAt": "2025-07-19T18:42:06Z",
+              "updatedAt": "2025-07-19T18:42:26Z"
+            }
+          ]
+        }
+      ]
     }
   ]
 }
