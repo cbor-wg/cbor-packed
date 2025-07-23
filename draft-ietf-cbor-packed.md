@@ -335,7 +335,9 @@ MAY require that unpacking errors are tolerated in some positions.
 Shared items are stored in the shared item table of the active set.
 
 The shared data items are referenced by using the reference data items
-in {{tab-shared}}.  When reconstructing the original data item, such a
+in {{tab-shared}}. The table index (an unsigned integer) is derived
+either from the simple value number or the unsigned or negative integer N
+provided as the content of tag 6. When reconstructing the original data item, such a
 reference is replaced by the referenced data item, which is then
 recursively unpacked.
 
@@ -402,9 +404,10 @@ suffix out of the argument table.
 Argument data items are referenced by using the reference data items
 in {{tab-straight}} and {{tab-inverted}}.
 
-The tag number of the reference data item is used to derive a table index (an
-unsigned integer) leading
-to the "argument"; the tag content of the reference is the "rump item".
+The table index (an unsigned integer) is derived from the tag number
+(for tags 256-`B`-`C` to 255), or from the unsigned or negative integer
+N in the tag content (for tag 6 and straight or inverted references, respectively).
+The "rump item" corresponds to the (rest of the) tag content.
 
 When reconstructing the original data item, such a reference is
 replaced by a data item constructed from the argument data item found
