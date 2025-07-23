@@ -889,7 +889,7 @@ from which the shared item is referenced.
 A regular shared item reference can be used to reference an
 integration tag.
 (Note that the generation of an integration tag can in turn be
-automatic in the table setup mechanism specified by an application environment ({{table-setup}})
+automatic in the table setup mechanism specified by an application environment ({{sec-table-setup}})
 or a table setup tag, so the integration tag may never actually physically
 occur in the interchanged data.)
 
