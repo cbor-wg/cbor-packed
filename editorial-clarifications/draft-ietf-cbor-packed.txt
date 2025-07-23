@@ -5,8 +5,8 @@
 Network Working Group                                         C. Bormann
 Internet-Draft                                    Universität Bremen TZI
 Intended status: Standards Track                             M. Gütschow
-Expires: 20 January 2026                                      TU Dresden
-                                                            19 July 2025
+Expires: 24 January 2026                                      TU Dresden
+                                                            23 July 2025
 
 
                               Packed CBOR
@@ -53,7 +53,7 @@ About This Document
 
 
 
-Bormann & Gütschow       Expires 20 January 2026                [Page 1]
+Bormann & Gütschow       Expires 24 January 2026                [Page 1]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -81,7 +81,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 January 2026.
+   This Internet-Draft will expire on 24 January 2026.
 
 Copyright Notice
 
@@ -104,12 +104,12 @@ Table of Contents
    2.  Packed CBOR . . . . . . . . . . . . . . . . . . . . . . . . .   6
      2.1.  Packing Tables  . . . . . . . . . . . . . . . . . . . . .   7
      2.2.  Referencing Shared Items  . . . . . . . . . . . . . . . .   8
-     2.3.  Referencing Argument Items  . . . . . . . . . . . . . . .   8
+     2.3.  Referencing Argument Items  . . . . . . . . . . . . . . .   9
      2.4.  Concatenation . . . . . . . . . . . . . . . . . . . . . .  11
 
 
 
-Bormann & Gütschow       Expires 20 January 2026                [Page 2]
+Bormann & Gütschow       Expires 24 January 2026                [Page 2]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -165,7 +165,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026                [Page 3]
+Bormann & Gütschow       Expires 24 January 2026                [Page 3]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -221,7 +221,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026                [Page 4]
+Bormann & Gütschow       Expires 24 January 2026                [Page 4]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -277,7 +277,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026                [Page 5]
+Bormann & Gütschow       Expires 24 January 2026                [Page 5]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -333,7 +333,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026                [Page 6]
+Bormann & Gütschow       Expires 24 January 2026                [Page 6]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -389,7 +389,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026                [Page 7]
+Bormann & Gütschow       Expires 24 January 2026                [Page 7]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -399,9 +399,11 @@ Internet-Draft                 Packed CBOR                     July 2025
    Shared items are stored in the shared item table of the active set.
 
    The shared data items are referenced by using the reference data
-   items in Table 1.  When reconstructing the original data item, such a
-   reference is replaced by the referenced data item, which is then
-   recursively unpacked.
+   items in Table 1.  The table index (an unsigned integer) is derived
+   either from the simple value number or the unsigned or negative
+   integer N provided as the content of tag 6.  When reconstructing the
+   original data item, such a reference is replaced by the referenced
+   data item, which is then recursively unpacked.
 
                   +=======================+=============+
                   | Reference             | Table Index |
@@ -436,19 +438,23 @@ Internet-Draft                 Packed CBOR                     July 2025
    tag content of Tag 6 may itself be packed, so it may need to be
    unpacked to make this determination.
 
+
+
+
+
+
+
+
+Bormann & Gütschow       Expires 24 January 2026                [Page 8]
+
+Internet-Draft                 Packed CBOR                     July 2025
+
+
 2.3.  Referencing Argument Items
 
    The argument table serves as a common table that can be used for
    argument references, i.e., for concatenation as well as references
    involving a function tag.
-
-
-
-
-Bormann & Gütschow       Expires 20 January 2026                [Page 8]
-
-Internet-Draft                 Packed CBOR                     July 2025
-
 
    When referencing an argument, a distinction is made between straight
    and inverted references; if no function tag is involved, a straight
@@ -481,9 +487,11 @@ Internet-Draft                 Packed CBOR                     July 2025
    Argument data items are referenced by using the reference data items
    in Table 2 and Table 3.
 
-   The tag number of the reference data item is used to derive a table
-   index (an unsigned integer) leading to the "argument"; the tag
-   content of the reference is the "rump item".
+   The table index (an unsigned integer) is derived from the tag number
+   (for tags 256-B-C to 255), or from the unsigned or negative integer N
+   in the tag content (for tag 6 and straight or inverted references,
+   respectively).  The "rump item" corresponds to the (rest of the) tag
+   content.
 
    When reconstructing the original data item, such a reference is
    replaced by a data item constructed from the argument data item found
@@ -491,20 +499,17 @@ Internet-Draft                 Packed CBOR                     July 2025
    first) and the rump data item (rump, again possibly needing to be
    recursively unpacked).
 
+
+
+Bormann & Gütschow       Expires 24 January 2026                [Page 9]
+
+Internet-Draft                 Packed CBOR                     July 2025
+
+
    Separate from the tag used as a reference, a tag ("function tag") may
    be involved to supply a function to be used in resolving the
    reference.  It is crucial not to confuse reference tag and, if
    present, function tag.
-
-
-
-
-
-
-Bormann & Gütschow       Expires 20 January 2026                [Page 9]
-
-Internet-Draft                 Packed CBOR                     July 2025
-
 
    A straight reference uses the argument as the provisional left-hand
    side and the rump data item as the provisional right-hand side.  An
@@ -547,6 +552,16 @@ Internet-Draft                 Packed CBOR                     July 2025
    h'666f6f62' == 'foob' is concatenated into a text string, and the
    last example is not an optimization).
 
+
+
+
+
+
+Bormann & Gütschow       Expires 24 January 2026               [Page 10]
+
+Internet-Draft                 Packed CBOR                     July 2025
+
+
    Taking into account the encoding, there are B two-byte references, 24
    three-byte references, 224 four-byte references, 65280 five-byte
    references, etc.  The numbers for inverted (suffix) references are
@@ -554,13 +569,6 @@ Internet-Draft                 Packed CBOR                     July 2025
    integers can grow to very large (or very negative) values, there is
    no practical limit to how many argument items might be used in a
    Packed CBOR item.)
-
-
-
-Bormann & Gütschow       Expires 20 January 2026               [Page 10]
-
-Internet-Draft                 Packed CBOR                     July 2025
-
 
 2.4.  Concatenation
 
@@ -602,21 +610,17 @@ Internet-Draft                 Packed CBOR                     July 2025
       are concatenated with the bytes of the right-hand side.  Byte
       strings concatenated with text strings need to contain valid UTF-8
       data.  The result of the concatenation gets the type of the
-      unwrapped rump data item; this way a single argument table entry
-      can be used to build both byte and text strings, depending on what
-      type of rump is being used.
 
 
 
-
-
-
-
-
-Bormann & Gütschow       Expires 20 January 2026               [Page 11]
+Bormann & Gütschow       Expires 24 January 2026               [Page 11]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
+
+      unwrapped rump data item; this way a single argument table entry
+      can be used to build both byte and text strings, depending on what
+      type of rump is being used.
 
    *  If one side is one of the string types, and the other side is an
       array, the result of the concatenation is equivalent to the
@@ -662,18 +666,15 @@ Internet-Draft                 Packed CBOR                     July 2025
       |        case, the onus of dealing with loops is on the
       |        application, as is the entire onus of dealing with Packed
       |        CBOR.
-      |  
 
 
 
-
-
-
-Bormann & Gütschow       Expires 20 January 2026               [Page 12]
+Bormann & Gütschow       Expires 24 January 2026               [Page 12]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
 
+      |  
       |     *  hybrid models are possible, for instance: The decoder
       |        builds a data item tree directly from the Packed CBOR as
       |        if it were oblivious, but also provides accessors that
@@ -724,8 +725,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-
-Bormann & Gütschow       Expires 20 January 2026               [Page 13]
+Bormann & Gütschow       Expires 24 January 2026               [Page 13]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -781,7 +781,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 14]
+Bormann & Gütschow       Expires 24 January 2026               [Page 14]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -837,7 +837,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 15]
+Bormann & Gütschow       Expires 24 January 2026               [Page 15]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -893,7 +893,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 16]
+Bormann & Gütschow       Expires 24 January 2026               [Page 16]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -949,7 +949,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 17]
+Bormann & Gütschow       Expires 24 January 2026               [Page 17]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -1005,7 +1005,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 18]
+Bormann & Gütschow       Expires 24 January 2026               [Page 18]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -1025,9 +1025,9 @@ Internet-Draft                 Packed CBOR                     July 2025
    which the shared item is referenced.  A regular shared item reference
    can be used to reference an integration tag.  (Note that the
    generation of an integration tag can in turn be automatic in the
-   table setup mechanism specified by an application environment or a
-   table setup tag, so the integration tag may never actually physically
-   occur in the interchanged data.)
+   table setup mechanism specified by an application environment
+   (Section 3) or a table setup tag, so the integration tag may never
+   actually physically occur in the interchanged data.)
 
    Application protocol specifications need to be explicit about which
    integration tags are in use; otherwise, the unpacker will not know
@@ -1061,7 +1061,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 19]
+Bormann & Gütschow       Expires 24 January 2026               [Page 19]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -1117,7 +1117,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 20]
+Bormann & Gütschow       Expires 24 January 2026               [Page 20]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -1173,7 +1173,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 21]
+Bormann & Gütschow       Expires 24 January 2026               [Page 21]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -1229,7 +1229,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 22]
+Bormann & Gütschow       Expires 24 January 2026               [Page 22]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -1285,7 +1285,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 23]
+Bormann & Gütschow       Expires 24 January 2026               [Page 23]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -1341,7 +1341,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 24]
+Bormann & Gütschow       Expires 24 January 2026               [Page 24]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -1397,16 +1397,16 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 25]
+Bormann & Gütschow       Expires 24 January 2026               [Page 25]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
 
    [I-D.bormann-cbor-notable-tags]
               Bormann, C., "Notable CBOR Tags", Work in Progress,
-              Internet-Draft, draft-bormann-cbor-notable-tags-12, 12
-              February 2025, <https://datatracker.ietf.org/doc/html/
-              draft-bormann-cbor-notable-tags-12>.
+              Internet-Draft, draft-bormann-cbor-notable-tags-13, 20
+              July 2025, <https://datatracker.ietf.org/doc/html/draft-
+              bormann-cbor-notable-tags-13>.
 
    [I-D.ietf-cbor-cde]
               Bormann, C., "CBOR Common Deterministic Encoding (CDE)",
@@ -1453,7 +1453,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 26]
+Bormann & Gütschow       Expires 24 January 2026               [Page 26]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -1509,7 +1509,7 @@ Appendix A.  Examples
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 27]
+Bormann & Gütschow       Expires 24 January 2026               [Page 27]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -1565,7 +1565,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 28]
+Bormann & Gütschow       Expires 24 January 2026               [Page 28]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -1621,7 +1621,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 29]
+Bormann & Gütschow       Expires 24 January 2026               [Page 29]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -1677,7 +1677,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 30]
+Bormann & Gütschow       Expires 24 January 2026               [Page 30]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -1733,7 +1733,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 31]
+Bormann & Gütschow       Expires 24 January 2026               [Page 31]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -1789,7 +1789,7 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 32]
+Bormann & Gütschow       Expires 24 January 2026               [Page 32]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -1845,7 +1845,7 @@ List of Tables
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 33]
+Bormann & Gütschow       Expires 24 January 2026               [Page 33]
 
 Internet-Draft                 Packed CBOR                     July 2025
 
@@ -1901,4 +1901,4 @@ Authors' Addresses
 
 
 
-Bormann & Gütschow       Expires 20 January 2026               [Page 34]
+Bormann & Gütschow       Expires 24 January 2026               [Page 34]

@@ -1074,7 +1074,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bormann &amp; Gütschow</td>
-<td class="center">Expires 20 January 2026</td>
+<td class="center">Expires 24 January 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1087,12 +1087,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-cbor-packed-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-07-19" class="published">19 July 2025</time>
+<time datetime="2025-07-23" class="published">23 July 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-01-20">20 January 2026</time></dd>
+<dd class="expires"><time datetime="2026-01-24">24 January 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1170,7 +1170,7 @@ align yet.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 20 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 24 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1587,7 +1587,9 @@ CBOR based protocols that include the use of packed CBOR
         </h3>
 <p id="section-2.2-1">Shared items are stored in the shared item table of the active set.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
 <p id="section-2.2-2">The shared data items are referenced by using the reference data items
-in <a href="#tab-shared" class="auto internal xref">Table 1</a>.  When reconstructing the original data item, such a
+in <a href="#tab-shared" class="auto internal xref">Table 1</a>. The table index (an unsigned integer) is derived
+either from the simple value number or the unsigned or negative integer N
+provided as the content of tag 6. When reconstructing the original data item, such a
 reference is replaced by the referenced data item, which is then
 recursively unpacked.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
 <span id="name-referencing-shared-values"></span><div id="tab-shared">
@@ -1704,9 +1706,10 @@ suffix out of the argument table.<a href="#section-2.3-2" class="pilcrow">¶</a>
 </div>
 <p id="section-2.3-5">Argument data items are referenced by using the reference data items
 in <a href="#tab-straight" class="auto internal xref">Table 2</a> and <a href="#tab-inverted" class="auto internal xref">Table 3</a>.<a href="#section-2.3-5" class="pilcrow">¶</a></p>
-<p id="section-2.3-6">The tag number of the reference data item is used to derive a table index (an
-unsigned integer) leading
-to the "argument"; the tag content of the reference is the "rump item".<a href="#section-2.3-6" class="pilcrow">¶</a></p>
+<p id="section-2.3-6">The table index (an unsigned integer) is derived from the tag number
+(for tags 256-<code>B</code>-<code>C</code> to 255), or from the unsigned or negative integer
+N in the tag content (for tag 6 and straight or inverted references, respectively).
+The "rump item" corresponds to the (rest of the) tag content.<a href="#section-2.3-6" class="pilcrow">¶</a></p>
 <p id="section-2.3-7">When reconstructing the original data item, such a reference is
 replaced by a data item constructed from the argument data item found
 in the table (argument, which might need to be recursively unpacked
@@ -2207,7 +2210,7 @@ from which the shared item is referenced.
 A regular shared item reference can be used to reference an
 integration tag.
 (Note that the generation of an integration tag can in turn be
-automatic in the table setup mechanism specified by an application environment
+automatic in the table setup mechanism specified by an application environment (<a href="#sec-table-setup" class="auto internal xref">Section 3</a>)
 or a table setup tag, so the integration tag may never actually physically
 occur in the interchanged data.)<a href="#section-5-2" class="pilcrow">¶</a></p>
 <p id="section-5-3">Application protocol specifications need to be explicit about which
@@ -2252,7 +2255,7 @@ such as strings or arrays, where the tag or simple value is defined to
 stand for a data item that can actually be used in the position of the stand-in
 item.
 Examples would be tags such as 21 to 23 (base64url, base64, uppercase
-hex: Section <a href="https://rfc-editor.org/rfc/rfc8949#section-3.4.5.2" class="relref">3.4.5.2</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>) or 108 (lowercase hex: <span><a href="https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-12#section-2.1" class="relref">Section 2.1</a> of [<a href="#I-D.bormann-cbor-notable-tags" class="cite xref">I-D.bormann-cbor-notable-tags</a>]</span>), which stand for
+hex: Section <a href="https://rfc-editor.org/rfc/rfc8949#section-3.4.5.2" class="relref">3.4.5.2</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>) or 108 (lowercase hex: <span><a href="https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-13#section-2.1" class="relref">Section 2.1</a> of [<a href="#I-D.bormann-cbor-notable-tags" class="cite xref">I-D.bormann-cbor-notable-tags</a>]</span>), which stand for
 text string items but internally employ more compact byte string
 representations that may also be more natural as application data items.<a href="#section-6-1" class="pilcrow">¶</a></p>
 <p id="section-6-2">These additional stand-in items are fundamentally independent of
@@ -2571,7 +2574,7 @@ this requires additional consideration.)<a href="#section-9-3" class="pilcrow">�
 <dd class="break"></dd>
 <dt id="I-D.bormann-cbor-notable-tags">[I-D.bormann-cbor-notable-tags]</dt>
         <dd>
-<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"Notable CBOR Tags"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-bormann-cbor-notable-tags-12</span>, <time datetime="2025-02-12" class="refDate">12 February 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-12">https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-12</a>&gt;</span>. </dd>
+<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"Notable CBOR Tags"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-bormann-cbor-notable-tags-13</span>, <time datetime="2025-07-20" class="refDate">20 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-13">https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-13</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-cbor-cde">[I-D.ietf-cbor-cde]</dt>
         <dd>
