@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-20T02:06:05.313447+00:00",
+  "timestamp": "2025-07-24T01:57:52.567548+00:00",
   "repo": "cbor-wg/cbor-packed",
   "labels": [
     {
@@ -1472,13 +1472,13 @@
       "labels": [],
       "body": "Mostly clarifying the interplay between non-packed stand-in items and nested packed CBOR in argument references, as discussed offline at the IETF hackathon.\r\n\r\nApart from that:\r\n- unifying the tables defining reference items with tag 6 (cc @miri64 who was also confused about the differing syntax)\r\n- clarifying that media-type supplied tables are only an _example_ of application-dependent initial tables\r\n- fixing two typos",
       "createdAt": "2025-07-19T16:55:00Z",
-      "updatedAt": "2025-07-19T18:42:26Z",
+      "updatedAt": "2025-07-23T13:09:48Z",
       "baseRepository": "cbor-wg/cbor-packed",
       "baseRefName": "main",
       "baseRefOid": "3b29989b1f70086c01df238926a8bcf8a47d29ac",
       "headRepository": "cbor-wg/cbor-packed",
       "headRefName": "editorial-clarifications",
-      "headRefOid": "ac010d611ec84a20edfc76116ca0c8aef265b966",
+      "headRefOid": "76be20c4a9e6be4fe20f73a8c65378163c91ff3c",
       "closedAt": null,
       "mergedAt": null,
       "mergedBy": null,
@@ -1502,6 +1502,138 @@
               "body": ":+1:",
               "createdAt": "2025-07-19T18:42:06Z",
               "updatedAt": "2025-07-19T18:42:26Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP861lPWz",
+          "commit": {
+            "abbreviatedOid": "ac010d6"
+          },
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "Thanks!\r\nApproved with a few suggestions.",
+          "createdAt": "2025-07-23T09:10:07Z",
+          "updatedAt": "2025-07-23T09:21:41Z",
+          "comments": [
+            {
+              "originalPosition": 19,
+              "body": "I would prefer to keep the CBOR types explicit there, as in\r\n\r\n```suggestion\r\n| Tag 6(N) (unsigned integer N \u2265 0)       | A + 2\u00d7N      |\r\n| Tag 6(N) (negative integer N < 0)       | A \u2212 2\u00d7N \u2212 1  |\r\n```",
+              "createdAt": "2025-07-23T09:10:07Z",
+              "updatedAt": "2025-07-23T09:21:41Z"
+            },
+            {
+              "originalPosition": 80,
+              "body": "s/unwrapped/final/. (maybe not the right word then...)\r\n",
+              "createdAt": "2025-07-23T09:15:25Z",
+              "updatedAt": "2025-07-23T09:21:42Z"
+            },
+            {
+              "originalPosition": 141,
+              "body": "This is the right word, but it may not be easy to make the connection to Section 3 where it is defined.\r\n\r\n```suggestion\r\nautomatic in the table setup mechanism specified by an application environment ({{table-setup}})\r\n```",
+              "createdAt": "2025-07-23T09:20:51Z",
+              "updatedAt": "2025-07-23T09:21:42Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP861luwB",
+          "commit": {
+            "abbreviatedOid": "ac010d6"
+          },
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-23T09:50:04Z",
+          "updatedAt": "2025-07-23T09:50:04Z",
+          "comments": [
+            {
+              "originalPosition": 19,
+              "body": "The idea was to get consistent syntax with `#tab-{straight,inverted}` below. Should we also add it there?",
+              "createdAt": "2025-07-23T09:50:04Z",
+              "updatedAt": "2025-07-23T09:50:05Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP861lvxZ",
+          "commit": {
+            "abbreviatedOid": "ac010d6"
+          },
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-23T09:51:24Z",
+          "updatedAt": "2025-07-23T09:51:25Z",
+          "comments": [
+            {
+              "originalPosition": 50,
+              "body": "This text actually does not reflect the `6([N, rump])` construction, now that I re-read it. Will propose a rewrite.",
+              "createdAt": "2025-07-23T09:51:24Z",
+              "updatedAt": "2025-07-23T09:51:25Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP861l0w0",
+          "commit": {
+            "abbreviatedOid": "ac010d6"
+          },
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-23T09:57:59Z",
+          "updatedAt": "2025-07-23T09:57:59Z",
+          "comments": [
+            {
+              "originalPosition": 80,
+              "body": "Actually, \"unwrapped\" is intended here:\r\n\r\n```\r\nif provisional left-hand side == function tag:\r\n    unwrapped left-hand side := (unpacked) tag content\r\n    while (unwrapped left-hand side == stand-in item):\r\n        unwrapped left-hand side := (unpacked) item \"the stand-in item stands for\"\r\n    final left-hand side := unwrapped left-hand side\r\nelse:\r\n    final left-hand side := provisional left-hand side\r\n```",
+              "createdAt": "2025-07-23T09:57:59Z",
+              "updatedAt": "2025-07-23T09:57:59Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP861oxH2",
+          "commit": {
+            "abbreviatedOid": "ac010d6"
+          },
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-23T13:07:08Z",
+          "updatedAt": "2025-07-23T13:07:08Z",
+          "comments": [
+            {
+              "originalPosition": 50,
+              "body": "Done in [`2e6109f` (#26)](https://github.com/cbor-wg/cbor-packed/pull/26/commits/2e6109ff47de281611d27532f405c9af92c50649).",
+              "createdAt": "2025-07-23T13:07:08Z",
+              "updatedAt": "2025-07-23T13:07:08Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP861oyKW",
+          "commit": {
+            "abbreviatedOid": "ac010d6"
+          },
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-23T13:07:58Z",
+          "updatedAt": "2025-07-23T13:07:59Z",
+          "comments": [
+            {
+              "originalPosition": 19,
+              "body": "I\"ve now instead provided an addition to the text in [`2e6109f` (#26)](https://github.com/cbor-wg/cbor-packed/pull/26/commits/2e6109ff47de281611d27532f405c9af92c50649).",
+              "createdAt": "2025-07-23T13:07:58Z",
+              "updatedAt": "2025-07-23T13:07:59Z"
             }
           ]
         }
