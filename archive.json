@@ -1,6 +1,6 @@
 {
   "magic": "E!vIA5L86J2I",
-  "timestamp": "2025-07-24T01:57:52.567548+00:00",
+  "timestamp": "2025-07-27T02:06:59.640767+00:00",
   "repo": "cbor-wg/cbor-packed",
   "labels": [
     {
@@ -57,6 +57,11 @@
       "name": "chore",
       "description": "",
       "color": "885B1C"
+    },
+    {
+      "name": "editorial",
+      "description": "",
+      "color": "5dca42"
     }
   ],
   "issues": [
@@ -311,10 +316,12 @@
       "author": "chrysn",
       "authorAssociation": "MEMBER",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "editorial"
+      ],
       "body": "I think this should be added.\r\n\r\n\u2026 and if you think I only want this to be in there to simplify the work of packed-by-reference that would say that same considerations apply, you'd be totally right.\r\n\r\n(If you like, I can sketch some text later).",
       "createdAt": "2024-10-19T16:22:58Z",
-      "updatedAt": "2025-07-11T09:18:30Z",
+      "updatedAt": "2025-07-24T16:02:20Z",
       "closedAt": null,
       "comments": [
         {
@@ -349,10 +356,12 @@
       "author": "chrysn",
       "authorAssociation": "MEMBER",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "editorial"
+      ],
       "body": "Someone somewhere (@cabo might fill in details) suggested that table setup could also add tags after the table rather than prepending.\r\n\r\nI think this has applications, but at the same time I've always thought of the tables as a possibly sparse array where not all parties might agree on what is present (as long as it is not used) -- for example, a media type might evolve by growing a larger provided packing table.\r\n\r\nThe properties of the table that packing setups (i.e. transformations of that table) can rely on should be described. Alternatively, we may need to acknowledge that not all packing methods can be composed. (One method may map all existing elements n to 2*n and assign meaning to all odd table entries, and around that, a table setup method that inserts elements after the last element can't work any more).",
       "createdAt": "2025-01-10T16:13:35Z",
-      "updatedAt": "2025-07-11T09:11:53Z",
+      "updatedAt": "2025-07-24T16:03:01Z",
       "closedAt": null,
       "comments": [
         {
@@ -387,10 +396,12 @@
       "author": "mguetschow",
       "authorAssociation": "COLLABORATOR",
       "assignees": [],
-      "labels": [],
+      "labels": [
+        "editorial"
+      ],
       "body": "As non-packed stand-in items are another instance of tag equivalence, it would make sense to talk about them after having introduced the tag equivalence concept. As they are not new or unique to Packed CBOR, we discussed offline that they should not be moved to a subsection.",
       "createdAt": "2025-07-19T16:59:10Z",
-      "updatedAt": "2025-07-19T16:59:10Z",
+      "updatedAt": "2025-07-24T15:52:04Z",
       "closedAt": null,
       "comments": []
     }
@@ -1472,7 +1483,7 @@
       "labels": [],
       "body": "Mostly clarifying the interplay between non-packed stand-in items and nested packed CBOR in argument references, as discussed offline at the IETF hackathon.\r\n\r\nApart from that:\r\n- unifying the tables defining reference items with tag 6 (cc @miri64 who was also confused about the differing syntax)\r\n- clarifying that media-type supplied tables are only an _example_ of application-dependent initial tables\r\n- fixing two typos",
       "createdAt": "2025-07-19T16:55:00Z",
-      "updatedAt": "2025-07-23T13:09:48Z",
+      "updatedAt": "2025-07-24T16:07:07Z",
       "baseRepository": "cbor-wg/cbor-packed",
       "baseRefName": "main",
       "baseRefOid": "3b29989b1f70086c01df238926a8bcf8a47d29ac",
@@ -1483,7 +1494,15 @@
       "mergedAt": null,
       "mergedBy": null,
       "mergeCommit": null,
-      "comments": [],
+      "comments": [
+        {
+          "author": "mguetschow",
+          "authorAssociation": "COLLABORATOR",
+          "body": "> Do we want to submit a revision before tomorrow's meeting?\r\n\r\nSure, sounds reasonable.",
+          "createdAt": "2025-07-24T16:07:07Z",
+          "updatedAt": "2025-07-24T16:07:07Z"
+        }
+      ],
       "reviews": [
         {
           "id": "PRR_kwDOEeCKP8607fwO",
@@ -1636,6 +1655,59 @@
               "updatedAt": "2025-07-23T13:07:59Z"
             }
           ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP8610obp",
+          "commit": {
+            "abbreviatedOid": "76be20c"
+          },
+          "author": "miri64",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-24T07:41:37Z",
+          "updatedAt": "2025-07-24T07:41:37Z",
+          "comments": [
+            {
+              "originalPosition": 19,
+              "body": "> The idea was to get consistent syntax with `#tab-{straight,inverted}` below. Should we also add it there?\r\n\r\nI would personally actually prefer if the type is spelled out in all tables.",
+              "createdAt": "2025-07-24T07:41:37Z",
+              "updatedAt": "2025-07-24T07:41:37Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP8610v_f",
+          "commit": {
+            "abbreviatedOid": "76be20c"
+          },
+          "author": "miri64",
+          "authorAssociation": "NONE",
+          "state": "COMMENTED",
+          "body": "",
+          "createdAt": "2025-07-24T07:47:49Z",
+          "updatedAt": "2025-07-24T07:47:50Z",
+          "comments": [
+            {
+              "originalPosition": 19,
+              "body": "Maybe taking inspiration from yesterday's Pecha Kucha talk to use more math symbols\r\n\r\n```suggestion\r\n| Tag 6(N) (N \u2265 0, N \u2208 \u0398\u2080)       | A + 2\u00d7N      |\r\n| Tag 6(N) (N < 0, N \u2208 \u0398\u2081)       | A \u2212 2\u00d7N \u2212 1  |\r\n```\r\n\r\n:imp: (this suggestion is not meant to be taken serious)",
+              "createdAt": "2025-07-24T07:47:49Z",
+              "updatedAt": "2025-07-24T07:47:50Z"
+            }
+          ]
+        },
+        {
+          "id": "PRR_kwDOEeCKP8617UhE",
+          "commit": {
+            "abbreviatedOid": "76be20c"
+          },
+          "author": "cabo",
+          "authorAssociation": "CONTRIBUTOR",
+          "state": "APPROVED",
+          "body": "LGTM.  Do we want to submit a revision before tomorrow's meeting?\r\n",
+          "createdAt": "2025-07-24T15:42:33Z",
+          "updatedAt": "2025-07-24T15:42:33Z",
+          "comments": []
         }
       ]
     }
