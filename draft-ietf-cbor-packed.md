@@ -336,7 +336,7 @@ Shared items are stored in the shared item table of the active set.
 
 The shared data items are referenced by using the reference data items
 in {{tab-shared}}. The table index (an unsigned integer) is derived
-either from the simple value number or the unsigned or negative integer N
+either from the simple value number or the (unsigned or negative) integer N
 provided as the content of tag 6. When reconstructing the original data item, such a
 reference is replaced by the referenced data item, which is then
 recursively unpacked.
@@ -406,8 +406,8 @@ in {{tab-straight}} and {{tab-inverted}}.
 
 The table index (an unsigned integer) is derived from the tag number
 (for tags 256-`B`-`C` to 255), or from the unsigned or negative integer
-N in the tag content (for tag 6 and straight or inverted references, respectively).
-The "rump item" corresponds to the (rest of the) tag content.
+N in the first element of the tag content (for tag 6 and straight or inverted references, respectively).
+The "rump item" is the second element of the two-element array that is the tag content.
 
 When reconstructing the original data item, such a reference is
 replaced by a data item constructed from the argument data item found
@@ -712,7 +712,7 @@ shared-and-argument-item = any
 argument-item = any
 shared-item = any
 ~~~
-{: #fig-cddl title="CDDL for Packed CBOR Table Setup Tags defined in this document"}
+{: #fig-cddl title="CDDL for Packed CBOR Table Setup Tags Defined in this Document"}
 
 [^assume113]: assuming the allocation of tag numbers 113 ('q')
     and 1113 for these tags
