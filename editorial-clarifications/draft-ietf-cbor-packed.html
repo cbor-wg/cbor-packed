@@ -35,23 +35,23 @@ the tunables A/B/C to be set to specific numbers before completing
 the Packed CBOR specification; not all the examples may fully
 align yet. 
     " name="description">
-<meta content="xml2rfc 3.30.0" name="generator">
+<meta content="xml2rfc 3.30.2" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-cbor-packed-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.30.0
+  xml2rfc 3.30.2
     Python 3.12.11
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
     lxml 5.3.1
-    platformdirs 4.3.8
+    platformdirs 4.4.0
     pycountry 24.6.1
     PyYAML 6.0.2
-    requests 2.32.4
+    requests 2.32.5
     setuptools 80.9.0
-    wcwidth 0.2.13
+    wcwidth 0.2.14
 -->
 <link href="draft-ietf-cbor-packed.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1070,11 +1070,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Packed CBOR</td>
-<td class="right">July 2025</td>
+<td class="right">October 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bormann &amp; Gütschow</td>
-<td class="center">Expires 24 January 2026</td>
+<td class="center">Expires 17 April 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1087,12 +1087,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-cbor-packed-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-07-23" class="published">23 July 2025</time>
+<time datetime="2025-10-14" class="published">14 October 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-01-24">24 January 2026</time></dd>
+<dd class="expires"><time datetime="2026-04-17">17 April 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1170,7 +1170,7 @@ align yet.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 24 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 17 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1588,7 +1588,7 @@ CBOR based protocols that include the use of packed CBOR
 <p id="section-2.2-1">Shared items are stored in the shared item table of the active set.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
 <p id="section-2.2-2">The shared data items are referenced by using the reference data items
 in <a href="#tab-shared" class="auto internal xref">Table 1</a>. The table index (an unsigned integer) is derived
-either from the simple value number or the unsigned or negative integer N
+either from the simple value number or the (unsigned or negative) integer N
 provided as the content of tag 6. When reconstructing the original data item, such a
 reference is replaced by the referenced data item, which is then
 recursively unpacked.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
@@ -1708,8 +1708,8 @@ suffix out of the argument table.<a href="#section-2.3-2" class="pilcrow">¶</a>
 in <a href="#tab-straight" class="auto internal xref">Table 2</a> and <a href="#tab-inverted" class="auto internal xref">Table 3</a>.<a href="#section-2.3-5" class="pilcrow">¶</a></p>
 <p id="section-2.3-6">The table index (an unsigned integer) is derived from the tag number
 (for tags 256-<code>B</code>-<code>C</code> to 255), or from the unsigned or negative integer
-N in the tag content (for tag 6 and straight or inverted references, respectively).
-The "rump item" corresponds to the (rest of the) tag content.<a href="#section-2.3-6" class="pilcrow">¶</a></p>
+N in the first element of the tag content (for tag 6 and straight or inverted references, respectively).
+The "rump item" is the second element of the two-element array that is the tag content.<a href="#section-2.3-6" class="pilcrow">¶</a></p>
 <p id="section-2.3-7">When reconstructing the original data item, such a reference is
 replaced by a data item constructed from the argument data item found
 in the table (argument, which might need to be recursively unpacked
@@ -2027,7 +2027,7 @@ shared-item = any
 </pre>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
-<a href="#name-cddl-for-packed-cbor-table-" class="selfRef">CDDL for Packed CBOR Table Setup Tags defined in this document</a>
+<a href="#name-cddl-for-packed-cbor-table-" class="selfRef">CDDL for Packed CBOR Table Setup Tags Defined in this Document</a>
           </figcaption></figure>
 </div>
 <p id="section-3.1-3">These tags extend the two tables for shared items and for arguments
@@ -2578,7 +2578,7 @@ this requires additional consideration.)<a href="#section-9-3" class="pilcrow">�
 <dd class="break"></dd>
 <dt id="I-D.ietf-cbor-cde">[I-D.ietf-cbor-cde]</dt>
         <dd>
-<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"CBOR Common Deterministic Encoding (CDE)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cbor-cde-12</span>, <time datetime="2025-07-07" class="refDate">7 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cbor-cde-12">https://datatracker.ietf.org/doc/html/draft-ietf-cbor-cde-12</a>&gt;</span>. </dd>
+<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"CBOR Common Deterministic Encoding (CDE)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cbor-cde-13</span>, <time datetime="2025-10-13" class="refDate">13 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cbor-cde-13">https://datatracker.ietf.org/doc/html/draft-ietf-cbor-cde-13</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.lenders-dns-cbor">[I-D.lenders-dns-cbor]</dt>
         <dd>
@@ -2915,7 +2915,7 @@ setup form (tag 1113).<a href="#appendix-A-6" class="pilcrow">¶</a></p>
         <dt id="appendix-B-1.1">
 <a href="#fig-cddl" class="auto internal xref">Figure 1</a>:</dt>
         <dd style="margin-left: 5.5em" id="appendix-B-1.2">
-          <p id="appendix-B-1.2.1"><a href="#fig-cddl" class="internal xref">CDDL for Packed CBOR Table Setup Tags defined in this document</a><a href="#appendix-B-1.2.1" class="pilcrow">¶</a></p>
+          <p id="appendix-B-1.2.1"><a href="#fig-cddl" class="internal xref">CDDL for Packed CBOR Table Setup Tags Defined in this Document</a><a href="#appendix-B-1.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="appendix-B-1.3">
