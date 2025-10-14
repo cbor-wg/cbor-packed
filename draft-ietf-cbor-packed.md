@@ -404,9 +404,9 @@ suffix out of the argument table.
 Argument data items are referenced by using the reference data items
 in {{tab-straight}} and {{tab-inverted}}.
 
-The table index (an unsigned integer) is derived from the tag number
-(for tags 256-`B`-`C` to 255), or from the unsigned or negative integer
-N in the first element of the tag content (for tag 6 and straight or inverted references, respectively).
+For tags 256-`B`-`C` to 255, the table index (an unsigned integer) is derived from the tag number.
+For tag 6, the table index is derived from the unsigned or negative integer N
+in the first element of the tag content (for straight or inverted references, respectively).
 The "rump item" is the second element of the two-element array that is the tag content.
 
 When reconstructing the original data item, such a reference is
