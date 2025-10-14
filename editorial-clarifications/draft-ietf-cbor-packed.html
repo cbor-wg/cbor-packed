@@ -1706,9 +1706,9 @@ suffix out of the argument table.<a href="#section-2.3-2" class="pilcrow">¶</a>
 </div>
 <p id="section-2.3-5">Argument data items are referenced by using the reference data items
 in <a href="#tab-straight" class="auto internal xref">Table 2</a> and <a href="#tab-inverted" class="auto internal xref">Table 3</a>.<a href="#section-2.3-5" class="pilcrow">¶</a></p>
-<p id="section-2.3-6">The table index (an unsigned integer) is derived from the tag number
-(for tags 256-<code>B</code>-<code>C</code> to 255), or from the unsigned or negative integer
-N in the first element of the tag content (for tag 6 and straight or inverted references, respectively).
+<p id="section-2.3-6">For tags 256-<code>B</code>-<code>C</code> to 255, the table index (an unsigned integer) is derived from the tag number.
+For tag 6, the table index is derived from the unsigned or negative integer N
+in the first element of the tag content (for straight or inverted references, respectively).
 The "rump item" is the second element of the two-element array that is the tag content.<a href="#section-2.3-6" class="pilcrow">¶</a></p>
 <p id="section-2.3-7">When reconstructing the original data item, such a reference is
 replaced by a data item constructed from the argument data item found
