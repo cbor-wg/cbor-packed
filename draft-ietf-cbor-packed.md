@@ -325,7 +325,7 @@ Alternatively, the unpacker MAY provide a special value, enclosed in
 the tag 1112, to the application and leave the error handling to the
 application.
 In the simplest case, this could be `1112(undefined)`, using the
-simple value >undefined< as per {{Section 5.7 of RFC8949@-bis}},
+simple value >undefined< as per {{Section 5.7 of RFC8949@-bis}};
 however, the same value cannot be used repeatedly as a map key
 within the same map.
 
