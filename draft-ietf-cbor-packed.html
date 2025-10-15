@@ -25,12 +25,9 @@ CBOR data item into a Packed CBOR data item that is almost as easy to
 consume as the original CBOR data item.  A separate decompression
 step is therefore often not required at the recipient. 
        (This cref will be removed by the RFC editor:) 
-The present revision  -16  is intended as input to IETF 123, to
-address the discussion about the use of simple values as reference
-items during the 2025-06-11 CBOR interim meeting.
-It contains a number of editorial improvements as well as the new
-concept of an integration tag; it is for discussion whether the
-latter should or should not be added to Packed CBOR.
+The present revision -17 contains a number of editorial
+improvements, it is intended for a brief discussion at the
+2025-10-15 CBOR WG interim.
 The wording of the present revision continues to make use of
 the tunables A/B/C to be set to specific numbers before completing
 the Packed CBOR specification; not all the examples may fully
@@ -1127,12 +1124,9 @@ CBOR data item into a Packed CBOR data item that is almost as easy to
 consume as the original CBOR data item.  A separate decompression
 step is therefore often not required at the recipient.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
 <p id="section-abstract-4"><span class="cref" id="status">(This cref will be removed by the RFC editor:)<br>
-The present revision <code>-16</code> is intended as input to IETF 123, to
-address the discussion about the use of simple values as reference
-items during the 2025-06-11 CBOR interim meeting.
-It contains a number of editorial improvements as well as the new
-concept of an integration tag; it is for discussion whether the
-latter should or should not be added to Packed CBOR.
+The present revision -17 contains a number of editorial
+improvements, it is intended for a brief discussion at the
+2025-10-15 CBOR WG interim.
 The wording of the present revision continues to make use of
 the tunables A/B/C to be set to specific numbers before completing
 the Packed CBOR specification; not all the examples may fully
@@ -1506,19 +1500,28 @@ In this specification, the term "argument" is not used in the specific
 sense assigned to it in Section <a href="https://rfc-editor.org/rfc/rfc8949#section-3" class="relref">3</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>, but in its
 general sense as an argument of a function.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
 <p id="section-1.1-4">Where arithmetic is explained, this document uses the notation
-familiar from the programming language C, except that ".." denotes a range that includes
-both ends given, that in the HTML and PDF forms, subtraction and
-negation are rendered as a hyphen ("-", as are various dashes), and
-that superscript notation denotes exponentiation.
+familiar from the programming language C, except that<a href="#section-1.1-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1.1-5.1">
+            <p id="section-1.1-5.1.1">"<code>..</code>" denotes a range that includes both ends given,<a href="#section-1.1-5.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-1.1-5.2">
+            <p id="section-1.1-5.2.1">in the HTML and PDF forms, subtraction and negation are rendered as
+a hyphen ("-", as are various dashes), and<a href="#section-1.1-5.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-1.1-5.3">
+            <p id="section-1.1-5.3.1">superscript notation denotes exponentiation.
 For example, 2 to the power of 64 is notated: 2<sup>64</sup>.
 In the plain-text version of this specification, superscript notation
 is not available and therefore is rendered by a surrogate notation.
 That notation is not optimized for this RFC; it is unfortunately
 ambiguous with C's exclusive-or and requires circumspection
-from the reader of the plain-text version.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
-<p id="section-1.1-5">Examples of CBOR data items are shown
+from the reader of the plain-text version.<a href="#section-1.1-5.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-1.1-6">Examples of CBOR data items are shown
 in CBOR Extended Diagnostic Notation (Section <a href="https://rfc-editor.org/rfc/rfc8949#section-8" class="relref">8</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span> in
-conjunction with <span><a href="https://rfc-editor.org/rfc/rfc8610#appendix-G" class="relref">Appendix G</a> of [<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> <span class="cref" id="update">➔ possibly update to</span> <span>[<a href="#I-D.ietf-cbor-edn-literals" class="cite xref">I-D.ietf-cbor-edn-literals</a>]</span>).<a href="#section-1.1-5" class="pilcrow">¶</a></p>
+conjunction with <span><a href="https://rfc-editor.org/rfc/rfc8610#appendix-G" class="relref">Appendix G</a> of [<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> <span class="cref" id="update">➔ possibly update to</span> <span>[<a href="#I-D.ietf-cbor-edn-literals" class="cite xref">I-D.ietf-cbor-edn-literals</a>]</span>).<a href="#section-1.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1563,7 +1566,7 @@ Such an index may be derived from information in tags and their
 content as well as from CBOR simple values.<a href="#section-2.1-4" class="pilcrow">¶</a></p>
 <p id="section-2.1-5">Table setup mechanisms (see <a href="#sec-table-setup" class="auto internal xref">Section 3</a>) may include all
 information needed for table setup within the packed CBOR data item, or
-they may refer to external information.  This information may be
+they may refer to external information.  This external information may be
 immutable, or it may be intended to potentially grow over time.
 In the latter case, the table setup mechanism needs to define how both
 backward and forward compatibility is addressed, e.g., how a reference
@@ -1589,7 +1592,9 @@ CBOR based protocols that include the use of packed CBOR
         </h3>
 <p id="section-2.2-1">Shared items are stored in the shared item table of the active set.<a href="#section-2.2-1" class="pilcrow">¶</a></p>
 <p id="section-2.2-2">The shared data items are referenced by using the reference data items
-in <a href="#tab-shared" class="auto internal xref">Table 1</a>.  When reconstructing the original data item, such a
+in <a href="#tab-shared" class="auto internal xref">Table 1</a>. The table index (an unsigned integer) is derived
+either from the simple value number or the (unsigned or negative) integer N
+provided as the content of tag 6. When reconstructing the original data item, such a
 reference is replaced by the referenced data item, which is then
 recursively unpacked.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
 <span id="name-referencing-shared-values"></span><div id="tab-shared">
@@ -1610,11 +1615,11 @@ recursively unpacked.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
               <td class="text-left" rowspan="1" colspan="1">0..(A-1)</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Tag 6(unsigned integer N)</td>
+              <td class="text-left" rowspan="1" colspan="1">Tag 6(N) (unsigned integer N ≥ 0)</td>
               <td class="text-left" rowspan="1" colspan="1">A + 2×N</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Tag 6(negative integer N)</td>
+              <td class="text-left" rowspan="1" colspan="1">Tag 6(N) (negative integer N &lt; 0)</td>
               <td class="text-left" rowspan="1" colspan="1">A − 2×N − 1</td>
             </tr>
           </tbody>
@@ -1674,7 +1679,7 @@ suffix out of the argument table.<a href="#section-2.3-2" class="pilcrow">¶</a>
               <td class="text-right" rowspan="1" colspan="1">0..(B-1)</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Tag 6([N, rump]) (N ≥ 0)</td>
+              <td class="text-left" rowspan="1" colspan="1">Tag 6([unsigned integer N, rump]) (N ≥ 0)</td>
               <td class="text-right" rowspan="1" colspan="1">B + N</td>
             </tr>
           </tbody>
@@ -1698,17 +1703,19 @@ suffix out of the argument table.<a href="#section-2.3-2" class="pilcrow">¶</a>
               <td class="text-right" rowspan="1" colspan="1">0..(C-1)</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Tag 6([-N-1, rump]) (N ≥ 0)</td>
-              <td class="text-right" rowspan="1" colspan="1">C + N</td>
+              <td class="text-left" rowspan="1" colspan="1">Tag 6([negative integer N, rump]) (N &lt; 0)</td>
+              <td class="text-right" rowspan="1" colspan="1">C - N - 1</td>
             </tr>
           </tbody>
         </table>
 </div>
 <p id="section-2.3-5">Argument data items are referenced by using the reference data items
 in <a href="#tab-straight" class="auto internal xref">Table 2</a> and <a href="#tab-inverted" class="auto internal xref">Table 3</a>.<a href="#section-2.3-5" class="pilcrow">¶</a></p>
-<p id="section-2.3-6">The tag number (or simple value number) of the reference data item is used to derive a table index (an
-unsigned integer) leading
-to the "argument"; the tag content of the reference is the "rump item".<a href="#section-2.3-6" class="pilcrow">¶</a></p>
+<p id="section-2.3-6">For tags 256-<code>B</code>-<code>C</code> to 255 included, the table index (an unsigned integer) is derived from the tag number.
+For tag 6, the table index is derived from the integer N
+in the first element of the tag content (unsigned integer for
+straight, negative integer for inverted references).
+The "rump item" is the second element of the two-element array that is the tag content.<a href="#section-2.3-6" class="pilcrow">¶</a></p>
 <p id="section-2.3-7">When reconstructing the original data item, such a reference is
 replaced by a data item constructed from the argument data item found
 in the table (argument, which might need to be recursively unpacked
@@ -1719,31 +1726,35 @@ be involved to supply a function to be used in resolving the
 reference.  It is crucial not to confuse reference tag and, if
 present, function tag.<a href="#section-2.3-8" class="pilcrow">¶</a></p>
 <p id="section-2.3-9">A straight reference uses the argument as the provisional left-hand
-side and the rump data item as the right-hand side.
+side and the rump data item as the provisional right-hand side.
 An inverted reference uses the rump data item as the provisional
-left-hand side and the argument as the right-hand side.<a href="#section-2.3-9" class="pilcrow">¶</a></p>
+left-hand side and the argument as the provisional right-hand side.<a href="#section-2.3-9" class="pilcrow">¶</a></p>
 <p id="section-2.3-10">In both cases, the provisional left-hand side is examined.  If it is a
 tag ("function tag"), it is "unwrapped": The function tag's tag number
-is used to indicate the function to be applied, and the tag content is
-kept as the unwrapped left-hand side.
+is used to indicate the function to be applied, and the tag content
+(which, again, might need to be recursively unpacked)
+is kept as the unwrapped left-hand side.
 If the provisional left-hand side is not a tag, it is kept as the
-unwrapped left-hand side, and the function to be applied is
+final left-hand side, and the function to be applied is
 concatenation, as defined below.<a href="#section-2.3-10" class="pilcrow">¶</a></p>
 <div id="use-standin">
-<p id="section-2.3-11">The right-hand side is examined whether it is a stand-in item
-(<a href="#sec-standin" class="auto internal xref">Section 6</a>), in which case the item that the stand-in item stands for is
-taken as the unwrapped right-hand-side; if the right-hand side is not
-a stand-in item, it is taken as is as the unwrapped right-hand side.<a href="#section-2.3-11" class="pilcrow">¶</a></p>
+<p id="section-2.3-11">The following procedure applies to the data items of both the provisional right-hand side
+and the unwrapped left-hand side (if applicable), independent of each other:
+If the data item is one of the explicitly allowed stand-in items (<a href="#sec-standin" class="auto internal xref">Section 6</a>),
+the item that the stand-in item stands for is recursively unpacked.
+If the resulting unpacked data item is again an allowed stand-in item, the previous step is repeated.
+If the data item is neither a stand-in item, nor further unpackable,
+it is taken as the final right-hand or left-hand side, respectively.<a href="#section-2.3-11" class="pilcrow">¶</a></p>
 </div>
 <p id="section-2.3-12">If a function tag was given, the reference is replaced by the result
-of applying the indicated unpacking function with the left-hand side
-as its first argument and the right-hand side as its second.
+of applying the indicated unpacking function with the final left-hand side
+as its first argument and the final right-hand side as its second.
 The unpacking function is defined by the definition of the tag number
 supplied.
 If that definition does not define an unpacking function, the result
 of the unpacking is not valid.<a href="#section-2.3-12" class="pilcrow">¶</a></p>
 <p id="section-2.3-13">If no function tag was given, the reference is replaced by the
-left-hand side "concatenated" with the right-hand side, where
+final left-hand side "concatenated" with the final right-hand side, where
 concatenation is defined as in <a href="#sec-concatenation" class="auto internal xref">Section 2.4</a>.<a href="#section-2.3-13" class="pilcrow">¶</a></p>
 <p id="section-2.3-14">As a contrived (but short) example <span class="cref" id="B32">assuming <code>B=32</code></span>, if the argument table is
 <code>["foobar", h'666f6f62', "fo"]</code>, each of the following straight (prefix)
@@ -1876,11 +1887,10 @@ also provides accessors that hide (resolve) the packing.  In this
 specific case, the onus of dealing with loops is on the accessors.<a href="#section-2.5-3.2.3.1" class="pilcrow">¶</a></p>
 </li>
           </ul>
-<p id="section-2.5-3.3">In general, loop detection can be handled in a similar way in which
+<p id="section-2.5-3.3">In general, loop detection can be handled similarly to how
 loops of symbolic links are handled in a file system: A system-wide
 limit (often set to a value permitting some 20 to 40 indirections for
-symbolic links) is applied to
-any reference chase.<a href="#section-2.5-3.3" class="pilcrow">¶</a></p>
+symbolic links) is applied to any reference chase.<a href="#section-2.5-3.3" class="pilcrow">¶</a></p>
 </aside>
 <aside id="section-2.5-4">
           <p id="section-2.5-4.1">NOTE:
@@ -2023,12 +2033,13 @@ shared-item = any
 </pre>
 </div>
 <figcaption><a href="#figure-1" class="selfRef">Figure 1</a>:
-<a href="#name-cddl-for-packed-cbor-table-" class="selfRef">CDDL for Packed CBOR Table Setup Tags Defined Here</a>
+<a href="#name-cddl-for-packed-cbor-table-" class="selfRef">CDDL for Packed CBOR Table Setup Tags Defined in this Document</a>
           </figcaption></figure>
 </div>
 <p id="section-3.1-3">These tags extend the two tables for shared items and for arguments
 that apply to the entire tag, which, unless an enclosing table setup
-tag or table-setting media type applies, are empty tables:<a href="#section-3.1-3" class="pilcrow">¶</a></p>
+tag or a table-setting application environment (e.g., a media type) applies,
+are empty tables:<a href="#section-3.1-3" class="pilcrow">¶</a></p>
 <span class="break"></span><dl class="dlParallel" id="section-3.1-4">
           <dt id="section-3.1-4.1">Tag 113 ("Basic-Packed-CBOR"):</dt>
           <dd style="margin-left: 1.5em" id="section-3.1-4.2">
@@ -2205,8 +2216,8 @@ from which the shared item is referenced.
 A regular shared item reference can be used to reference an
 integration tag.
 (Note that the generation of an integration tag can in turn be
-automatic in the table setup mechanism specified by a media type or a
-table setup tag, so the integration tag may never actually physically
+automatic in the table setup mechanism specified by an application environment (<a href="#sec-table-setup" class="auto internal xref">Section 3</a>)
+or a table setup tag, so the integration tag may never actually physically
 occur in the interchanged data.)<a href="#section-5-2" class="pilcrow">¶</a></p>
 <p id="section-5-3">Application protocol specifications need to be explicit about which
 integration tags are in use; otherwise, the unpacker will not know
@@ -2224,7 +2235,7 @@ table setup mechanism.)<a href="#section-5-3" class="pilcrow">¶</a></p>
 that is an array.
 It specifies that the tag content is "spliced" into the surrounding
 array of a reference item referencing that shared item, i.e. the
-surrounding array is replace by one that enumerates the elements of
+surrounding array is replaced by one that enumerates the elements of
 the shared item at the site of the shared item reference.<a href="#section-5.1-1" class="pilcrow">¶</a></p>
 <p id="section-5.1-2">Example: a rump of <code>[1, 2, 3, simple(0), 7, 8, 9]</code>, where the shared
 item table contains <code>1115([4, 5, 6])</code> as its first item is unpacked as
@@ -2381,8 +2392,10 @@ data item represented by them.<a href="#section-7.2-2" class="pilcrow">¶</a></p
       <h2 id="name-iana-considerations">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-8-1">For all assignments described in this section, the "reference" column
-is the present draft, i.e., draft-ietf-cbor-packed.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-1"><span class="cref" id="to-be-removed">RFC Editor: please replace RFCXXXX with the RFC
+number of this RFC and remove this note.</span><a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-2">For all assignments described in this section, the "reference" column
+is the present document, i.e., RFCXXXX.<a href="#section-8-2" class="pilcrow">¶</a></p>
 <div id="sec-cbor-tags-registry">
 <section id="section-8.1">
         <h3 id="name-cbor-tags-registry">
@@ -2910,7 +2923,7 @@ setup form (tag 1113).<a href="#appendix-A-6" class="pilcrow">¶</a></p>
         <dt id="appendix-B-1.1">
 <a href="#fig-cddl" class="auto internal xref">Figure 1</a>:</dt>
         <dd style="margin-left: 5.5em" id="appendix-B-1.2">
-          <p id="appendix-B-1.2.1"><a href="#fig-cddl" class="internal xref">CDDL for Packed CBOR Table Setup Tags Defined Here</a><a href="#appendix-B-1.2.1" class="pilcrow">¶</a></p>
+          <p id="appendix-B-1.2.1"><a href="#fig-cddl" class="internal xref">CDDL for Packed CBOR Table Setup Tags Defined in this Document</a><a href="#appendix-B-1.2.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 <dt id="appendix-B-1.3">

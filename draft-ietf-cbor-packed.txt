@@ -35,19 +35,19 @@ Abstract
 
 
    // (This cref will be removed by the RFC editor:) The present
-   // revision -16 is intended as input to IETF 123, to address the
-   // discussion about the use of simple values as reference items
-   // during the 2025-06-11 CBOR interim meeting.  It contains a number
-   // of editorial improvements as well as the new concept of an
-   // integration tag; it is for discussion whether the latter should or
-   // should not be added to Packed CBOR.  The wording of the present
-   // revision continues to make use of the tunables A/B/C to be set to
-   // specific numbers before completing the Packed CBOR specification;
-   // not all the examples may fully align yet.
+   // revision -17 contains a number of editorial improvements, it is
+   // intended for a brief discussion at the 2025-10-15 CBOR WG interim.
+   // The wording of the present revision continues to make use of the
+   // tunables A/B/C to be set to specific numbers before completing the
+   // Packed CBOR specification; not all the examples may fully align
+   // yet.
 
 About This Document
 
    This note is to be removed before publishing as an RFC.
+
+   Status information for this document may be found at
+   https://datatracker.ietf.org/doc/draft-ietf-cbor-packed/.
 
 
 
@@ -57,9 +57,6 @@ Bormann & Gütschow        Expires 18 April 2026                 [Page 1]
 
 Internet-Draft                 Packed CBOR                  October 2025
 
-
-   Status information for this document may be found at
-   https://datatracker.ietf.org/doc/draft-ietf-cbor-packed/.
 
    Discussion of this document takes place on the CBOR Working Group
    mailing list (mailto:cbor@ietf.org), which is archived at
@@ -104,8 +101,11 @@ Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
      1.1.  Terminology and Conventions . . . . . . . . . . . . . . .   5
-   2.  Packed CBOR . . . . . . . . . . . . . . . . . . . . . . . . .   6
-
+   2.  Packed CBOR . . . . . . . . . . . . . . . . . . . . . . . . .   7
+     2.1.  Packing Tables  . . . . . . . . . . . . . . . . . . . . .   7
+     2.2.  Referencing Shared Items  . . . . . . . . . . . . . . . .   8
+     2.3.  Referencing Argument Items  . . . . . . . . . . . . . . .   9
+     2.4.  Concatenation . . . . . . . . . . . . . . . . . . . . . .  11
 
 
 
@@ -114,10 +114,6 @@ Bormann & Gütschow        Expires 18 April 2026                 [Page 2]
 Internet-Draft                 Packed CBOR                  October 2025
 
 
-     2.1.  Packing Tables  . . . . . . . . . . . . . . . . . . . . .   7
-     2.2.  Referencing Shared Items  . . . . . . . . . . . . . . . .   8
-     2.3.  Referencing Argument Items  . . . . . . . . . . . . . . .   8
-     2.4.  Concatenation . . . . . . . . . . . . . . . . . . . . . .  11
      2.5.  Discussion  . . . . . . . . . . . . . . . . . . . . . . .  12
      2.6.  Allocation  . . . . . . . . . . . . . . . . . . . . . . .  13
    3.  Table Setup . . . . . . . . . . . . . . . . . . . . . . . . .  14
@@ -132,7 +128,7 @@ Internet-Draft                 Packed CBOR                  October 2025
      7.1.  Tag Equivalence . . . . . . . . . . . . . . . . . . . . .  21
      7.2.  Tag Equivalence of Packed CBOR Tags . . . . . . . . . . .  22
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  22
-     8.1.  CBOR Tags Registry  . . . . . . . . . . . . . . . . . . .  22
+     8.1.  CBOR Tags Registry  . . . . . . . . . . . . . . . . . . .  23
      8.2.  CBOR Simple Values Registry . . . . . . . . . . . . . . .  24
    9.  Security Considerations . . . . . . . . . . . . . . . . . . .  24
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  24
@@ -159,7 +155,11 @@ Internet-Draft                 Packed CBOR                  October 2025
    disadvantage is that the recipient needs to decompress the compressed
    form before it can make use of the data.
 
-
+   This specification describes Packed CBOR, a set of CBOR tags and
+   simple values that enable a simple transformation of an original CBOR
+   data item into a Packed CBOR data item that is almost as easy to
+   consume as the original CBOR data item.  A separate decompression
+   step is therefore often not required at the recipient.
 
 
 
@@ -169,12 +169,6 @@ Bormann & Gütschow        Expires 18 April 2026                 [Page 3]
 
 Internet-Draft                 Packed CBOR                  October 2025
 
-
-   This specification describes Packed CBOR, a set of CBOR tags and
-   simple values that enable a simple transformation of an original CBOR
-   data item into a Packed CBOR data item that is almost as easy to
-   consume as the original CBOR data item.  A separate decompression
-   step is therefore often not required at the recipient.
 
    This document defines the Packed CBOR format by specifying the
    transformation from a Packed CBOR data item to the original CBOR data
@@ -218,6 +212,12 @@ Internet-Draft                 Packed CBOR                  October 2025
    which is populated by one or more extensions in this document or
    elsewhere.  These extensions can be selected by an application
    protocol that makes use of Packed CBOR.
+
+
+
+
+
+
 
 
 
@@ -308,26 +308,26 @@ Internet-Draft                 Packed CBOR                  October 2025
    argument of a function.
 
    Where arithmetic is explained, this document uses the notation
-   familiar from the programming language C, except that ".." denotes a
-   range that includes both ends given, that in the HTML and PDF forms,
-   subtraction and negation are rendered as a hyphen ("-", as are
-   various dashes), and that superscript notation denotes
-   exponentiation.  For example, 2 to the power of 64 is notated: 2^64.
-   In the plain-text version of this specification, superscript notation
-   is not available and therefore is rendered by a surrogate notation.
-   That notation is not optimized for this RFC; it is unfortunately
-   ambiguous with C's exclusive-or and requires circumspection from the
-   reader of the plain-text version.
+   familiar from the programming language C, except that
+
+   *  ".." denotes a range that includes both ends given,
+
+   *  in the HTML and PDF forms, subtraction and negation are rendered
+      as a hyphen ("-", as are various dashes), and
+
+   *  superscript notation denotes exponentiation.  For example, 2 to
+      the power of 64 is notated: 2^64.  In the plain-text version of
+      this specification, superscript notation is not available and
+      therefore is rendered by a surrogate notation.  That notation is
+      not optimized for this RFC; it is unfortunately ambiguous with C's
+      exclusive-or and requires circumspection from the reader of the
+      plain-text version.
 
    Examples of CBOR data items are shown in CBOR Extended Diagnostic
    Notation (Section 8 of RFC 8949 [STD94] in conjunction with
    Appendix G of [RFC8610]
    // ➔ possibly update to [I-D.ietf-cbor-edn-literals]).
 
-2.  Packed CBOR
-
-   This section describes the packing tables, their structure, and how
-   they are referenced.
 
 
 
@@ -336,6 +336,12 @@ Internet-Draft                 Packed CBOR                  October 2025
 Bormann & Gütschow        Expires 18 April 2026                 [Page 6]
 
 Internet-Draft                 Packed CBOR                  October 2025
+
+
+2.  Packed CBOR
+
+   This section describes the packing tables, their structure, and how
+   they are referenced.
 
 
    // To be resolved before publication:
@@ -367,12 +373,12 @@ Internet-Draft                 Packed CBOR                  October 2025
 
    Table setup mechanisms (see Section 3) may include all information
    needed for table setup within the packed CBOR data item, or they may
-   refer to external information.  This information may be immutable, or
-   it may be intended to potentially grow over time.  In the latter
-   case, the table setup mechanism needs to define how both backward and
-   forward compatibility is addressed, e.g., how a reference to a new
-   item should be handled when the unpacker uses an older version of the
-   external information.
+   refer to external information.  This external information may be
+   immutable, or it may be intended to potentially grow over time.  In
+   the latter case, the table setup mechanism needs to define how both
+   backward and forward compatibility is addressed, e.g., how a
+   reference to a new item should be handled when the unpacker uses an
+   older version of the external information.
 
    If, during unpacking, an index is used that references an item that
    is unpopulated in (e.g., outside the size of) the table in use, this
@@ -380,12 +386,6 @@ Internet-Draft                 Packed CBOR                  October 2025
    Alternatively, the unpacker MAY provide the special value
    1112(undefined) (the simple value >undefined< as per Section 5.7 of
    RFC 8949 [STD94], enclosed in the tag 1112) to the application and
-   leave the error handling to the application.  An unpacker SHOULD
-   document which of these two alternatives has been chosen.  CBOR based
-   protocols that include the use of packed CBOR MAY require that
-   unpacking errors are tolerated in some positions.
-
-
 
 
 
@@ -394,24 +394,31 @@ Bormann & Gütschow        Expires 18 April 2026                 [Page 7]
 Internet-Draft                 Packed CBOR                  October 2025
 
 
+   leave the error handling to the application.  An unpacker SHOULD
+   document which of these two alternatives has been chosen.  CBOR based
+   protocols that include the use of packed CBOR MAY require that
+   unpacking errors are tolerated in some positions.
+
 2.2.  Referencing Shared Items
 
    Shared items are stored in the shared item table of the active set.
 
    The shared data items are referenced by using the reference data
-   items in Table 1.  When reconstructing the original data item, such a
-   reference is replaced by the referenced data item, which is then
-   recursively unpacked.
+   items in Table 1.  The table index (an unsigned integer) is derived
+   either from the simple value number or the (unsigned or negative)
+   integer N provided as the content of tag 6.  When reconstructing the
+   original data item, such a reference is replaced by the referenced
+   data item, which is then recursively unpacked.
 
-                +===========================+=============+
-                | Reference                 | Table Index |
-                +===========================+=============+
-                | Simple value 0..(A-1)     | 0..(A-1)    |
-                +---------------------------+-------------+
-                | Tag 6(unsigned integer N) | A + 2×N     |
-                +---------------------------+-------------+
-                | Tag 6(negative integer N) | A − 2×N − 1 |
-                +---------------------------+-------------+
+            +===================================+=============+
+            | Reference                         | Table Index |
+            +===================================+=============+
+            | Simple value 0..(A-1)             | 0..(A-1)    |
+            +-----------------------------------+-------------+
+            | Tag 6(N) (unsigned integer N ≥ 0) | A + 2×N     |
+            +-----------------------------------+-------------+
+            | Tag 6(N) (negative integer N < 0) | A − 2×N − 1 |
+            +-----------------------------------+-------------+
 
                      Table 1: Referencing Shared Values
 
@@ -436,13 +443,6 @@ Internet-Draft                 Packed CBOR                  October 2025
    tag content of Tag 6 may itself be packed, so it may need to be
    unpacked to make this determination.
 
-2.3.  Referencing Argument Items
-
-   The argument table serves as a common table that can be used for
-   argument references, i.e., for concatenation as well as references
-   involving a function tag.
-
-
 
 
 Bormann & Gütschow        Expires 18 April 2026                 [Page 8]
@@ -450,53 +450,53 @@ Bormann & Gütschow        Expires 18 April 2026                 [Page 8]
 Internet-Draft                 Packed CBOR                  October 2025
 
 
+2.3.  Referencing Argument Items
+
+   The argument table serves as a common table that can be used for
+   argument references, i.e., for concatenation as well as references
+   involving a function tag.
+
    When referencing an argument, a distinction is made between straight
    and inverted references; if no function tag is involved, a straight
    reference combines a prefix out of the argument table with the rump
    data item, and an inverted reference combines a rump data item with a
    suffix out of the argument table.
 
-                +==========================+=============+
-                | Straight Reference       | Table Index |
-                +==========================+=============+
-                | Tag (256-B)..255(rump)   |    0..(B-1) |
-                +--------------------------+-------------+
-                | Tag 6([N, rump]) (N ≥ 0) |       B + N |
-                +--------------------------+-------------+
+        +===========================================+=============+
+        | Straight Reference                        | Table Index |
+        +===========================================+=============+
+        | Tag (256-B)..255(rump)                    |    0..(B-1) |
+        +-------------------------------------------+-------------+
+        | Tag 6([unsigned integer N, rump]) (N ≥ 0) |       B + N |
+        +-------------------------------------------+-------------+
 
-                   Table 2: Straight Referencing (e.g.,
-                            Prefix) Arguments
+           Table 2: Straight Referencing (e.g., Prefix) Arguments
 
-             +================================+=============+
-             | Inverted Reference             | Table Index |
-             +================================+=============+
-             | Tag (256-B-C)..(256-B-1)(rump) |    0..(C-1) |
-             +--------------------------------+-------------+
-             | Tag 6([-N-1, rump]) (N ≥ 0)    |       C + N |
-             +--------------------------------+-------------+
+        +===========================================+=============+
+        | Inverted Reference                        | Table Index |
+        +===========================================+=============+
+        | Tag (256-B-C)..(256-B-1)(rump)            |    0..(C-1) |
+        +-------------------------------------------+-------------+
+        | Tag 6([negative integer N, rump]) (N < 0) |   C - N - 1 |
+        +-------------------------------------------+-------------+
 
-               Table 3: Inverted Referencing (e.g., Suffix)
-                                Arguments
+           Table 3: Inverted Referencing (e.g., Suffix) Arguments
 
    Argument data items are referenced by using the reference data items
    in Table 2 and Table 3.
 
-   The tag number (or simple value number) of the reference data item is
-   used to derive a table index (an unsigned integer) leading to the
-   "argument"; the tag content of the reference is the "rump item".
+   For tags 256-B-C to 255 included, the table index (an unsigned
+   integer) is derived from the tag number.  For tag 6, the table index
+   is derived from the integer N in the first element of the tag content
+   (unsigned integer for straight, negative integer for inverted
+   references).  The "rump item" is the second element of the two-
+   element array that is the tag content.
 
    When reconstructing the original data item, such a reference is
    replaced by a data item constructed from the argument data item found
    in the table (argument, which might need to be recursively unpacked
    first) and the rump data item (rump, again possibly needing to be
    recursively unpacked).
-
-   Separate from the tag used as a reference, a tag ("function tag") may
-   be involved to supply a function to be used in resolving the
-   reference.  It is crucial not to confuse reference tag and, if
-   present, function tag.
-
-
 
 
 
@@ -506,34 +506,43 @@ Bormann & Gütschow        Expires 18 April 2026                 [Page 9]
 Internet-Draft                 Packed CBOR                  October 2025
 
 
+   Separate from the tag used as a reference, a tag ("function tag") may
+   be involved to supply a function to be used in resolving the
+   reference.  It is crucial not to confuse reference tag and, if
+   present, function tag.
+
    A straight reference uses the argument as the provisional left-hand
-   side and the rump data item as the right-hand side.  An inverted
-   reference uses the rump data item as the provisional left-hand side
-   and the argument as the right-hand side.
+   side and the rump data item as the provisional right-hand side.  An
+   inverted reference uses the rump data item as the provisional left-
+   hand side and the argument as the provisional right-hand side.
 
    In both cases, the provisional left-hand side is examined.  If it is
    a tag ("function tag"), it is "unwrapped": The function tag's tag
    number is used to indicate the function to be applied, and the tag
-   content is kept as the unwrapped left-hand side.  If the provisional
-   left-hand side is not a tag, it is kept as the unwrapped left-hand
-   side, and the function to be applied is concatenation, as defined
-   below.
+   content (which, again, might need to be recursively unpacked) is kept
+   as the unwrapped left-hand side.  If the provisional left-hand side
+   is not a tag, it is kept as the final left-hand side, and the
+   function to be applied is concatenation, as defined below.
 
-   The right-hand side is examined whether it is a stand-in item
-   (Section 6), in which case the item that the stand-in item stands for
-   is taken as the unwrapped right-hand-side; if the right-hand side is
-   not a stand-in item, it is taken as is as the unwrapped right-hand
-   side.
+   The following procedure applies to the data items of both the
+   provisional right-hand side and the unwrapped left-hand side (if
+   applicable), independent of each other: If the data item is one of
+   the explicitly allowed stand-in items (Section 6), the item that the
+   stand-in item stands for is recursively unpacked.  If the resulting
+   unpacked data item is again an allowed stand-in item, the previous
+   step is repeated.  If the data item is neither a stand-in item, nor
+   further unpackable, it is taken as the final right-hand or left-hand
+   side, respectively.
 
    If a function tag was given, the reference is replaced by the result
-   of applying the indicated unpacking function with the left-hand side
-   as its first argument and the right-hand side as its second.  The
-   unpacking function is defined by the definition of the tag number
-   supplied.  If that definition does not define an unpacking function,
-   the result of the unpacking is not valid.
+   of applying the indicated unpacking function with the final left-hand
+   side as its first argument and the final right-hand side as its
+   second.  The unpacking function is defined by the definition of the
+   tag number supplied.  If that definition does not define an unpacking
+   function, the result of the unpacking is not valid.
 
-   If no function tag was given, the reference is replaced by the left-
-   hand side "concatenated" with the right-hand side, where
+   If no function tag was given, the reference is replaced by the final
+   left-hand side "concatenated" with the final right-hand side, where
    concatenation is defined as in Section 2.4.
 
    As a contrived (but short) example
@@ -542,15 +551,6 @@ Internet-Draft                 Packed CBOR                  October 2025
    to "foobart": 224("t"), 225("art"), 226("obart") (the byte string
    h'666f6f62' == 'foob' is concatenated into a text string, and the
    last example is not an optimization).
-
-   Taking into account the encoding, there are B two-byte references, 24
-   three-byte references, 224 four-byte references, 65280 five-byte
-   references, etc.  The numbers for inverted (suffix) references are
-   the same, except that there are C two-byte references.  (As CBOR
-   integers can grow to very large (or very negative) values, there is
-   no practical limit to how many argument items might be used in a
-   Packed CBOR item.)
-
 
 
 
@@ -561,6 +561,14 @@ Bormann & Gütschow        Expires 18 April 2026                [Page 10]
 
 Internet-Draft                 Packed CBOR                  October 2025
 
+
+   Taking into account the encoding, there are B two-byte references, 24
+   three-byte references, 224 four-byte references, 65280 five-byte
+   references, etc.  The numbers for inverted (suffix) references are
+   the same, except that there are C two-byte references.  (As CBOR
+   integers can grow to very large (or very negative) values, there is
+   no practical limit to how many argument items might be used in a
+   Packed CBOR item.)
 
 2.4.  Concatenation
 
@@ -602,14 +610,6 @@ Internet-Draft                 Packed CBOR                  October 2025
       are concatenated with the bytes of the right-hand side.  Byte
       strings concatenated with text strings need to contain valid UTF-8
       data.  The result of the concatenation gets the type of the
-      unwrapped rump data item; this way a single argument table entry
-      can be used to build both byte and text strings, depending on what
-      type of rump is being used.
-
-
-
-
-
 
 
 
@@ -617,6 +617,10 @@ Bormann & Gütschow        Expires 18 April 2026                [Page 11]
 
 Internet-Draft                 Packed CBOR                  October 2025
 
+
+      unwrapped rump data item; this way a single argument table entry
+      can be used to build both byte and text strings, depending on what
+      type of rump is being used.
 
    *  If one side is one of the string types, and the other side is an
       array, the result of the concatenation is equivalent to the
@@ -662,10 +666,6 @@ Internet-Draft                 Packed CBOR                  October 2025
       |        case, the onus of dealing with loops is on the
       |        application, as is the entire onus of dealing with Packed
       |        CBOR.
-      |  
-
-
-
 
 
 
@@ -674,16 +674,17 @@ Bormann & Gütschow        Expires 18 April 2026                [Page 12]
 Internet-Draft                 Packed CBOR                  October 2025
 
 
+      |  
       |     *  hybrid models are possible, for instance: The decoder
       |        builds a data item tree directly from the Packed CBOR as
       |        if it were oblivious, but also provides accessors that
       |        hide (resolve) the packing.  In this specific case, the
       |        onus of dealing with loops is on the accessors.
       |  
-      |  In general, loop detection can be handled in a similar way in
-      |  which loops of symbolic links are handled in a file system: A
-      |  system-wide limit (often set to a value permitting some 20 to
-      |  40 indirections for symbolic links) is applied to any reference
+      |  In general, loop detection can be handled similarly to how
+      |  loops of symbolic links are handled in a file system: A system-
+      |  wide limit (often set to a value permitting some 20 to 40
+      |  indirections for symbolic links) is applied to any reference
       |  chase.
 
       |  NOTE: The present specification does nothing to help with the
@@ -719,7 +720,6 @@ Internet-Draft                 Packed CBOR                  October 2025
    undefined being originally assigned to 24..27 (after the introduction
    of indefinite length encoding, 20..23).  No further allocation has
    been performed in this space in the 12 years since.
-
 
 
 
@@ -833,7 +833,7 @@ Internet-Draft                 Packed CBOR                  October 2025
    argument-item = any
    shared-item = any
 
-        Figure 1: CDDL for Packed CBOR Table Setup Tags Defined Here
+
 
 
 
@@ -842,9 +842,13 @@ Bormann & Gütschow        Expires 18 April 2026                [Page 15]
 Internet-Draft                 Packed CBOR                  October 2025
 
 
+      Figure 1: CDDL for Packed CBOR Table Setup Tags Defined in this
+                                  Document
+
    These tags extend the two tables for shared items and for arguments
    that apply to the entire tag, which, unless an enclosing table setup
-   tag or table-setting media type applies, are empty tables:
+   tag or a table-setting application environment (e.g., a media type)
+   applies, are empty tables:
 
    Tag 113 ("Basic-Packed-CBOR"):  The array given as the first element
       of the tag content is prepended to both the tables for shared
@@ -884,10 +888,6 @@ Internet-Draft                 Packed CBOR                  October 2025
 
    An example in functional notation: join(", ", ["a", "b", "c"])
    returns "a, b, c".
-
-
-
-
 
 
 
@@ -1025,9 +1025,9 @@ Internet-Draft                 Packed CBOR                  October 2025
    which the shared item is referenced.  A regular shared item reference
    can be used to reference an integration tag.  (Note that the
    generation of an integration tag can in turn be automatic in the
-   table setup mechanism specified by a media type or a table setup tag,
-   so the integration tag may never actually physically occur in the
-   interchanged data.)
+   table setup mechanism specified by an application environment
+   (Section 3) or a table setup tag, so the integration tag may never
+   actually physically occur in the interchanged data.)
 
    Application protocol specifications need to be explicit about which
    integration tags are in use; otherwise, the unpacker will not know
@@ -1042,7 +1042,7 @@ Internet-Draft                 Packed CBOR                  October 2025
    Tag 1115, the splicing integration tag, can be used with a tag
    content that is an array.  It specifies that the tag content is
    "spliced" into the surrounding array of a reference item referencing
-   that shared item, i.e. the surrounding array is replace by one that
+   that shared item, i.e. the surrounding array is replaced by one that
    enumerates the elements of the shared item at the site of the shared
    item reference.
 
@@ -1217,13 +1217,13 @@ Internet-Draft                 Packed CBOR                  October 2025
 
 8.  IANA Considerations
 
+
+   // RFC Editor: please replace RFCXXXX with the RFC number of this RFC
+   // and remove this note.
+
    For all assignments described in this section, the "reference" column
-   is the present draft, i.e., draft-ietf-cbor-packed.
+   is the present document, i.e., RFCXXXX.
 
-8.1.  CBOR Tags Registry
-
-   In the registry "CBOR Tags" [IANA.cbor-tags], IANA is requested to
-   allocate the tags defined in Table 4.
 
 
 
@@ -1233,6 +1233,11 @@ Bormann & Gütschow        Expires 18 April 2026                [Page 22]
 
 Internet-Draft                 Packed CBOR                  October 2025
 
+
+8.1.  CBOR Tags Registry
+
+   In the registry "CBOR Tags" [IANA.cbor-tags], IANA is requested to
+   allocate the tags defined in Table 4.
 
    +======================+=============================+==============+
    |                  Tag | Data Item                   | Semantics    |
@@ -1277,11 +1282,6 @@ Internet-Draft                 Packed CBOR                  October 2025
    |                      | argument-items, rump)       | CBOR: table  |
    |                      |                             | setup        |
    +----------------------+-----------------------------+--------------+
-   |                 1115 | any                         | Packed       |
-   |                      |                             | CBOR:        |
-   |                      |                             | splicing     |
-   |                      |                             | integration  |
-   |                      |                             | tag          |
 
 
 
@@ -1290,6 +1290,11 @@ Bormann & Gütschow        Expires 18 April 2026                [Page 23]
 Internet-Draft                 Packed CBOR                  October 2025
 
 
+   |                 1115 | any                         | Packed       |
+   |                      |                             | CBOR:        |
+   |                      |                             | splicing     |
+   |                      |                             | integration  |
+   |                      |                             | tag          |
    +----------------------+-----------------------------+--------------+
 
                       Table 4: Values for Tag Numbers
@@ -1333,11 +1338,6 @@ Internet-Draft                 Packed CBOR                  October 2025
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-              Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
-              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
-              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
-
-
 
 
 
@@ -1345,6 +1345,10 @@ Bormann & Gütschow        Expires 18 April 2026                [Page 24]
 
 Internet-Draft                 Packed CBOR                  October 2025
 
+
+              Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
+              2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
+              May 2017, <https://www.rfc-editor.org/info/rfc8174>.
 
    [I-D.ietf-cbor-edn-literals]
               Bormann, C., "CBOR Extended Diagnostic Notation (EDN)",
@@ -1389,10 +1393,6 @@ Internet-Draft                 Packed CBOR                  October 2025
               reference-04, 3 March 2025,
               <https://datatracker.ietf.org/doc/html/draft-amsuess-cbor-
               packed-by-reference-04>.
-
-
-
-
 
 
 
@@ -1829,7 +1829,8 @@ Internet-Draft                 Packed CBOR                  October 2025
 
 List of Figures
 
-   Figure 1:  CDDL for Packed CBOR Table Setup Tags Defined Here
+   Figure 1:  CDDL for Packed CBOR Table Setup Tags Defined in this
+              Document
    Figure 2:  Example original CBOR data item, 400 bytes
    Figure 3:  Example packed CBOR data item with item sharing only, 308
               bytes
@@ -1841,7 +1842,6 @@ List of Figures
 List of Tables
 
    Table 1:   Referencing Shared Values
-   Table 2:   Straight Referencing (e.g., Prefix) Arguments
 
 
 
@@ -1850,6 +1850,7 @@ Bormann & Gütschow        Expires 18 April 2026                [Page 33]
 Internet-Draft                 Packed CBOR                  October 2025
 
 
+   Table 2:   Straight Referencing (e.g., Prefix) Arguments
    Table 3:   Inverted Referencing (e.g., Suffix) Arguments
    Table 4:   Values for Tag Numbers
    Table 5:   Simple Values
@@ -1884,7 +1885,6 @@ Authors' Addresses
    D-01069 Dresden
    Germany
    Email: mikolai.guetschow@tu-dresden.de
-
 
 
 
