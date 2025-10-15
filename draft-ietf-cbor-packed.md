@@ -105,12 +105,9 @@ informative:
 
 [^status]:
     (This cref will be removed by the RFC editor:)\\
-    The present revision `-16` is intended as input to IETF 123, to
-    address the discussion about the use of simple values as reference
-    items during the 2025-06-11 CBOR interim meeting.
-    It contains a number of editorial improvements as well as the new
-    concept of an integration tag; it is for discussion whether the
-    latter should or should not be added to Packed CBOR.
+    The present revision -17 contains a number of editorial
+    improvements, it is intended for a brief discussion at the
+    2025-10-15 CBOR WG interim.
     The wording of the present revision continues to make use of
     the tunables A/B/C to be set to specific numbers before completing
     the Packed CBOR specification; not all the examples may fully
@@ -255,16 +252,18 @@ general sense as an argument of a function.
 
 Where arithmetic is explained, this document uses the notation
 familiar from the programming language C<!-- (including C++14's 0bnnn
-binary literals) -->, except that ".." denotes a range that includes
-both ends given, that in the HTML and PDF forms, subtraction and
-negation are rendered as a hyphen ("-", as are various dashes), and
-that superscript notation denotes exponentiation.
-For example, 2 to the power of 64 is notated: 2<sup>64</sup>.
-In the plain-text version of this specification, superscript notation
-is not available and therefore is rendered by a surrogate notation.
-That notation is not optimized for this RFC; it is unfortunately
-ambiguous with C's exclusive-or and requires circumspection
-from the reader of the plain-text version.
+binary literals) -->, except that
+
+* "`..`" denotes a range that includes both ends given,
+* in the HTML and PDF forms, subtraction and negation are rendered as
+  a hyphen ("-", as are various dashes), and
+* superscript notation denotes exponentiation.
+  For example, 2 to the power of 64 is notated: 2<sup>64</sup>.
+  In the plain-text version of this specification, superscript notation
+  is not available and therefore is rendered by a surrogate notation.
+  That notation is not optimized for this RFC; it is unfortunately
+  ambiguous with C's exclusive-or and requires circumspection
+  from the reader of the plain-text version.
 
 Examples of CBOR data items are shown
 in CBOR Extended Diagnostic Notation ({{Section 8 of RFC8949@-bis}} in
@@ -310,7 +309,7 @@ content as well as from CBOR simple values.
 
 Table setup mechanisms (see {{sec-table-setup}}) may include all
 information needed for table setup within the packed CBOR data item, or
-they may refer to external information.  This information may be
+they may refer to external information.  This external information may be
 immutable, or it may be intended to potentially grow over time.
 In the latter case, the table setup mechanism needs to define how both
 backward and forward compatibility is addressed, e.g., how a reference
@@ -336,14 +335,16 @@ MAY require that unpacking errors are tolerated in some positions.
 Shared items are stored in the shared item table of the active set.
 
 The shared data items are referenced by using the reference data items
-in {{tab-shared}}.  When reconstructing the original data item, such a
+in {{tab-shared}}. The table index (an unsigned integer) is derived
+either from the simple value number or the (unsigned or negative) integer N
+provided as the content of tag 6. When reconstructing the original data item, such a
 reference is replaced by the referenced data item, which is then
 recursively unpacked.
 
-| Reference                 | Table Index  |
-| Simple value 0..(A-1)     | 0..(A-1)   |
-| Tag 6(unsigned integer N) | A + 2×N      |
-| Tag 6(negative integer N) | A − 2×N − 1  |
+| Reference              | Table Index  |
+| Simple value 0..(A-1)  | 0..(A-1)     |
+| Tag 6(N) (unsigned integer N ≥ 0) | A + 2×N      |
+| Tag 6(N) (negative integer N < 0) | A − 2×N − 1  |
 {: #tab-shared title="Referencing Shared Values"}
 
 [^A16]: assuming `A=16`
@@ -388,24 +389,26 @@ reference combines a prefix out of the argument table with the rump
 data item, and an inverted reference combines a rump data item with a
 suffix out of the argument table.
 
-| Straight Reference       | Table Index |
-|--------------------------|-------------|
-| Tag (256-`B`)..255(rump) | 0..(B-1)    |
-| Tag 6(\[N, rump]) (N ≥ 0) | B + N       |
+| Straight Reference        | Table Index |
+|---------------------------|-------------|
+| Tag (256-`B`)..255(rump)  | 0..(B-1)    |
+| Tag 6(\[unsigned integer N, rump]) (N ≥ 0) | B + N       |
 {: #tab-straight cols='l r' title="Straight Referencing (e.g., Prefix) Arguments"}
 
 | Inverted Reference                   | Table Index |
 |--------------------------------------|-------------|
 | Tag (256-`B`-`C`)..(256-`B`-1)(rump) | 0..(C-1)    |
-| Tag 6(\[-N-1, rump]) (N ≥ 0)         | C + N       |
+| Tag 6(\[negative integer N, rump]) (N < 0) | C - N - 1   |
 {: #tab-inverted cols='l r' title="Inverted Referencing (e.g., Suffix) Arguments"}
 
 Argument data items are referenced by using the reference data items
 in {{tab-straight}} and {{tab-inverted}}.
 
-The tag number (or simple value number) of the reference data item is used to derive a table index (an
-unsigned integer) leading
-to the "argument"; the tag content of the reference is the "rump item".
+For tags 256-`B`-`C` to 255 included, the table index (an unsigned integer) is derived from the tag number.
+For tag 6, the table index is derived from the integer N
+in the first element of the tag content (unsigned integer for
+straight, negative integer for inverted references).
+The "rump item" is the second element of the two-element array that is the tag content.
 
 When reconstructing the original data item, such a reference is
 replaced by a data item constructed from the argument data item found
@@ -419,34 +422,38 @@ reference.  It is crucial not to confuse reference tag and, if
 present, function tag.
 
 A straight reference uses the argument as the provisional left-hand
-side and the rump data item as the right-hand side.
+side and the rump data item as the provisional right-hand side.
 An inverted reference uses the rump data item as the provisional
-left-hand side and the argument as the right-hand side.
+left-hand side and the argument as the provisional right-hand side.
 
 In both cases, the provisional left-hand side is examined.  If it is a
 tag ("function tag"), it is "unwrapped": The function tag's tag number
-is used to indicate the function to be applied, and the tag content is
-kept as the unwrapped left-hand side.
+is used to indicate the function to be applied, and the tag content
+(which, again, might need to be recursively unpacked)
+is kept as the unwrapped left-hand side.
 If the provisional left-hand side is not a tag, it is kept as the
-unwrapped left-hand side, and the function to be applied is
+final left-hand side, and the function to be applied is
 concatenation, as defined below.
 
 {:#use-standin}
-The right-hand side is examined whether it is a stand-in item
-({{sec-standin}}), in which case the item that the stand-in item stands for is
-taken as the unwrapped right-hand-side; if the right-hand side is not
-a stand-in item, it is taken as is as the unwrapped right-hand side.
+The following procedure applies to the data items of both the provisional right-hand side
+and the unwrapped left-hand side (if applicable), independent of each other:
+If the data item is one of the explicitly allowed stand-in items ({{sec-standin}}),
+the item that the stand-in item stands for is recursively unpacked.
+If the resulting unpacked data item is again an allowed stand-in item, the previous step is repeated.
+If the data item is neither a stand-in item, nor further unpackable,
+it is taken as the final right-hand or left-hand side, respectively.
 
 If a function tag was given, the reference is replaced by the result
-of applying the indicated unpacking function with the left-hand side
-as its first argument and the right-hand side as its second.
+of applying the indicated unpacking function with the final left-hand side
+as its first argument and the final right-hand side as its second.
 The unpacking function is defined by the definition of the tag number
 supplied.
 If that definition does not define an unpacking function, the result
 of the unpacking is not valid.
 
 If no function tag was given, the reference is replaced by the
-left-hand side "concatenated" with the right-hand side, where
+final left-hand side "concatenated" with the final right-hand side, where
 concatenation is defined as in {{sec-concatenation}}.
 
 As a contrived (but short) example [^B32], if the argument table is
@@ -563,11 +570,10 @@ For example:
   also provides accessors that hide (resolve) the packing.  In this
   specific case, the onus of dealing with loops is on the accessors.
 
-In general, loop detection can be handled in a similar way in which
+In general, loop detection can be handled similarly to how
 loops of symbolic links are handled in a file system: A system-wide
 limit (often set to a value permitting some 20 to 40 indirections for
-symbolic links) is applied to
-any reference chase.
+symbolic links) is applied to any reference chase.
 
 </aside>
 
@@ -707,14 +713,15 @@ shared-and-argument-item = any
 argument-item = any
 shared-item = any
 ~~~
-{: #fig-cddl title="CDDL for Packed CBOR Table Setup Tags Defined Here"}
+{: #fig-cddl title="CDDL for Packed CBOR Table Setup Tags Defined in this Document"}
 
 [^assume113]: assuming the allocation of tag numbers 113 ('q')
     and 1113 for these tags
 
 These tags extend the two tables for shared items and for arguments
 that apply to the entire tag, which, unless an enclosing table setup
-tag or table-setting media type applies, are empty tables:
+tag or a table-setting application environment (e.g., a media type) applies,
+are empty tables:
 
 Tag 113 ("Basic-Packed-CBOR"):
 : The array given as the first element of the tag content is prepended
@@ -883,8 +890,8 @@ from which the shared item is referenced.
 A regular shared item reference can be used to reference an
 integration tag.
 (Note that the generation of an integration tag can in turn be
-automatic in the table setup mechanism specified by a media type or a
-table setup tag, so the integration tag may never actually physically
+automatic in the table setup mechanism specified by an application environment ({{sec-table-setup}})
+or a table setup tag, so the integration tag may never actually physically
 occur in the interchanged data.)
 
 Application protocol specifications need to be explicit about which
@@ -902,7 +909,7 @@ Tag 1115, the splicing integration tag, can be used with a tag content
 that is an array.
 It specifies that the tag content is "spliced" into the surrounding
 array of a reference item referencing that shared item, i.e. the
-surrounding array is replace by one that enumerates the elements of
+surrounding array is replaced by one that enumerates the elements of
 the shared item at the site of the shared item reference.
 
 Example: a rump of `[1, 2, 3, simple(0), 7, 8, 9]`, where the shared
@@ -1055,8 +1062,14 @@ data item represented by them.
 IANA Considerations
 ============
 
+
+[^to-be-removed]
+
+[^to-be-removed]: RFC Editor: please replace RFCXXXX with the RFC
+    number of this RFC and remove this note.
+
 For all assignments described in this section, the "reference" column
-is the present draft, i.e., draft-ietf-cbor-packed.
+is the present document, i.e., RFCXXXX.
 
 ## CBOR Tags Registry
 
