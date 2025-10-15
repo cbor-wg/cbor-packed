@@ -700,15 +700,15 @@ combination with an `ni:` URI {{-ni}}.
 
 <aside markdown="1">
 
-As a hint for implementations, a default algorithm that makes nested
-table setup tags work could be described as follows:
+As a hint for implementations, a default algorithm for referencing out
+of nested table setup tags could be described as follows:
 
 * When chasing a reference, go upward in the data item tree.
-* If the next up table setup tag fulfills the reference (i.e., the size
-  of the provided table is larger than the reference index), use the corresponding
-  reference, and finish this algorithm.
-* If the table setup tag is not of the kind that simply prepends,
-  apply the alternative algorithm described by this setup tag.
+* If the next up table setup tag is not of the kind that simply prepends,
+  switch to the alternative algorithm described by the setup tag.
+* If the next up table setup tag fulfills the reference (i.e., the
+  size of the provided table is larger than the reference index), use
+  the corresponding reference, and finish this algorithm.
 * Otherwise, subtract the width of the table entries added in the
   relevant table from the reference number and continue upwards (up
   into the media type, which can bequeath default tables to the CBOR
