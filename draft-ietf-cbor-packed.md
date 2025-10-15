@@ -320,10 +320,15 @@ information.
 If, during unpacking, an index is used that references an item that is
 unpopulated in (e.g., outside the size of) the table in use, this MAY be treated as an
 error by the unpacker and abort the unpacking.
-Alternatively, the unpacker MAY provide the special value
-`1112(undefined)` (the simple value >undefined< as per {{Section 5.7 of
-RFC8949@-bis}}, enclosed in the tag 1112) to the application and leave the
-error handling to the application.
+
+Alternatively, the unpacker MAY provide a special value, enclosed in
+the tag 1112, to the application and leave the error handling to the
+application.
+In the simplest case, this could be `1112(undefined)`, using the
+simple value >undefined< as per {{Section 5.7 of RFC8949@-bis}},
+however, the same value cannot be used repeatedly as a map key
+within the same map.
+
 An unpacker SHOULD document which of these two alternatives has been
 chosen.
 CBOR based protocols that include the use of packed CBOR
@@ -1084,7 +1089,7 @@ IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 |                        114 | array                                                                        | Packed CBOR: record function |
 | (256-`B`-`C`)..(256-`B`-1) | function tag or concatenation item (text string, byte string, array, or map) | Packed CBOR: inverted        |
 |             (256-`B`)..255 | any                                                                          | Packed CBOR: straight        |
-|                       1112 | undefined (0xf7)                                                             | Packed CBOR: reference error |
+|                       1112 | any                                                                          | Packed CBOR: reference error |
 |                       1113 | array (shared-items, argument-items, rump)                                   | Packed CBOR: table setup     |
 |                       1115 | any                                                                          | Packed CBOR: splicing integration tag |
 {: #tab-tag-values cols='r l l' title="Values for Tag Numbers"}
