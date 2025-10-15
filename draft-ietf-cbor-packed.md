@@ -705,7 +705,8 @@ table setup tags work for table setup tags that prepend to the packing
 tables could be described as follows:
 
 * When chasing a reference, go upward in the data item tree.
-* If the next up table setup tag fulfills the reference, use that
+* If the next up table setup tag fulfills the reference (i.e., the size
+  of the provided table is larger than the reference index), use the corresponding
   reference, and finish this algorithm.
 * If the table setup tag is not of the kind that simply prepends,
   apply the alternative algorithm described by this setup tag.
