@@ -819,8 +819,7 @@ Internet-Draft                 Packed CBOR                  October 2025
       |  combination with an ni: URI [RFC6920].
 
       |  As a hint for implementations, a default algorithm that makes
-      |  nested table setup tags work for table setup tags that prepend
-      |  to the packing tables could be described as follows:
+      |  nested table setup tags work could be described as follows:
       |  
       |     *  When chasing a reference, go upward in the data item
       |        tree.
@@ -834,6 +833,7 @@ Internet-Draft                 Packed CBOR                  October 2025
       |        prepends, apply the alternative algorithm described by
       |        this setup tag.
       |  
+
 
 
 
