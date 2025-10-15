@@ -818,9 +818,9 @@ Internet-Draft                 Packed CBOR                  October 2025
       |  but might be too inefficient when used in the likely
       |  combination with an ni: URI [RFC6920].
 
-      |  As a hint for implementations, a default algorithm for
-      |  resolving references in a scenario with nested table setup tags
-      |  could be described as follows:
+      |  As a hint for implementations, an algorithm for resolving
+      |  references in a scenario with nested table setup tags could be
+      |  described as follows:
       |  
       |     *  When chasing a reference, go upward in the data item
       |        tree.
