@@ -1575,14 +1575,18 @@ handled when the unpacker uses an older version of the external
 information.<a href="#section-2.1-5" class="pilcrow">¶</a></p>
 <p id="section-2.1-6">If, during unpacking, an index is used that references an item that is
 unpopulated in (e.g., outside the size of) the table in use, this <span class="bcp14">MAY</span> be treated as an
-error by the unpacker and abort the unpacking.
-Alternatively, the unpacker <span class="bcp14">MAY</span> provide the special value
-<code>1112(undefined)</code> (the simple value &gt;undefined&lt; as per Section <a href="https://rfc-editor.org/rfc/rfc8949#section-5.7" class="relref">5.7</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>, enclosed in the tag 1112) to the application and leave the
-error handling to the application.
-An unpacker <span class="bcp14">SHOULD</span> document which of these two alternatives has been
+error by the unpacker and abort the unpacking.<a href="#section-2.1-6" class="pilcrow">¶</a></p>
+<p id="section-2.1-7">Alternatively, the unpacker <span class="bcp14">MAY</span> provide an implementation specific value, enclosed in
+the tag 1112, to the application and leave the error handling to the
+application.
+In the simplest case, this could be <code>1112(undefined)</code>, using the
+simple value &gt;undefined&lt; as per Section <a href="https://rfc-editor.org/rfc/rfc8949#section-5.7" class="relref">5.7</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>;
+however, the same value cannot be used repeatedly as a map key
+within the same map.<a href="#section-2.1-7" class="pilcrow">¶</a></p>
+<p id="section-2.1-8">An unpacker <span class="bcp14">SHOULD</span> document which of these two alternatives has been
 chosen.
 CBOR based protocols that include the use of packed CBOR
-<span class="bcp14">MAY</span> require that unpacking errors are tolerated in some positions.<a href="#section-2.1-6" class="pilcrow">¶</a></p>
+<span class="bcp14">MAY</span> require that unpacking errors are tolerated in some positions.<a href="#section-2.1-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-referencing-shared-items">
@@ -2478,7 +2482,7 @@ IANA is requested to allocate the tags defined in <a href="#tab-tag-values" clas
             </tr>
             <tr>
               <td class="text-right" rowspan="1" colspan="1">1112</td>
-              <td class="text-left" rowspan="1" colspan="1">undefined (0xf7)</td>
+              <td class="text-left" rowspan="1" colspan="1">any</td>
               <td class="text-left" rowspan="1" colspan="1">Packed CBOR: reference error</td>
             </tr>
             <tr>
