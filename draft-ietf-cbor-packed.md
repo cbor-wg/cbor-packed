@@ -700,7 +700,7 @@ combination with an `ni:` URI {{-ni}}.
 
 <aside markdown="1">
 
-As a hint for implementations, a default algorithm for resolving references
+As a hint for implementations, an algorithm for resolving references
 in a scenario with nested table setup tags could be described as follows:
 
 * When chasing a reference, go upward in the data item tree.
