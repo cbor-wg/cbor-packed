@@ -2544,6 +2544,18 @@ inputs when deterministically encoded <span>[<a href="#I-D.ietf-cbor-cde" class=
 (Note that where external dictionaries are added to
 cbor-packed as in <span>[<a href="#I-D.amsuess-cbor-packed-by-reference" class="cite xref">I-D.amsuess-cbor-packed-by-reference</a>]</span>,
 this requires additional consideration.)<a href="#section-9-3" class="pilcrow">¶</a></p>
+<p id="section-9-4">When tables are obtained from the application environment, e.g., a
+media type, any evolution of the application environment (such as an
+update to the media type specification) needs to reliably ensure that
+existing references continue to unpack in the same way.
+Therefore, application environments that provide packing tables need
+to explicitly specify if these packing tables may evolve, and, if yes,
+provide a design for this kind of evolvability.
+For instance, <span>[<a href="#I-D.amsuess-cbor-packed-by-reference" class="cite xref">I-D.amsuess-cbor-packed-by-reference</a>]</span> provides a way to reserve entries in a packing
+table that can be filled in by revisions of the application
+environment; to avoid false unpacking, this needs to be the only
+update that can be applied to such a table-setting application
+environment.<a href="#section-9-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-combined-references">
