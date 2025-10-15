@@ -698,6 +698,23 @@ A URI-based reference would be
 easy to define, but might be too inefficient when used in the likely
 combination with an `ni:` URI {{-ni}}.
 
+<aside markdown="1">
+
+As a hint for implementations, a default algorithm that makes nested
+table setup tags work for table setup tags that prepend to the packing
+tables could be described as follows:
+
+* When chasing a reference, go upward in the data item tree.
+* If the next up table setup tag fulfills the reference, use that
+  reference, and finish this algorithm.
+* If the table setup tag is not of the kind that simply prepends,
+  apply the alternative algorithm described by this setup tag.
+* Otherwise, subtract the width of the table entries added in the
+  relevant table from the reference number and continue upwards (up
+  into the media type, which can bequeath default tables to the CBOR
+  items in them).
+
+</aside>
 
 ## Basic Packed CBOR
 
