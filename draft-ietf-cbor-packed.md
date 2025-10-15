@@ -701,8 +701,7 @@ combination with an `ni:` URI {{-ni}}.
 <aside markdown="1">
 
 As a hint for implementations, a default algorithm that makes nested
-table setup tags work for table setup tags that prepend to the packing
-tables could be described as follows:
+table setup tags work could be described as follows:
 
 * When chasing a reference, go upward in the data item tree.
 * If the next up table setup tag fulfills the reference (i.e., the size
