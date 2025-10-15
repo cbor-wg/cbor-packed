@@ -104,13 +104,9 @@ informative:
 [^status]
 
 [^status]:
-    The present pull request is intended to address the discussion about the
-    use of simple values as reference items during the 2025-06-11 CBOR
-    interim meeting.
-    It contains a number of editorial improvements as well as the new
-    concept of an integration tag; it is for discussion whether the
-    latter should or should not be added to Packed CBOR.
-    The wording of the present pull request continues to make use of
+    The present revision -17 contains a number of editorial
+    improvements.
+    The wording of the present revision continues to make use of
     the tunables A/B/C to be set to specific numbers before completing
     the Packed CBOR specification; not all the examples may fully
     align yet.
@@ -254,16 +250,18 @@ general sense as an argument of a function.
 
 Where arithmetic is explained, this document uses the notation
 familiar from the programming language C<!-- (including C++14's 0bnnn
-binary literals) -->, except that ".." denotes a range that includes
-both ends given, that in the HTML and PDF forms, subtraction and
-negation are rendered as a hyphen ("-", as are various dashes), and
-that superscript notation denotes exponentiation.
-For example, 2 to the power of 64 is notated: 2<sup>64</sup>.
-In the plain-text version of this specification, superscript notation
-is not available and therefore is rendered by a surrogate notation.
-That notation is not optimized for this RFC; it is unfortunately
-ambiguous with C's exclusive-or and requires circumspection
-from the reader of the plain-text version.
+binary literals) -->, except that
+
+* "`..`" denotes a range that includes both ends given,
+* in the HTML and PDF forms, subtraction and negation are rendered as
+  a hyphen ("-", as are various dashes), and
+* superscript notation denotes exponentiation.
+  For example, 2 to the power of 64 is notated: 2<sup>64</sup>.
+  In the plain-text version of this specification, superscript notation
+  is not available and therefore is rendered by a surrogate notation.
+  That notation is not optimized for this RFC; it is unfortunately
+  ambiguous with C's exclusive-or and requires circumspection
+  from the reader of the plain-text version.
 
 Examples of CBOR data items are shown
 in CBOR Extended Diagnostic Notation ({{Section 8 of RFC8949@-bis}} in
@@ -343,8 +341,8 @@ recursively unpacked.
 
 | Reference              | Table Index  |
 | Simple value 0..(A-1)  | 0..(A-1)     |
-| Tag 6(N) (N ≥ 0)       | A + 2×N      |
-| Tag 6(N) (N < 0)       | A − 2×N − 1  |
+| Tag 6(N) (unsigned integer N ≥ 0) | A + 2×N      |
+| Tag 6(N) (negative integer N < 0) | A − 2×N − 1  |
 {: #tab-shared title="Referencing Shared Values"}
 
 [^A16]: assuming `A=16`
@@ -392,21 +390,22 @@ suffix out of the argument table.
 | Straight Reference        | Table Index |
 |---------------------------|-------------|
 | Tag (256-`B`)..255(rump)  | 0..(B-1)    |
-| Tag 6(\[N, rump]) (N ≥ 0) | B + N       |
+| Tag 6(\[unsigned integer N, rump]) (N ≥ 0) | B + N       |
 {: #tab-straight cols='l r' title="Straight Referencing (e.g., Prefix) Arguments"}
 
 | Inverted Reference                   | Table Index |
 |--------------------------------------|-------------|
 | Tag (256-`B`-`C`)..(256-`B`-1)(rump) | 0..(C-1)    |
-| Tag 6(\[N, rump]) (N < 0)            | C - N - 1   |
+| Tag 6(\[negative integer N, rump]) (N < 0) | C - N - 1   |
 {: #tab-inverted cols='l r' title="Inverted Referencing (e.g., Suffix) Arguments"}
 
 Argument data items are referenced by using the reference data items
 in {{tab-straight}} and {{tab-inverted}}.
 
-For tags 256-`B`-`C` to 255, the table index (an unsigned integer) is derived from the tag number.
-For tag 6, the table index is derived from the unsigned or negative integer N
-in the first element of the tag content (for straight or inverted references, respectively).
+For tags 256-`B`-`C` to 255 included, the table index (an unsigned integer) is derived from the tag number.
+For tag 6, the table index is derived from the integer N
+in the first element of the tag content (unsigned integer for
+straight, negative integer for inverted references).
 The "rump item" is the second element of the two-element array that is the tag content.
 
 When reconstructing the original data item, such a reference is
@@ -1061,8 +1060,14 @@ data item represented by them.
 IANA Considerations
 ============
 
+
+[^to-be-removed]
+
+[^to-be-removed]: RFC Editor: please replace RFCXXXX with the RFC
+    number of this RFC and remove this note.
+
 For all assignments described in this section, the "reference" column
-is the present draft, i.e., draft-ietf-cbor-packed.
+is the present document, i.e., RFCXXXX.
 
 ## CBOR Tags Registry
 
