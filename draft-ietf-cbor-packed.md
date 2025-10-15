@@ -1114,6 +1114,18 @@ inputs when deterministically encoded {{-cde}}.
 cbor-packed as in {{-extref}},
 this requires additional consideration.)
 
+When tables are obtained from the application environment, e.g., a
+media type, any evolution of the application environment (such as an
+update to the media type specification) needs to reliably ensure that
+existing references continue to unpack in the same way.
+For instance, {{-extref}} provides a way to reserve entries in a packing
+table that can be filled in by revisions of the application
+environment; to avoid false unpacking, this needs to be the only
+update that can be applied to such a table-setting application
+environment.
+This means that application environments such as media types that need
+to be evolvable need to be specifically designed for this kind of
+evolvability.
 
 --- back
 
