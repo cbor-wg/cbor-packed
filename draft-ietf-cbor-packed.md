@@ -104,8 +104,9 @@ informative:
 [^status]
 
 [^status]:
+    (This cref will be removed by the RFC editor:)\\
     The present revision -17 contains a number of editorial
-    improvements.
+    improvements, it is intended foro brief discussion at the 2025-10-15 CBOR WG interim.
     The wording of the present revision continues to make use of
     the tunables A/B/C to be set to specific numbers before completing
     the Packed CBOR specification; not all the examples may fully
