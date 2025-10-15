@@ -24,34 +24,35 @@ and simple values that enable a simple transformation of an original
 CBOR data item into a Packed CBOR data item that is almost as easy to
 consume as the original CBOR data item.  A separate decompression
 step is therefore often not required at the recipient. 
-       The present pull request is intended to address the discussion about the
-use of simple values as reference items during the 2025-06-11 CBOR
-interim meeting.
+       (This cref will be removed by the RFC editor:) 
+The present revision  -16  is intended as input to IETF 123, to
+address the discussion about the use of simple values as reference
+items during the 2025-06-11 CBOR interim meeting.
 It contains a number of editorial improvements as well as the new
 concept of an integration tag; it is for discussion whether the
 latter should or should not be added to Packed CBOR.
-The wording of the present pull request continues to make use of
+The wording of the present revision continues to make use of
 the tunables A/B/C to be set to specific numbers before completing
 the Packed CBOR specification; not all the examples may fully
 align yet. 
     " name="description">
-<meta content="xml2rfc 3.29.0" name="generator">
+<meta content="xml2rfc 3.30.2" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-cbor-packed-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.29.0
+  xml2rfc 3.30.2
     Python 3.12.11
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
     lxml 5.3.1
-    platformdirs 4.3.8
+    platformdirs 4.4.0
     pycountry 24.6.1
     PyYAML 6.0.2
-    requests 2.32.4
+    requests 2.32.5
     setuptools 80.9.0
-    wcwidth 0.2.13
+    wcwidth 0.2.14
 -->
 <link href="draft-ietf-cbor-packed.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -1070,11 +1071,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Packed CBOR</td>
-<td class="right">July 2025</td>
+<td class="right">October 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bormann &amp; Gütschow</td>
-<td class="center">Expires 8 January 2026</td>
+<td class="center">Expires 18 April 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1087,12 +1088,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-cbor-packed-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-07-07" class="published">7 July 2025</time>
+<time datetime="2025-10-15" class="published">15 October 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-01-08">8 January 2026</time></dd>
+<dd class="expires"><time datetime="2026-04-18">18 April 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1125,13 +1126,14 @@ and simple values that enable a simple transformation of an original
 CBOR data item into a Packed CBOR data item that is almost as easy to
 consume as the original CBOR data item.  A separate decompression
 step is therefore often not required at the recipient.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
-<p id="section-abstract-4"><span class="cref" id="status">The present pull request is intended to address the discussion about the
-use of simple values as reference items during the 2025-06-11 CBOR
-interim meeting.
+<p id="section-abstract-4"><span class="cref" id="status">(This cref will be removed by the RFC editor:)<br>
+The present revision <code>-16</code> is intended as input to IETF 123, to
+address the discussion about the use of simple values as reference
+items during the 2025-06-11 CBOR interim meeting.
 It contains a number of editorial improvements as well as the new
 concept of an integration tag; it is for discussion whether the
 latter should or should not be added to Packed CBOR.
-The wording of the present pull request continues to make use of
+The wording of the present revision continues to make use of
 the tunables A/B/C to be set to specific numbers before completing
 the Packed CBOR specification; not all the examples may fully
 align yet.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
@@ -1170,7 +1172,7 @@ align yet.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 8 January 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 18 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -2229,7 +2231,7 @@ item table contains <code>1115([4, 5, 6])</code> as its first item is unpacked a
 <code>[1, 2, 3, 4, 5, 6, 7, 8, 9]</code>.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
 <p id="section-5.1-3">Example application:
 Splicing integration tags could be generated implicitly in the
-implicit table setup defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-lenders-dns-cbor-13#section-4.1" class="relref">Section 4.1</a> of [<a href="#I-D.lenders-dns-cbor" class="cite xref">I-D.lenders-dns-cbor</a>]</span>, removing the
+implicit table setup defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-lenders-dns-cbor-14#section-4.1" class="relref">Section 4.1</a> of [<a href="#I-D.lenders-dns-cbor" class="cite xref">I-D.lenders-dns-cbor</a>]</span>, removing the
 need to allow nested arrays for names.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2248,7 +2250,7 @@ such as strings or arrays, where the tag or simple value is defined to
 stand for a data item that can actually be used in the position of the stand-in
 item.
 Examples would be tags such as 21 to 23 (base64url, base64, uppercase
-hex: Section <a href="https://rfc-editor.org/rfc/rfc8949#section-3.4.5.2" class="relref">3.4.5.2</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>) or 108 (lowercase hex: <span><a href="https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-12#section-2.1" class="relref">Section 2.1</a> of [<a href="#I-D.bormann-cbor-notable-tags" class="cite xref">I-D.bormann-cbor-notable-tags</a>]</span>), which stand for
+hex: Section <a href="https://rfc-editor.org/rfc/rfc8949#section-3.4.5.2" class="relref">3.4.5.2</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>) or 108 (lowercase hex: <span><a href="https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-13#section-2.1" class="relref">Section 2.1</a> of [<a href="#I-D.bormann-cbor-notable-tags" class="cite xref">I-D.bormann-cbor-notable-tags</a>]</span>), which stand for
 text string items but internally employ more compact byte string
 representations that may also be more natural as application data items.<a href="#section-6-1" class="pilcrow">¶</a></p>
 <p id="section-6-2">These additional stand-in items are fundamentally independent of
@@ -2526,7 +2528,7 @@ this requires additional consideration.)<a href="#section-9-3" class="pilcrow">�
 <dd class="break"></dd>
 <dt id="I-D.ietf-cbor-edn-literals">[I-D.ietf-cbor-edn-literals]</dt>
         <dd>
-<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"CBOR Extended Diagnostic Notation (EDN)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cbor-edn-literals-17</span>, <time datetime="2025-05-12" class="refDate">12 May 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cbor-edn-literals-17">https://datatracker.ietf.org/doc/html/draft-ietf-cbor-edn-literals-17</a>&gt;</span>. </dd>
+<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"CBOR Extended Diagnostic Notation (EDN)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cbor-edn-literals-18</span>, <time datetime="2025-07-07" class="refDate">7 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cbor-edn-literals-18">https://datatracker.ietf.org/doc/html/draft-ietf-cbor-edn-literals-18</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="IANA.cbor-simple-values">[IANA.cbor-simple-values]</dt>
         <dd>
@@ -2567,15 +2569,15 @@ this requires additional consideration.)<a href="#section-9-3" class="pilcrow">�
 <dd class="break"></dd>
 <dt id="I-D.bormann-cbor-notable-tags">[I-D.bormann-cbor-notable-tags]</dt>
         <dd>
-<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"Notable CBOR Tags"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-bormann-cbor-notable-tags-12</span>, <time datetime="2025-02-12" class="refDate">12 February 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-12">https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-12</a>&gt;</span>. </dd>
+<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"Notable CBOR Tags"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-bormann-cbor-notable-tags-13</span>, <time datetime="2025-07-20" class="refDate">20 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-13">https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-13</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-cbor-cde">[I-D.ietf-cbor-cde]</dt>
         <dd>
-<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"CBOR Common Deterministic Encoding (CDE)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cbor-cde-11</span>, <time datetime="2025-05-12" class="refDate">12 May 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cbor-cde-11">https://datatracker.ietf.org/doc/html/draft-ietf-cbor-cde-11</a>&gt;</span>. </dd>
+<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"CBOR Common Deterministic Encoding (CDE)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cbor-cde-13</span>, <time datetime="2025-10-13" class="refDate">13 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cbor-cde-13">https://datatracker.ietf.org/doc/html/draft-ietf-cbor-cde-13</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.lenders-dns-cbor">[I-D.lenders-dns-cbor]</dt>
         <dd>
-<span class="refAuthor">Lenders, M. S.</span>, <span class="refAuthor">Bormann, C.</span>, <span class="refAuthor">Schmidt, T. C.</span>, and <span class="refAuthor">M. Wählisch</span>, <span class="refTitle">"A Concise Binary Object Representation (CBOR) of DNS Messages"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-lenders-dns-cbor-13</span>, <time datetime="2025-04-16" class="refDate">16 April 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-lenders-dns-cbor-13">https://datatracker.ietf.org/doc/html/draft-lenders-dns-cbor-13</a>&gt;</span>. </dd>
+<span class="refAuthor">Lenders, M. S.</span>, <span class="refAuthor">Bormann, C.</span>, <span class="refAuthor">Schmidt, T. C.</span>, and <span class="refAuthor">M. Wählisch</span>, <span class="refTitle">"A Concise Binary Object Representation (CBOR) of DNS Messages"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-lenders-dns-cbor-14</span>, <time datetime="2025-07-07" class="refDate">7 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-lenders-dns-cbor-14">https://datatracker.ietf.org/doc/html/draft-lenders-dns-cbor-14</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC1951">[RFC1951]</dt>
         <dd>

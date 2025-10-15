@@ -5,8 +5,8 @@
 Network Working Group                                         C. Bormann
 Internet-Draft                                    Universität Bremen TZI
 Intended status: Standards Track                             M. Gütschow
-Expires: 8 January 2026                                       TU Dresden
-                                                             7 July 2025
+Expires: 18 April 2026                                        TU Dresden
+                                                         15 October 2025
 
 
                               Packed CBOR
@@ -34,29 +34,32 @@ Abstract
    step is therefore often not required at the recipient.
 
 
-   // The present pull request is intended to address the discussion
-   // about the use of simple values as reference items during the
-   // 2025-06-11 CBOR interim meeting.  It contains a number of
-   // editorial improvements as well as the new concept of an
+   // (This cref will be removed by the RFC editor:) The present
+   // revision -16 is intended as input to IETF 123, to address the
+   // discussion about the use of simple values as reference items
+   // during the 2025-06-11 CBOR interim meeting.  It contains a number
+   // of editorial improvements as well as the new concept of an
    // integration tag; it is for discussion whether the latter should or
    // should not be added to Packed CBOR.  The wording of the present
-   // pull request continues to make use of the tunables A/B/C to be set
-   // to specific numbers before completing the Packed CBOR
-   // specification; not all the examples may fully align yet.
+   // revision continues to make use of the tunables A/B/C to be set to
+   // specific numbers before completing the Packed CBOR specification;
+   // not all the examples may fully align yet.
 
 About This Document
 
    This note is to be removed before publishing as an RFC.
 
+
+
+
+
+Bormann & Gütschow        Expires 18 April 2026                 [Page 1]
+
+Internet-Draft                 Packed CBOR                  October 2025
+
+
    Status information for this document may be found at
    https://datatracker.ietf.org/doc/draft-ietf-cbor-packed/.
-
-
-
-Bormann & Gütschow       Expires 8 January 2026                 [Page 1]
-
-Internet-Draft                 Packed CBOR                     July 2025
-
 
    Discussion of this document takes place on the CBOR Working Group
    mailing list (mailto:cbor@ietf.org), which is archived at
@@ -81,7 +84,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 8 January 2026.
+   This Internet-Draft will expire on 18 April 2026.
 
 Copyright Notice
 
@@ -102,18 +105,19 @@ Table of Contents
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
      1.1.  Terminology and Conventions . . . . . . . . . . . . . . .   5
    2.  Packed CBOR . . . . . . . . . . . . . . . . . . . . . . . . .   6
+
+
+
+
+Bormann & Gütschow        Expires 18 April 2026                 [Page 2]
+
+Internet-Draft                 Packed CBOR                  October 2025
+
+
      2.1.  Packing Tables  . . . . . . . . . . . . . . . . . . . . .   7
      2.2.  Referencing Shared Items  . . . . . . . . . . . . . . . .   8
      2.3.  Referencing Argument Items  . . . . . . . . . . . . . . .   8
      2.4.  Concatenation . . . . . . . . . . . . . . . . . . . . . .  11
-
-
-
-Bormann & Gütschow       Expires 8 January 2026                 [Page 2]
-
-Internet-Draft                 Packed CBOR                     July 2025
-
-
      2.5.  Discussion  . . . . . . . . . . . . . . . . . . . . . . .  12
      2.6.  Allocation  . . . . . . . . . . . . . . . . . . . . . . .  13
    3.  Table Setup . . . . . . . . . . . . . . . . . . . . . . . . .  14
@@ -155,20 +159,22 @@ Internet-Draft                 Packed CBOR                     July 2025
    disadvantage is that the recipient needs to decompress the compressed
    form before it can make use of the data.
 
+
+
+
+
+
+
+Bormann & Gütschow        Expires 18 April 2026                 [Page 3]
+
+Internet-Draft                 Packed CBOR                  October 2025
+
+
    This specification describes Packed CBOR, a set of CBOR tags and
    simple values that enable a simple transformation of an original CBOR
    data item into a Packed CBOR data item that is almost as easy to
    consume as the original CBOR data item.  A separate decompression
    step is therefore often not required at the recipient.
-
-
-
-
-
-Bormann & Gütschow       Expires 8 January 2026                 [Page 3]
-
-Internet-Draft                 Packed CBOR                     July 2025
-
 
    This document defines the Packed CBOR format by specifying the
    transformation from a Packed CBOR data item to the original CBOR data
@@ -215,15 +221,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-
-
-
-
-
-
-Bormann & Gütschow       Expires 8 January 2026                 [Page 4]
+Bormann & Gütschow        Expires 18 April 2026                 [Page 4]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
 1.1.  Terminology and Conventions
@@ -277,9 +277,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                 [Page 5]
+Bormann & Gütschow        Expires 18 April 2026                 [Page 5]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
       application protocol to stand in for a more complex data item.
@@ -333,9 +333,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                 [Page 6]
+Bormann & Gütschow        Expires 18 April 2026                 [Page 6]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
    // To be resolved before publication:
@@ -389,9 +389,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                 [Page 7]
+Bormann & Gütschow        Expires 18 April 2026                 [Page 7]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
 2.2.  Referencing Shared Items
@@ -445,9 +445,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                 [Page 8]
+Bormann & Gütschow        Expires 18 April 2026                 [Page 8]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
    When referencing an argument, a distinction is made between straight
@@ -501,9 +501,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                 [Page 9]
+Bormann & Gütschow        Expires 18 April 2026                 [Page 9]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
    A straight reference uses the argument as the provisional left-hand
@@ -557,9 +557,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 10]
+Bormann & Gütschow        Expires 18 April 2026                [Page 10]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
 2.4.  Concatenation
@@ -613,9 +613,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 11]
+Bormann & Gütschow        Expires 18 April 2026                [Page 11]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
    *  If one side is one of the string types, and the other side is an
@@ -669,9 +669,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 12]
+Bormann & Gütschow        Expires 18 April 2026                [Page 12]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
       |     *  hybrid models are possible, for instance: The decoder
@@ -725,9 +725,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 13]
+Bormann & Gütschow        Expires 18 April 2026                [Page 13]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
    Given that indefinite length encoding effectively took away 4
@@ -781,9 +781,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 14]
+Bormann & Gütschow        Expires 18 April 2026                [Page 14]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
       there further along in the array while leaving index 0 to 15
@@ -837,9 +837,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 15]
+Bormann & Gütschow        Expires 18 April 2026                [Page 15]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
    These tags extend the two tables for shared items and for arguments
@@ -893,9 +893,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 16]
+Bormann & Gütschow        Expires 18 April 2026                [Page 16]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
    For a right-hand side of one or more elements, the first element
@@ -949,9 +949,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 17]
+Bormann & Gütschow        Expires 18 April 2026                [Page 17]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
 4.2.  Record Function Tag
@@ -1005,9 +1005,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 18]
+Bormann & Gütschow        Expires 18 April 2026                [Page 18]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
 5.  Integration Tags
@@ -1061,9 +1061,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 19]
+Bormann & Gütschow        Expires 18 April 2026                [Page 19]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
 6.  Additional Stand-in Items
@@ -1117,9 +1117,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 20]
+Bormann & Gütschow        Expires 18 April 2026                [Page 20]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
    The underlying problem is not unique to Packed CBOR.  For instance,
@@ -1173,9 +1173,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 21]
+Bormann & Gütschow        Expires 18 April 2026                [Page 21]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
    *  Tag Equivalence is a new concept, which may not be implemented by
@@ -1229,9 +1229,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 22]
+Bormann & Gütschow        Expires 18 April 2026                [Page 22]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
    +======================+=============================+==============+
@@ -1285,9 +1285,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 23]
+Bormann & Gütschow        Expires 18 April 2026                [Page 23]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
    +----------------------+-----------------------------+--------------+
@@ -1341,17 +1341,17 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 24]
+Bormann & Gütschow        Expires 18 April 2026                [Page 24]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
    [I-D.ietf-cbor-edn-literals]
               Bormann, C., "CBOR Extended Diagnostic Notation (EDN)",
               Work in Progress, Internet-Draft, draft-ietf-cbor-edn-
-              literals-17, 12 May 2025,
+              literals-18, 7 July 2025,
               <https://datatracker.ietf.org/doc/html/draft-ietf-cbor-
-              edn-literals-17>.
+              edn-literals-18>.
 
    [IANA.cbor-simple-values]
               IANA, "Concise Binary Object Representation (CBOR) Simple
@@ -1397,30 +1397,30 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 25]
+Bormann & Gütschow        Expires 18 April 2026                [Page 25]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
    [I-D.bormann-cbor-notable-tags]
               Bormann, C., "Notable CBOR Tags", Work in Progress,
-              Internet-Draft, draft-bormann-cbor-notable-tags-12, 12
-              February 2025, <https://datatracker.ietf.org/doc/html/
-              draft-bormann-cbor-notable-tags-12>.
+              Internet-Draft, draft-bormann-cbor-notable-tags-13, 20
+              July 2025, <https://datatracker.ietf.org/doc/html/draft-
+              bormann-cbor-notable-tags-13>.
 
    [I-D.ietf-cbor-cde]
               Bormann, C., "CBOR Common Deterministic Encoding (CDE)",
-              Work in Progress, Internet-Draft, draft-ietf-cbor-cde-11,
-              12 May 2025, <https://datatracker.ietf.org/doc/html/draft-
-              ietf-cbor-cde-11>.
+              Work in Progress, Internet-Draft, draft-ietf-cbor-cde-13,
+              13 October 2025, <https://datatracker.ietf.org/doc/html/
+              draft-ietf-cbor-cde-13>.
 
    [I-D.lenders-dns-cbor]
               Lenders, M. S., Bormann, C., Schmidt, T. C., and M.
               Wählisch, "A Concise Binary Object Representation (CBOR)
               of DNS Messages", Work in Progress, Internet-Draft, draft-
-              lenders-dns-cbor-13, 16 April 2025,
+              lenders-dns-cbor-14, 7 July 2025,
               <https://datatracker.ietf.org/doc/html/draft-lenders-dns-
-              cbor-13>.
+              cbor-14>.
 
    [RFC1951]  Deutsch, P., "DEFLATE Compressed Data Format Specification
               version 1.3", RFC 1951, DOI 10.17487/RFC1951, May 1996,
@@ -1453,9 +1453,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 26]
+Bormann & Gütschow        Expires 18 April 2026                [Page 26]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
               At the time of writing, this STD comprises the following:
@@ -1509,9 +1509,9 @@ Appendix A.  Examples
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 27]
+Bormann & Gütschow        Expires 18 April 2026                [Page 27]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
    { "store": {
@@ -1565,9 +1565,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 28]
+Bormann & Gütschow        Expires 18 April 2026                [Page 28]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
    113([["price", "category", "author", "title", "fiction", 8.95,
@@ -1621,9 +1621,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 29]
+Bormann & Gütschow        Expires 18 April 2026                [Page 29]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
    {
@@ -1677,9 +1677,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 30]
+Bormann & Gütschow        Expires 18 April 2026                [Page 30]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
          ],
@@ -1733,9 +1733,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 31]
+Bormann & Gütschow        Expires 18 April 2026                [Page 31]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
          ]
@@ -1789,9 +1789,9 @@ Internet-Draft                 Packed CBOR                     July 2025
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 32]
+Bormann & Gütschow        Expires 18 April 2026                [Page 32]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
    1113([/shared/["name", "@type", "links", "href", "mediaType",
@@ -1845,9 +1845,9 @@ List of Tables
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 33]
+Bormann & Gütschow        Expires 18 April 2026                [Page 33]
 
-Internet-Draft                 Packed CBOR                     July 2025
+Internet-Draft                 Packed CBOR                  October 2025
 
 
    Table 3:   Inverted Referencing (e.g., Suffix) Arguments
@@ -1901,4 +1901,4 @@ Authors' Addresses
 
 
 
-Bormann & Gütschow       Expires 8 January 2026                [Page 34]
+Bormann & Gütschow        Expires 18 April 2026                [Page 34]
