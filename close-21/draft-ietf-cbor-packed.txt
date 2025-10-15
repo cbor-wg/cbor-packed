@@ -131,9 +131,9 @@ Internet-Draft                 Packed CBOR                  October 2025
      8.1.  CBOR Tags Registry  . . . . . . . . . . . . . . . . . . .  23
      8.2.  CBOR Simple Values Registry . . . . . . . . . . . . . . .  24
    9.  Security Considerations . . . . . . . . . . . . . . . . . . .  24
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  24
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  25
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  25
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  25
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  26
    Appendix A.  Examples . . . . . . . . . . . . . . . . . . . . . .  27
    List of Figures . . . . . . . . . . . . . . . . . . . . . . . . .  33
    List of Tables  . . . . . . . . . . . . . . . . . . . . . . . . .  33
@@ -1328,16 +1328,16 @@ Internet-Draft                 Packed CBOR                  October 2025
    When tables are obtained from the application environment, e.g., a
    media type, any evolution of the application environment (such as an
    update to the media type specification) needs to reliably ensure that
-   existing references continue to unpack in the same way.  For
-   instance, [I-D.amsuess-cbor-packed-by-reference] provides a way to
-   reserve entries in a packing table that can be filled in by revisions
-   of the application environment; to avoid false unpacking, this needs
-   to be the only update that can be applied to such a table-setting
-   application environment.  This means that application environments
-   such as media types that need to be evolvable need to be specifically
-   designed for this kind of evolvability.
+   existing references continue to unpack in the same way.  Therefore,
+   application environments that provide packing tables need to
+   explicitly specify if these packing tables may evolve, and, if yes,
+   provide a design for this kind of evolvability.  For instance,
+   [I-D.amsuess-cbor-packed-by-reference] provides a way to reserve
+   entries in a packing table that can be filled in by revisions of the
+   application environment; to avoid false unpacking, this needs to be
+   the only update that can be applied to such a table-setting
+   application environment.
 
-10.  References
 
 
 
@@ -1345,6 +1345,8 @@ Bormann & Gütschow        Expires 18 April 2026                [Page 24]
 
 Internet-Draft                 Packed CBOR                  October 2025
 
+
+10.  References
 
 10.1.  Normative References
 
@@ -1392,8 +1394,6 @@ Internet-Draft                 Packed CBOR                  October 2025
               DOI 10.17487/RFC8949, December 2020,
               <https://www.rfc-editor.org/info/rfc8949>.
 
-10.2.  Informative References
-
 
 
 
@@ -1401,6 +1401,8 @@ Bormann & Gütschow        Expires 18 April 2026                [Page 25]
 
 Internet-Draft                 Packed CBOR                  October 2025
 
+
+10.2.  Informative References
 
    [ARB-EXP]  Occil, P., "Arbitrary-Exponent Numbers", Specification for
               Registration of CBOR Tags 264 and 265,
@@ -1446,9 +1448,7 @@ Internet-Draft                 Packed CBOR                  October 2025
               Representation (CBOR)", RFC 7049, DOI 10.17487/RFC7049,
               October 2013, <https://www.rfc-editor.org/rfc/rfc7049>.
 
-   [RFC7396]  Hoffman, P. and J. Snell, "JSON Merge Patch", RFC 7396,
-              DOI 10.17487/RFC7396, October 2014,
-              <https://www.rfc-editor.org/rfc/rfc7396>.
+
 
 
 
@@ -1457,6 +1457,10 @@ Bormann & Gütschow        Expires 18 April 2026                [Page 26]
 
 Internet-Draft                 Packed CBOR                  October 2025
 
+
+   [RFC7396]  Hoffman, P. and J. Snell, "JSON Merge Patch", RFC 7396,
+              DOI 10.17487/RFC7396, October 2014,
+              <https://www.rfc-editor.org/rfc/rfc7396>.
 
    [RFC8742]  Bormann, C., "Concise Binary Object Representation (CBOR)
               Sequences", RFC 8742, DOI 10.17487/RFC8742, February 2020,
@@ -1489,10 +1493,6 @@ Appendix A.  Examples
    data item can be packed into 298 bytes as depicted in Figure 4.  Note
    that this particular example does not lend itself to prefix
    compression, so it uses the simple common-table setup form (tag 113).
-
-
-
-
 
 
 
