@@ -24,13 +24,9 @@ and simple values that enable a simple transformation of an original
 CBOR data item into a Packed CBOR data item that is almost as easy to
 consume as the original CBOR data item.  A separate decompression
 step is therefore often not required at the recipient. 
-       The present pull request is intended to address the discussion about the
-use of simple values as reference items during the 2025-06-11 CBOR
-interim meeting.
-It contains a number of editorial improvements as well as the new
-concept of an integration tag; it is for discussion whether the
-latter should or should not be added to Packed CBOR.
-The wording of the present pull request continues to make use of
+       The present revision -17 contains a number of editorial
+improvements.
+The wording of the present revision continues to make use of
 the tunables A/B/C to be set to specific numbers before completing
 the Packed CBOR specification; not all the examples may fully
 align yet. 
@@ -1074,7 +1070,7 @@ svg :is([fill="white"], [fill^="#fff"]) {
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bormann &amp; Gütschow</td>
-<td class="center">Expires 17 April 2026</td>
+<td class="center">Expires 18 April 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1087,12 +1083,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-cbor-packed-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-10-14" class="published">14 October 2025</time>
+<time datetime="2025-10-15" class="published">15 October 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-04-17">17 April 2026</time></dd>
+<dd class="expires"><time datetime="2026-04-18">18 April 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1125,13 +1121,9 @@ and simple values that enable a simple transformation of an original
 CBOR data item into a Packed CBOR data item that is almost as easy to
 consume as the original CBOR data item.  A separate decompression
 step is therefore often not required at the recipient.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
-<p id="section-abstract-4"><span class="cref" id="status">The present pull request is intended to address the discussion about the
-use of simple values as reference items during the 2025-06-11 CBOR
-interim meeting.
-It contains a number of editorial improvements as well as the new
-concept of an integration tag; it is for discussion whether the
-latter should or should not be added to Packed CBOR.
-The wording of the present pull request continues to make use of
+<p id="section-abstract-4"><span class="cref" id="status">The present revision -17 contains a number of editorial
+improvements.
+The wording of the present revision continues to make use of
 the tunables A/B/C to be set to specific numbers before completing
 the Packed CBOR specification; not all the examples may fully
 align yet.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
@@ -1170,7 +1162,7 @@ align yet.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 17 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 18 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1504,19 +1496,28 @@ In this specification, the term "argument" is not used in the specific
 sense assigned to it in Section <a href="https://rfc-editor.org/rfc/rfc8949#section-3" class="relref">3</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>, but in its
 general sense as an argument of a function.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
 <p id="section-1.1-4">Where arithmetic is explained, this document uses the notation
-familiar from the programming language C, except that ".." denotes a range that includes
-both ends given, that in the HTML and PDF forms, subtraction and
-negation are rendered as a hyphen ("-", as are various dashes), and
-that superscript notation denotes exponentiation.
+familiar from the programming language C, except that<a href="#section-1.1-4" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-1.1-5.1">
+            <p id="section-1.1-5.1.1">"<code>..</code>" denotes a range that includes both ends given,<a href="#section-1.1-5.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-1.1-5.2">
+            <p id="section-1.1-5.2.1">in the HTML and PDF forms, subtraction and negation are rendered as
+a hyphen ("-", as are various dashes), and<a href="#section-1.1-5.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-1.1-5.3">
+            <p id="section-1.1-5.3.1">superscript notation denotes exponentiation.
 For example, 2 to the power of 64 is notated: 2<sup>64</sup>.
 In the plain-text version of this specification, superscript notation
 is not available and therefore is rendered by a surrogate notation.
 That notation is not optimized for this RFC; it is unfortunately
 ambiguous with C's exclusive-or and requires circumspection
-from the reader of the plain-text version.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
-<p id="section-1.1-5">Examples of CBOR data items are shown
+from the reader of the plain-text version.<a href="#section-1.1-5.3.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+<p id="section-1.1-6">Examples of CBOR data items are shown
 in CBOR Extended Diagnostic Notation (Section <a href="https://rfc-editor.org/rfc/rfc8949#section-8" class="relref">8</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span> in
-conjunction with <span><a href="https://rfc-editor.org/rfc/rfc8610#appendix-G" class="relref">Appendix G</a> of [<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> <span class="cref" id="update">➔ possibly update to</span> <span>[<a href="#I-D.ietf-cbor-edn-literals" class="cite xref">I-D.ietf-cbor-edn-literals</a>]</span>).<a href="#section-1.1-5" class="pilcrow">¶</a></p>
+conjunction with <span><a href="https://rfc-editor.org/rfc/rfc8610#appendix-G" class="relref">Appendix G</a> of [<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> <span class="cref" id="update">➔ possibly update to</span> <span>[<a href="#I-D.ietf-cbor-edn-literals" class="cite xref">I-D.ietf-cbor-edn-literals</a>]</span>).<a href="#section-1.1-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1610,11 +1611,11 @@ recursively unpacked.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
               <td class="text-left" rowspan="1" colspan="1">0..(A-1)</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Tag 6(N) (N ≥ 0)</td>
+              <td class="text-left" rowspan="1" colspan="1">Tag 6(N) (unsigned integer N ≥ 0)</td>
               <td class="text-left" rowspan="1" colspan="1">A + 2×N</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Tag 6(N) (N &lt; 0)</td>
+              <td class="text-left" rowspan="1" colspan="1">Tag 6(N) (negative integer N &lt; 0)</td>
               <td class="text-left" rowspan="1" colspan="1">A − 2×N − 1</td>
             </tr>
           </tbody>
@@ -1674,7 +1675,7 @@ suffix out of the argument table.<a href="#section-2.3-2" class="pilcrow">¶</a>
               <td class="text-right" rowspan="1" colspan="1">0..(B-1)</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Tag 6([N, rump]) (N ≥ 0)</td>
+              <td class="text-left" rowspan="1" colspan="1">Tag 6([unsigned integer N, rump]) (N ≥ 0)</td>
               <td class="text-right" rowspan="1" colspan="1">B + N</td>
             </tr>
           </tbody>
@@ -1698,7 +1699,7 @@ suffix out of the argument table.<a href="#section-2.3-2" class="pilcrow">¶</a>
               <td class="text-right" rowspan="1" colspan="1">0..(C-1)</td>
             </tr>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Tag 6([N, rump]) (N &lt; 0)</td>
+              <td class="text-left" rowspan="1" colspan="1">Tag 6([negative integer N, rump]) (N &lt; 0)</td>
               <td class="text-right" rowspan="1" colspan="1">C - N - 1</td>
             </tr>
           </tbody>
@@ -1706,9 +1707,10 @@ suffix out of the argument table.<a href="#section-2.3-2" class="pilcrow">¶</a>
 </div>
 <p id="section-2.3-5">Argument data items are referenced by using the reference data items
 in <a href="#tab-straight" class="auto internal xref">Table 2</a> and <a href="#tab-inverted" class="auto internal xref">Table 3</a>.<a href="#section-2.3-5" class="pilcrow">¶</a></p>
-<p id="section-2.3-6">For tags 256-<code>B</code>-<code>C</code> to 255, the table index (an unsigned integer) is derived from the tag number.
-For tag 6, the table index is derived from the unsigned or negative integer N
-in the first element of the tag content (for straight or inverted references, respectively).
+<p id="section-2.3-6">For tags 256-<code>B</code>-<code>C</code> to 255 included, the table index (an unsigned integer) is derived from the tag number.
+For tag 6, the table index is derived from the integer N
+in the first element of the tag content (unsigned integer for
+straight, negative integer for inverted references).
 The "rump item" is the second element of the two-element array that is the tag content.<a href="#section-2.3-6" class="pilcrow">¶</a></p>
 <p id="section-2.3-7">When reconstructing the original data item, such a reference is
 replaced by a data item constructed from the argument data item found
@@ -2386,8 +2388,10 @@ data item represented by them.<a href="#section-7.2-2" class="pilcrow">¶</a></p
       <h2 id="name-iana-considerations">
 <a href="#section-8" class="section-number selfRef">8. </a><a href="#name-iana-considerations" class="section-name selfRef">IANA Considerations</a>
       </h2>
-<p id="section-8-1">For all assignments described in this section, the "reference" column
-is the present draft, i.e., draft-ietf-cbor-packed.<a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-1"><span class="cref" id="to-be-removed">RFC Editor: please replace RFCXXXX with the RFC
+number of this RFC and remove this note.</span><a href="#section-8-1" class="pilcrow">¶</a></p>
+<p id="section-8-2">For all assignments described in this section, the "reference" column
+is the present document, i.e., RFCXXXX.<a href="#section-8-2" class="pilcrow">¶</a></p>
 <div id="sec-cbor-tags-registry">
 <section id="section-8.1">
         <h3 id="name-cbor-tags-registry">
