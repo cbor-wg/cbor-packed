@@ -321,7 +321,7 @@ If, during unpacking, an index is used that references an item that is
 unpopulated in (e.g., outside the size of) the table in use, this MAY be treated as an
 error by the unpacker and abort the unpacking.
 
-Alternatively, the unpacker MAY provide a special value, enclosed in
+Alternatively, the unpacker MAY provide an implementation specific value, enclosed in
 the tag 1112, to the application and leave the error handling to the
 application.
 In the simplest case, this could be `1112(undefined)`, using the
