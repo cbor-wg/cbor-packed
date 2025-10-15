@@ -398,7 +398,7 @@ Internet-Draft                 Packed CBOR                  October 2025
    the tag 1112, to the application and leave the error handling to the
    application.  In the simplest case, this could be 1112(undefined),
    using the simple value >undefined< as per Section 5.7 of RFC 8949
-   [STD94], however, the same value cannot be used repeatedly as a map
+   [STD94]; however, the same value cannot be used repeatedly as a map
    key within the same map.
 
    An unpacker SHOULD document which of these two alternatives has been
