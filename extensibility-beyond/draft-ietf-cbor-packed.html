@@ -33,22 +33,21 @@ the tunables A/B/C to be set to specific numbers before completing
 the Packed CBOR specification; not all the examples may fully
 align yet. 
     " name="description">
-<meta content="xml2rfc 3.30.2" name="generator">
+<meta content="xml2rfc 3.31.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
 <meta content="draft-ietf-cbor-packed-latest" name="ietf.draft">
 <!-- Generator version information:
-  xml2rfc 3.30.2
-    Python 3.12.11
+  xml2rfc 3.31.0
+    Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
     intervaltree 3.1.0
     Jinja2 3.1.6
     lxml 5.3.1
-    platformdirs 4.4.0
+    platformdirs 4.5.0
     pycountry 24.6.1
     PyYAML 6.0.2
     requests 2.32.5
-    setuptools 80.9.0
     wcwidth 0.2.14
 -->
 <link href="draft-ietf-cbor-packed.xml" rel="alternate" type="application/rfc+xml">
@@ -1068,11 +1067,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Packed CBOR</td>
-<td class="right">October 2025</td>
+<td class="right">December 2025</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bormann &amp; Gütschow</td>
-<td class="center">Expires 18 April 2026</td>
+<td class="center">Expires 5 June 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1085,12 +1084,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-cbor-packed-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-10-15" class="published">15 October 2025</time>
+<time datetime="2025-12-02" class="published">2 December 2025</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-04-18">18 April 2026</time></dd>
+<dd class="expires"><time datetime="2026-06-05">5 June 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1166,7 +1165,7 @@ align yet.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 18 April 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 5 June 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1199,7 +1198,10 @@ align yet.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
             <p id="section-toc.1-1.1.1" class="keepWithNext"><a href="#section-1" class="auto internal xref">1</a>.  <a href="#name-introduction" class="internal xref">Introduction</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.1">
-                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-terminology-and-conventions" class="internal xref">Terminology and Conventions</a></p>
+                <p id="section-toc.1-1.1.2.1.1" class="keepWithNext"><a href="#section-1.1" class="auto internal xref">1.1</a>.  <a href="#name-extensibility-approach" class="internal xref">Extensibility Approach</a></p>
+</li>
+              <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.1.2.2">
+                <p id="section-toc.1-1.1.2.2.1" class="keepWithNext"><a href="#section-1.2" class="auto internal xref">1.2</a>.  <a href="#name-terminology-and-conventions" class="internal xref">Terminology and Conventions</a></p>
 </li>
             </ul>
 </li>
@@ -1207,7 +1209,7 @@ align yet.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
             <p id="section-toc.1-1.2.1"><a href="#section-2" class="auto internal xref">2</a>.  <a href="#name-packed-cbor" class="internal xref">Packed CBOR</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.1">
-                <p id="section-toc.1-1.2.2.1.1" class="keepWithNext"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-packing-tables" class="internal xref">Packing Tables</a></p>
+                <p id="section-toc.1-1.2.2.1.1"><a href="#section-2.1" class="auto internal xref">2.1</a>.  <a href="#name-packing-tables" class="internal xref">Packing Tables</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.2.2.2">
                 <p id="section-toc.1-1.2.2.2.1"><a href="#section-2.2" class="auto internal xref">2.2</a>.  <a href="#name-referencing-shared-items" class="internal xref">Referencing Shared Items</a></p>
@@ -1364,133 +1366,164 @@ string.<a href="#section-1-6.2.1" class="pilcrow">¶</a></p>
 <p id="section-1-7">A specific application protocol that employs Packed CBOR might employ
 both kinds of optimization or limit its use to item
 sharing only.<a href="#section-1-7" class="pilcrow">¶</a></p>
-<p id="section-1-8">Packed CBOR is defined in two main parts:<a href="#section-1-8" class="pilcrow">¶</a></p>
+<div id="sec-extensibility-approach">
+<section id="section-1.1">
+        <h3 id="name-extensibility-approach">
+<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-extensibility-approach" class="section-name selfRef">Extensibility Approach</a>
+        </h3>
+<p id="section-1.1-1">Packed CBOR is defined in two main parts:<a href="#section-1.1-1" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1-9.1">
-          <p id="section-1-9.1.1">Referencing packing tables
-(<a href="#sec-packed-cbor" class="auto internal xref">Section 2</a>), which is intended to be the stable, common
-component of all uses of Packed CBOR, and<a href="#section-1-9.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-1.1-2.1">
+            <p id="section-1.1-2.1.1">Data items for referencing packing tables
+(<a href="#sec-packed-cbor" class="auto internal xref">Section 2</a>), the set of which defined here which is intended
+to be the stable, common component of all uses of Packed CBOR, and<a href="#section-1.1-2.1.1" class="pilcrow">¶</a></p>
 </li>
-        <li class="normal" id="section-1-9.2">
-          <p id="section-1-9.2.1">setting up packing tables
+          <li class="normal" id="section-1.1-2.2">
+            <p id="section-1.1-2.2.1">Mechanisms for setting up packing tables
 (<a href="#sec-table-setup" class="auto internal xref">Section 3</a>), which carries the main extension point, populated
-in this document by two table setup tags.<a href="#section-1-9.2.1" class="pilcrow">¶</a></p>
+in this document by two table setup tags.
+Such setup information is usually conveyed in a tag and then applies
+to the content of the tag.
+Setup information can also be contained in environmental information
+that applies to an encoded CBOR data item, e.g., a media type can set
+up a static dictionary that applies to CBOR data items in
+representations that are of that media type.<a href="#section-1.1-2.2.1" class="pilcrow">¶</a></p>
 </li>
-      </ul>
-<p id="section-1-10">Sections <a href="#sec-function-tags" class="auto internal xref">4</a>, <a href="#sec-integration-tags" class="auto internal xref">5</a>, and
+        </ul>
+<p id="section-1.1-3">Sections <a href="#sec-function-tags" class="auto internal xref">4</a>, <a href="#sec-integration-tags" class="auto internal xref">5</a>, and
 <a href="#sec-standin" class="auto internal xref">6</a> provide additional extension points, each of which is
 populated by one or more extensions in this document or elsewhere.
 These extensions can be selected by an application protocol that makes
-use of Packed CBOR.<a href="#section-1-10" class="pilcrow">¶</a></p>
+use of Packed CBOR.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
+<p id="section-1.1-4">Beyond the extensibility approach shown in the present document, new
+setup tags (or media types etc.) could also be defined such that they
+modify (or completely swap out) the way the referencing data items
+defined here operate and/or define new referencing data items.
+This is not done in the present document so that there is a coherent
+interpretation of the referencing data items defined here; such new
+definitions of referencing data items probably should specify how
+they interact with parts of Packed CBOR that they do not replace.<a href="#section-1.1-4" class="pilcrow">¶</a></p>
+<p id="section-1.1-5">An unpacker can only carry out the tags (and the environmental
+information) that it knows how to interpret.
+An unpacker that encounters tags that are unknown to it can simply make these
+tags available to the application, which can abort processing if
+unknown (or unimplemented) tags are found, or if their interpretation
+would require functionality of the unpacker that is not available.
+As a shortcut, the application might also provide the unpacker with a
+list of tags that the application can process, allowing the unpacker
+to abort processing when a tag unknown to it and not on this list is
+encountered.<a href="#section-1.1-5" class="pilcrow">¶</a></p>
+</section>
+</div>
 <div id="terms">
-<section id="section-1.1">
+<section id="section-1.2">
         <h3 id="name-terminology-and-conventions">
-<a href="#section-1.1" class="section-number selfRef">1.1. </a><a href="#name-terminology-and-conventions" class="section-name selfRef">Terminology and Conventions</a>
+<a href="#section-1.2" class="section-number selfRef">1.2. </a><a href="#name-terminology-and-conventions" class="section-name selfRef">Terminology and Conventions</a>
         </h3>
-<p id="section-1.1-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
+<p id="section-1.2-1">The key words "<span class="bcp14">MUST</span>", "<span class="bcp14">MUST NOT</span>", "<span class="bcp14">REQUIRED</span>", "<span class="bcp14">SHALL</span>", "<span class="bcp14">SHALL NOT</span>", "<span class="bcp14">SHOULD</span>", "<span class="bcp14">SHOULD NOT</span>", "<span class="bcp14">RECOMMENDED</span>", "<span class="bcp14">NOT RECOMMENDED</span>",
 "<span class="bcp14">MAY</span>", and "<span class="bcp14">OPTIONAL</span>" in this document are to be interpreted as
 described in <span>[<a href="#BCP14" class="cite xref">BCP14</a>]</span> (<a href="#RFC2119" class="auto internal xref">RFC2119</a>) (<a href="#RFC8174" class="auto internal xref">RFC8174</a>) when, and only when, they
-appear in all capitals, as shown here.<a href="#section-1.1-1" class="pilcrow">¶</a></p>
-<span class="break"></span><dl class="dlParallel" id="section-1.1-2">
-          <dt id="section-1.1-2.1">Original data item:</dt>
-          <dd style="margin-left: 1.5em" id="section-1.1-2.2">
-            <p id="section-1.1-2.2.1">A CBOR data item that is intended to be expressed by a packed data
-item; the result of all reconstructions.<a href="#section-1.1-2.2.1" class="pilcrow">¶</a></p>
+appear in all capitals, as shown here.<a href="#section-1.2-1" class="pilcrow">¶</a></p>
+<span class="break"></span><dl class="dlParallel" id="section-1.2-2">
+          <dt id="section-1.2-2.1">Original data item:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.2-2.2">
+            <p id="section-1.2-2.2.1">A CBOR data item that is intended to be expressed by a packed data
+item; the result of all reconstructions.<a href="#section-1.2-2.2.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-1.1-2.3">Packed data item:</dt>
-          <dd style="margin-left: 1.5em" id="section-1.1-2.4">
-            <p id="section-1.1-2.4.1">A CBOR data item that involves packed references (<em>packed CBOR</em>).<a href="#section-1.1-2.4.1" class="pilcrow">¶</a></p>
+<dt id="section-1.2-2.3">Packed data item:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.2-2.4">
+            <p id="section-1.2-2.4.1">A CBOR data item that involves packed references (<em>packed CBOR</em>).<a href="#section-1.2-2.4.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-1.1-2.5">Packed reference:</dt>
-          <dd style="margin-left: 1.5em" id="section-1.1-2.6">
-            <p id="section-1.1-2.6.1">A shared item reference or an argument reference, expressed by a
-reference data item.<a href="#section-1.1-2.6.1" class="pilcrow">¶</a></p>
+<dt id="section-1.2-2.5">Packed reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.2-2.6">
+            <p id="section-1.2-2.6.1">A shared item reference or an argument reference, expressed by a
+reference data item.<a href="#section-1.2-2.6.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-1.1-2.7">Reference data item:</dt>
-          <dd style="margin-left: 1.5em" id="section-1.1-2.8">
-            <p id="section-1.1-2.8.1">A data item (tag or simple value) that serves as a packed reference.<a href="#section-1.1-2.8.1" class="pilcrow">¶</a></p>
+<dt id="section-1.2-2.7">Reference data item:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.2-2.8">
+            <p id="section-1.2-2.8.1">A data item (tag or simple value) that serves as a packed reference.<a href="#section-1.2-2.8.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-1.1-2.9">Reference site:</dt>
-          <dd style="margin-left: 1.5em" id="section-1.1-2.10">
-            <p id="section-1.1-2.10.1">The context of a reference data item.<a href="#section-1.1-2.10.1" class="pilcrow">¶</a></p>
+<dt id="section-1.2-2.9">Reference site:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.2-2.10">
+            <p id="section-1.2-2.10.1">The context of a reference data item.<a href="#section-1.2-2.10.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-1.1-2.11">Shared item reference:</dt>
-          <dd style="margin-left: 1.5em" id="section-1.1-2.12">
-            <p id="section-1.1-2.12.1">A reference to a shared item as defined in <a href="#sec-referencing-shared-items" class="auto internal xref">Section 2.2</a>.<a href="#section-1.1-2.12.1" class="pilcrow">¶</a></p>
+<dt id="section-1.2-2.11">Shared item reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.2-2.12">
+            <p id="section-1.2-2.12.1">A reference to a shared item as defined in <a href="#sec-referencing-shared-items" class="auto internal xref">Section 2.2</a>.<a href="#section-1.2-2.12.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-1.1-2.13">Argument reference:</dt>
-          <dd style="margin-left: 1.5em" id="section-1.1-2.14">
-            <p id="section-1.1-2.14.1">A reference that combines a shared argument with a rump item as
-defined in <a href="#sec-referencing-argument-items" class="auto internal xref">Section 2.3</a>.<a href="#section-1.1-2.14.1" class="pilcrow">¶</a></p>
+<dt id="section-1.2-2.13">Argument reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.2-2.14">
+            <p id="section-1.2-2.14.1">A reference that combines a shared argument with a rump item as
+defined in <a href="#sec-referencing-argument-items" class="auto internal xref">Section 2.3</a>.<a href="#section-1.2-2.14.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-1.1-2.15">Rump:</dt>
-          <dd style="margin-left: 1.5em" id="section-1.1-2.16">
-            <p id="section-1.1-2.16.1">The data item contained in an argument reference that is combined
-with the argument to yield the reconstruction.<a href="#section-1.1-2.16.1" class="pilcrow">¶</a></p>
+<dt id="section-1.2-2.15">Rump:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.2-2.16">
+            <p id="section-1.2-2.16.1">The data item contained in an argument reference that is combined
+with the argument to yield the reconstruction.<a href="#section-1.2-2.16.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-1.1-2.17">Straight reference:</dt>
-          <dd style="margin-left: 1.5em" id="section-1.1-2.18">
-            <p id="section-1.1-2.18.1">An argument reference that uses the argument as the left-hand side
-and the rump as the right-hand side.<a href="#section-1.1-2.18.1" class="pilcrow">¶</a></p>
+<dt id="section-1.2-2.17">Straight reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.2-2.18">
+            <p id="section-1.2-2.18.1">An argument reference that uses the argument as the left-hand side
+and the rump as the right-hand side.<a href="#section-1.2-2.18.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-1.1-2.19">Inverted reference:</dt>
-          <dd style="margin-left: 1.5em" id="section-1.1-2.20">
-            <p id="section-1.1-2.20.1">An argument reference that uses the rump as the left-hand side
-and the argument as the right-hand side.<a href="#section-1.1-2.20.1" class="pilcrow">¶</a></p>
+<dt id="section-1.2-2.19">Inverted reference:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.2-2.20">
+            <p id="section-1.2-2.20.1">An argument reference that uses the rump as the left-hand side
+and the argument as the right-hand side.<a href="#section-1.2-2.20.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-1.1-2.21">Function tag:</dt>
-          <dd style="margin-left: 1.5em" id="section-1.1-2.22">
-            <p id="section-1.1-2.22.1">A tag used in an argument reference for the argument (straight
+<dt id="section-1.2-2.21">Function tag:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.2-2.22">
+            <p id="section-1.2-2.22.1">A tag used in an argument reference for the argument (straight
 references) or the rump (inverted references), causing the
 application of a function indicated by the function tag in order to
-reconstruct the data item.<a href="#section-1.1-2.22.1" class="pilcrow">¶</a></p>
+reconstruct the data item.<a href="#section-1.2-2.22.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-1.1-2.23">Integration tag:</dt>
-          <dd style="margin-left: 1.5em" id="section-1.1-2.24">
-            <p id="section-1.1-2.24.1">A tag defined by an application protocol to be used as a shared item
+<dt id="section-1.2-2.23">Integration tag:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.2-2.24">
+            <p id="section-1.2-2.24.1">A tag defined by an application protocol to be used as a shared item
 table element in order to signal a non-default procedure to
-integrate the shared item into the reference site.<a href="#section-1.1-2.24.1" class="pilcrow">¶</a></p>
+integrate the shared item into the reference site.<a href="#section-1.2-2.24.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-1.1-2.25">Stand-in item:</dt>
-          <dd style="margin-left: 1.5em" id="section-1.1-2.26">
-            <p id="section-1.1-2.26.1">A data item (a tag or a simple value) defined by an
+<dt id="section-1.2-2.25">Stand-in item:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.2-2.26">
+            <p id="section-1.2-2.26.1">A data item (a tag or a simple value) defined by an
 application protocol to stand in for a more complex data item.
 Stand-in items are fundamentally independent of Packed CBOR but can
 be employed by the application protocol as part of a Packed CBOR
-argument reference.<a href="#section-1.1-2.26.1" class="pilcrow">¶</a></p>
+argument reference.<a href="#section-1.2-2.26.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-1.1-2.27">Packing tables:</dt>
-          <dd style="margin-left: 1.5em" id="section-1.1-2.28">
-            <p id="section-1.1-2.28.1">The pair of a shared item table and an argument table.<a href="#section-1.1-2.28.1" class="pilcrow">¶</a></p>
+<dt id="section-1.2-2.27">Packing tables:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.2-2.28">
+            <p id="section-1.2-2.28.1">The pair of a shared item table and an argument table.<a href="#section-1.2-2.28.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-1.1-2.29">Active set (of packing tables):</dt>
-          <dd style="margin-left: 1.5em" id="section-1.1-2.30">
-            <p id="section-1.1-2.30.1">The packing tables in effect at the data item under consideration.<a href="#section-1.1-2.30.1" class="pilcrow">¶</a></p>
+<dt id="section-1.2-2.29">Active set (of packing tables):</dt>
+          <dd style="margin-left: 1.5em" id="section-1.2-2.30">
+            <p id="section-1.2-2.30.1">The packing tables in effect at the data item under consideration.<a href="#section-1.2-2.30.1" class="pilcrow">¶</a></p>
 </dd>
           <dd class="break"></dd>
-<dt id="section-1.1-2.31">Reconstruction:</dt>
-          <dd style="margin-left: 1.5em" id="section-1.1-2.32">
-            <p id="section-1.1-2.32.1">The result of applying a packed reference in the context of given
+<dt id="section-1.2-2.31">Reconstruction:</dt>
+          <dd style="margin-left: 1.5em" id="section-1.2-2.32">
+            <p id="section-1.2-2.32.1">The result of applying a packed reference in the context of given
 packing tables; we speak of the <em>reconstruction of a packed reference</em>
-as that result.<a href="#section-1.1-2.32.1" class="pilcrow">¶</a></p>
+as that result.<a href="#section-1.2-2.32.1" class="pilcrow">¶</a></p>
 </dd>
         <dd class="break"></dd>
 </dl>
-<p id="section-1.1-3">The definitions of <span>[<a href="#STD94" class="cite xref">STD94</a>]</span> apply.
+<p id="section-1.2-3">The definitions of <span>[<a href="#STD94" class="cite xref">STD94</a>]</span> apply.
 Specifically: The term "byte" is used in its now customary sense as a synonym for
 "octet"; "byte strings" are CBOR data items carrying a sequence of
 zero or more (binary) bytes, while "text strings" are CBOR data items carrying a
@@ -1498,30 +1531,30 @@ sequence of zero or more Unicode code points (more precisely: Unicode
 scalar values), encoded in UTF-8 <span>[<a href="#STD63" class="cite xref">STD63</a>]</span>.
 In this specification, the term "argument" is not used in the specific
 sense assigned to it in Section <a href="https://rfc-editor.org/rfc/rfc8949#section-3" class="relref">3</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>, but in its
-general sense as an argument of a function.<a href="#section-1.1-3" class="pilcrow">¶</a></p>
-<p id="section-1.1-4">Where arithmetic is explained, this document uses the notation
-familiar from the programming language C, except that<a href="#section-1.1-4" class="pilcrow">¶</a></p>
+general sense as an argument of a function.<a href="#section-1.2-3" class="pilcrow">¶</a></p>
+<p id="section-1.2-4">Where arithmetic is explained, this document uses the notation
+familiar from the programming language C, except that<a href="#section-1.2-4" class="pilcrow">¶</a></p>
 <ul class="normal">
-<li class="normal" id="section-1.1-5.1">
-            <p id="section-1.1-5.1.1">"<code>..</code>" denotes a range that includes both ends given,<a href="#section-1.1-5.1.1" class="pilcrow">¶</a></p>
+<li class="normal" id="section-1.2-5.1">
+            <p id="section-1.2-5.1.1">"<code>..</code>" denotes a range that includes both ends given,<a href="#section-1.2-5.1.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-1.1-5.2">
-            <p id="section-1.1-5.2.1">in the HTML and PDF forms, subtraction and negation are rendered as
-a hyphen ("-", as are various dashes), and<a href="#section-1.1-5.2.1" class="pilcrow">¶</a></p>
+          <li class="normal" id="section-1.2-5.2">
+            <p id="section-1.2-5.2.1">in the HTML and PDF forms, subtraction and negation are rendered as
+a hyphen ("-", as are various dashes), and<a href="#section-1.2-5.2.1" class="pilcrow">¶</a></p>
 </li>
-          <li class="normal" id="section-1.1-5.3">
-            <p id="section-1.1-5.3.1">superscript notation denotes exponentiation.
+          <li class="normal" id="section-1.2-5.3">
+            <p id="section-1.2-5.3.1">superscript notation denotes exponentiation.
 For example, 2 to the power of 64 is notated: 2<sup>64</sup>.
 In the plain-text version of this specification, superscript notation
 is not available and therefore is rendered by a surrogate notation.
 That notation is not optimized for this RFC; it is unfortunately
 ambiguous with C's exclusive-or and requires circumspection
-from the reader of the plain-text version.<a href="#section-1.1-5.3.1" class="pilcrow">¶</a></p>
+from the reader of the plain-text version.<a href="#section-1.2-5.3.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
-<p id="section-1.1-6">Examples of CBOR data items are shown
+<p id="section-1.2-6">Examples of CBOR data items are shown
 in CBOR Extended Diagnostic Notation (Section <a href="https://rfc-editor.org/rfc/rfc8949#section-8" class="relref">8</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span> in
-conjunction with <span><a href="https://rfc-editor.org/rfc/rfc8610#appendix-G" class="relref">Appendix G</a> of [<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> <span class="cref" id="update">➔ possibly update to</span> <span>[<a href="#I-D.ietf-cbor-edn-literals" class="cite xref">I-D.ietf-cbor-edn-literals</a>]</span>).<a href="#section-1.1-6" class="pilcrow">¶</a></p>
+conjunction with <span><a href="https://rfc-editor.org/rfc/rfc8610#appendix-G" class="relref">Appendix G</a> of [<a href="#RFC8610" class="cite xref">RFC8610</a>]</span> <span class="cref" id="update">➔ possibly update to</span> <span>[<a href="#I-D.ietf-cbor-edn-literals" class="cite xref">I-D.ietf-cbor-edn-literals</a>]</span>).<a href="#section-1.2-6" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -1575,14 +1608,18 @@ handled when the unpacker uses an older version of the external
 information.<a href="#section-2.1-5" class="pilcrow">¶</a></p>
 <p id="section-2.1-6">If, during unpacking, an index is used that references an item that is
 unpopulated in (e.g., outside the size of) the table in use, this <span class="bcp14">MAY</span> be treated as an
-error by the unpacker and abort the unpacking.
-Alternatively, the unpacker <span class="bcp14">MAY</span> provide the special value
-<code>1112(undefined)</code> (the simple value &gt;undefined&lt; as per Section <a href="https://rfc-editor.org/rfc/rfc8949#section-5.7" class="relref">5.7</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>, enclosed in the tag 1112) to the application and leave the
-error handling to the application.
-An unpacker <span class="bcp14">SHOULD</span> document which of these two alternatives has been
+error by the unpacker and abort the unpacking.<a href="#section-2.1-6" class="pilcrow">¶</a></p>
+<p id="section-2.1-7">Alternatively, the unpacker <span class="bcp14">MAY</span> provide an implementation specific value, enclosed in
+the tag 1112, to the application and leave the error handling to the
+application.
+In the simplest case, this could be <code>1112(undefined)</code>, using the
+simple value &gt;undefined&lt; as per Section <a href="https://rfc-editor.org/rfc/rfc8949#section-5.7" class="relref">5.7</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>;
+however, the same value cannot be used repeatedly as a map key
+within the same map.<a href="#section-2.1-7" class="pilcrow">¶</a></p>
+<p id="section-2.1-8">An unpacker <span class="bcp14">SHOULD</span> document which of these two alternatives has been
 chosen.
 CBOR based protocols that include the use of packed CBOR
-<span class="bcp14">MAY</span> require that unpacking errors are tolerated in some positions.<a href="#section-2.1-6" class="pilcrow">¶</a></p>
+<span class="bcp14">MAY</span> require that unpacking errors are tolerated in some positions.<a href="#section-2.1-8" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-referencing-shared-items">
@@ -2011,6 +2048,30 @@ A URI-based reference would be
 easy to define, but might be too inefficient when used in the likely
 combination with an <code>ni:</code> URI <span>[<a href="#RFC6920" class="cite xref">RFC6920</a>]</span>.<a href="#section-3-7.1" class="pilcrow">¶</a></p>
 </aside>
+<aside id="section-3-8">
+        <p id="section-3-8.1">As a hint for implementations, an algorithm for resolving references
+in a scenario with nested table setup tags could be described as follows:<a href="#section-3-8.1" class="pilcrow">¶</a></p>
+<ul class="normal">
+<li class="normal" id="section-3-8.2.1">
+            <p id="section-3-8.2.1.1">When chasing a reference, go upward in the data item tree.<a href="#section-3-8.2.1.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3-8.2.2">
+            <p id="section-3-8.2.2.1">If the next up table setup tag is not of the kind that simply prepends,
+switch to the alternative algorithm described by the setup tag.<a href="#section-3-8.2.2.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3-8.2.3">
+            <p id="section-3-8.2.3.1">If the next up table setup tag fulfills the reference (i.e., the
+size of the provided table is larger than the reference index), use
+the corresponding reference, and finish this algorithm.<a href="#section-3-8.2.3.1" class="pilcrow">¶</a></p>
+</li>
+          <li class="normal" id="section-3-8.2.4">
+            <p id="section-3-8.2.4.1">Otherwise, subtract the width of the table entries added in the
+relevant table from the reference number and continue upwards (up
+into the media type, which can bequeath default tables to the CBOR
+items in them).<a href="#section-3-8.2.4.1" class="pilcrow">¶</a></p>
+</li>
+        </ul>
+</aside>
 <div id="sec-basic-packed-cbor">
 <section id="section-3.1">
         <h3 id="name-basic-packed-cbor">
@@ -2242,7 +2303,7 @@ item table contains <code>1115([4, 5, 6])</code> as its first item is unpacked a
 <code>[1, 2, 3, 4, 5, 6, 7, 8, 9]</code>.<a href="#section-5.1-2" class="pilcrow">¶</a></p>
 <p id="section-5.1-3">Example application:
 Splicing integration tags could be generated implicitly in the
-implicit table setup defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-lenders-dns-cbor-14#section-4.1" class="relref">Section 4.1</a> of [<a href="#I-D.lenders-dns-cbor" class="cite xref">I-D.lenders-dns-cbor</a>]</span>, removing the
+implicit table setup defined in <span><a href="https://datatracker.ietf.org/doc/html/draft-lenders-dns-cbor-15#section-4.1" class="relref">Section 4.1</a> of [<a href="#I-D.lenders-dns-cbor" class="cite xref">I-D.lenders-dns-cbor</a>]</span>, removing the
 need to allow nested arrays for names.<a href="#section-5.1-3" class="pilcrow">¶</a></p>
 </section>
 </div>
@@ -2454,7 +2515,7 @@ IANA is requested to allocate the tags defined in <a href="#tab-tag-values" clas
             </tr>
             <tr>
               <td class="text-right" rowspan="1" colspan="1">1112</td>
-              <td class="text-left" rowspan="1" colspan="1">undefined (0xf7)</td>
+              <td class="text-left" rowspan="1" colspan="1">any</td>
               <td class="text-left" rowspan="1" colspan="1">Packed CBOR: reference error</td>
             </tr>
             <tr>
@@ -2516,6 +2577,18 @@ inputs when deterministically encoded <span>[<a href="#I-D.ietf-cbor-cde" class=
 (Note that where external dictionaries are added to
 cbor-packed as in <span>[<a href="#I-D.amsuess-cbor-packed-by-reference" class="cite xref">I-D.amsuess-cbor-packed-by-reference</a>]</span>,
 this requires additional consideration.)<a href="#section-9-3" class="pilcrow">¶</a></p>
+<p id="section-9-4">When tables are obtained from the application environment, e.g., a
+media type, any evolution of the application environment (such as an
+update to the media type specification) needs to reliably ensure that
+existing references continue to unpack in the same way.
+Therefore, application environments that provide packing tables need
+to explicitly specify if these packing tables may evolve, and, if yes,
+provide a design for this kind of evolvability.
+For instance, <span>[<a href="#I-D.amsuess-cbor-packed-by-reference" class="cite xref">I-D.amsuess-cbor-packed-by-reference</a>]</span> provides a way to reserve entries in a packing
+table that can be filled in by revisions of the application
+environment; to avoid false unpacking, this needs to be the only
+update that can be applied to such a table-setting application
+environment.<a href="#section-9-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="sec-combined-references">
@@ -2541,7 +2614,7 @@ this requires additional consideration.)<a href="#section-9-3" class="pilcrow">�
 <dd class="break"></dd>
 <dt id="I-D.ietf-cbor-edn-literals">[I-D.ietf-cbor-edn-literals]</dt>
         <dd>
-<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"CBOR Extended Diagnostic Notation (EDN)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cbor-edn-literals-18</span>, <time datetime="2025-07-07" class="refDate">7 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cbor-edn-literals-18">https://datatracker.ietf.org/doc/html/draft-ietf-cbor-edn-literals-18</a>&gt;</span>. </dd>
+<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"CBOR Extended Diagnostic Notation (EDN)"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-ietf-cbor-edn-literals-19</span>, <time datetime="2025-10-16" class="refDate">16 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-ietf-cbor-edn-literals-19">https://datatracker.ietf.org/doc/html/draft-ietf-cbor-edn-literals-19</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="IANA.cbor-simple-values">[IANA.cbor-simple-values]</dt>
         <dd>
@@ -2590,7 +2663,7 @@ this requires additional consideration.)<a href="#section-9-3" class="pilcrow">�
 <dd class="break"></dd>
 <dt id="I-D.lenders-dns-cbor">[I-D.lenders-dns-cbor]</dt>
         <dd>
-<span class="refAuthor">Lenders, M. S.</span>, <span class="refAuthor">Bormann, C.</span>, <span class="refAuthor">Schmidt, T. C.</span>, and <span class="refAuthor">M. Wählisch</span>, <span class="refTitle">"A Concise Binary Object Representation (CBOR) of DNS Messages"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-lenders-dns-cbor-14</span>, <time datetime="2025-07-07" class="refDate">7 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-lenders-dns-cbor-14">https://datatracker.ietf.org/doc/html/draft-lenders-dns-cbor-14</a>&gt;</span>. </dd>
+<span class="refAuthor">Lenders, M. S.</span>, <span class="refAuthor">Bormann, C.</span>, <span class="refAuthor">Schmidt, T. C.</span>, and <span class="refAuthor">M. Wählisch</span>, <span class="refTitle">"A Concise Binary Object Representation (CBOR) of DNS Messages"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-lenders-dns-cbor-15</span>, <time datetime="2025-10-20" class="refDate">20 October 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-lenders-dns-cbor-15">https://datatracker.ietf.org/doc/html/draft-lenders-dns-cbor-15</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="RFC1951">[RFC1951]</dt>
         <dd>
