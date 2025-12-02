@@ -154,21 +154,49 @@ A specific application protocol that employs Packed CBOR might employ
 both kinds of optimization or limit its use to item
 sharing only.
 
+## Extensibility Approach
+
 Packed CBOR is defined in two main parts:
 
-* Referencing packing tables
-({{sec-packed-cbor}}), which is intended to be the stable, common
-component of all uses of Packed CBOR, and
+* Data items for referencing packing tables
+({{sec-packed-cbor}}), the set of which defined here which is intended
+to be the stable, common component of all uses of Packed CBOR, and
 
-* setting up packing tables
+* Mechanisms for setting up packing tables
 ({{sec-table-setup}}), which carries the main extension point, populated
 in this document by two table setup tags.
+Such setup information is usually conveyed in a tag and then applies
+to the content of the tag.
+Setup information can also be contained in environmental information
+that applies to an encoded CBOR data item, e.g., a media type can set
+up a static dictionary that applies to CBOR data items in
+representations that are of that media type.
 
 Sections {{<sec-function-tags}}, {{<sec-integration-tags}}, and
 {{<sec-standin}} provide additional extension points, each of which is
 populated by one or more extensions in this document or elsewhere.
 These extensions can be selected by an application protocol that makes
 use of Packed CBOR.
+
+Beyond the extensibility approach shown in the present document, new
+setup tags (or media types etc.) could also be defined such that they
+modify (or completely swap out) the way the referencing data items
+defined here operate and/or define new referencing data items.
+This is not done in the present document so that there is a coherent
+interpretation of the referencing data items defined here; such new
+definitions of referencing data items probably should specify how
+they interact with parts of Packed CBOR that they do not replace.
+
+An unpacker can only carry out the tags (and the environmental
+information) that it knows how to interpret.
+An unpacker that encounters tags that are unknown to it can simply make these
+tags available to the application, which can abort processing if
+unknown (or unimplemented) tags are found, or if their interpretation
+would require functionality of the unpacker that is not available.
+As a shortcut, the application might also provide the unpacker with a
+list of tags that the application can process, allowing the unpacker
+to abort processing when a tag unknown to it and not on this list is
+encountered.
 
 Terminology and Conventions        {#terms}
 ------------
