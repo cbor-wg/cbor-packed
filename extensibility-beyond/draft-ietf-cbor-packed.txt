@@ -5,8 +5,8 @@
 Network Working Group                                         C. Bormann
 Internet-Draft                                    Universität Bremen TZI
 Intended status: Standards Track                             M. Gütschow
-Expires: 5 June 2026                                          TU Dresden
-                                                         2 December 2025
+Expires: 7 June 2026                                          TU Dresden
+                                                         4 December 2025
 
 
                               Packed CBOR
@@ -53,7 +53,7 @@ About This Document
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                  [Page 1]
+Bormann & Gütschow         Expires 7 June 2026                  [Page 1]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -81,7 +81,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 June 2026.
+   This Internet-Draft will expire on 7 June 2026.
 
 Copyright Notice
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                  [Page 2]
+Bormann & Gütschow         Expires 7 June 2026                  [Page 2]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -165,7 +165,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                  [Page 3]
+Bormann & Gütschow         Expires 7 June 2026                  [Page 3]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -221,7 +221,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                  [Page 4]
+Bormann & Gütschow         Expires 7 June 2026                  [Page 4]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -234,11 +234,12 @@ Internet-Draft                 Packed CBOR                 December 2025
    Beyond the extensibility approach shown in the present document, new
    setup tags (or media types etc.) could also be defined such that they
    modify (or completely swap out) the way the referencing data items
-   defined here operate and/or define new referencing data items.  This
-   is not done in the present document so that there is a coherent
-   interpretation of the referencing data items defined here; such new
-   definitions of referencing data items probably should specify how
-   they interact with parts of Packed CBOR that they do not replace.
+   (simple values and tags) defined in this document operate and/or
+   define new referencing data items.  This is not done in the present
+   document so that there is a coherent interpretation of the
+   referencing data items defined here; such new definitions of
+   referencing data items probably should specify how they interact with
+   parts of Packed CBOR that they do not replace.
 
    An unpacker can only carry out the tags (and the environmental
    information) that it knows how to interpret.  An unpacker that
@@ -276,8 +277,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-
-Bormann & Gütschow         Expires 5 June 2026                  [Page 5]
+Bormann & Gütschow         Expires 7 June 2026                  [Page 5]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -333,7 +333,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                  [Page 6]
+Bormann & Gütschow         Expires 7 June 2026                  [Page 6]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -389,7 +389,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                  [Page 7]
+Bormann & Gütschow         Expires 7 June 2026                  [Page 7]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -445,7 +445,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                  [Page 8]
+Bormann & Gütschow         Expires 7 June 2026                  [Page 8]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -501,7 +501,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                  [Page 9]
+Bormann & Gütschow         Expires 7 June 2026                  [Page 9]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -557,7 +557,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 10]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 10]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -613,7 +613,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 11]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 11]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -669,7 +669,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 12]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 12]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -725,7 +725,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 13]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 13]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -781,7 +781,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 14]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 14]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -837,7 +837,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 15]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 15]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -893,7 +893,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 16]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 16]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -949,7 +949,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 17]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 17]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -1005,7 +1005,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 18]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 18]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -1061,7 +1061,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 19]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 19]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -1117,7 +1117,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 20]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 20]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -1173,7 +1173,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 21]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 21]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -1229,7 +1229,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 22]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 22]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -1285,7 +1285,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 23]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 23]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -1341,7 +1341,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 24]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 24]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -1397,7 +1397,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 25]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 25]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -1453,7 +1453,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 26]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 26]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -1509,7 +1509,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 27]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 27]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -1565,7 +1565,7 @@ Appendix A.  Examples
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 28]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 28]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -1621,7 +1621,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 29]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 29]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -1677,7 +1677,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 30]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 30]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -1733,7 +1733,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 31]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 31]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -1789,7 +1789,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 32]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 32]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -1845,7 +1845,7 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 33]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 33]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -1901,7 +1901,7 @@ List of Tables
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 34]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 34]
 
 Internet-Draft                 Packed CBOR                 December 2025
 
@@ -1957,4 +1957,4 @@ Authors' Addresses
 
 
 
-Bormann & Gütschow         Expires 5 June 2026                 [Page 35]
+Bormann & Gütschow         Expires 7 June 2026                 [Page 35]
