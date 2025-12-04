@@ -181,7 +181,8 @@ use of Packed CBOR.
 Beyond the extensibility approach shown in the present document, new
 setup tags (or media types etc.) could also be defined such that they
 modify (or completely swap out) the way the referencing data items
-defined here operate and/or define new referencing data items.
+(simple values and tags)
+defined in this document operate and/or define new referencing data items.
 This is not done in the present document so that there is a coherent
 interpretation of the referencing data items defined here; such new
 definitions of referencing data items probably should specify how
