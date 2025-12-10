@@ -179,11 +179,18 @@ These extensions can be selected by an application protocol that makes
 use of Packed CBOR.
 
 Beyond the extensibility approach shown in the present document, new
-setup tags (or media types etc.) could also be defined such that they
-modify (or completely swap out) the way the referencing data items
+CBOR tags (or media types etc.) could also be defined such that they
+(1) modify (or completely swap out) the way the referencing data items
 (simple values and tags)
-defined in this document operate and/or define new referencing data items.
-This is not done in the present document so that there is a coherent
+defined in this document operate and/or (2) define new referencing data items.
+(From the point of view of the present specification, these tags or
+media types then act as setup tags setting up tables that control
+subtrees with semantics
+different from the present specification; from the point of view of the
+specification defining these tags or media types this simply initiates
+the use of the referencing data items for their specific purposes.)
+An example for this is not shown in the present document so that there
+is a coherent
 interpretation of the referencing data items defined here; such new
 definitions of referencing data items probably should specify how
 they interact with parts of Packed CBOR that they do not replace.
@@ -191,7 +198,7 @@ they interact with parts of Packed CBOR that they do not replace.
 An unpacker can only carry out the tags (and the environmental
 information) that it knows how to interpret.
 An unpacker that encounters tags that are unknown to it can simply make these
-tags available to the application, which can abort processing if
+tags available to the application, which then can abort processing if
 unknown (or unimplemented) tags are found, or if their interpretation
 would require functionality of the unpacker that is not available.
 As a shortcut, the application might also provide the unpacker with a
