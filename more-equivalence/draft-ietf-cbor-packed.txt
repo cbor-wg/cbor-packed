@@ -125,8 +125,9 @@ Internet-Draft                 Packed CBOR                 December 2025
      5.1.  Splicing Integration Tag  . . . . . . . . . . . . . . . .  20
    6.  Additional Stand-in Items . . . . . . . . . . . . . . . . . .  20
    7.  Tag Validity: Equivalence Principle . . . . . . . . . . . . .  21
-     7.1.  Tag Equivalence . . . . . . . . . . . . . . . . . . . . .  22
-     7.2.  Tag Equivalence of Packed CBOR Tags and Simple Values . .  23
+     7.1.  Tag Content Equivalence . . . . . . . . . . . . . . . . .  22
+     7.2.  Tag Content Equivalence of Tags and Simple Values Defined
+           in Packed CBOR  . . . . . . . . . . . . . . . . . . . . .  23
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  23
      8.1.  CBOR Tags Registry  . . . . . . . . . . . . . . . . . . .  23
      8.2.  CBOR Simple Values Registry . . . . . . . . . . . . . . .  24
@@ -160,7 +161,6 @@ Internet-Draft                 Packed CBOR                 December 2025
    data item into a Packed CBOR data item that is almost as easy to
    consume as the original CBOR data item.  A separate decompression
    step is therefore often not required at the recipient.
-
 
 
 
@@ -1200,31 +1200,31 @@ Internet-Draft                 Packed CBOR                 December 2025
       |  value may have no way to handle the extended range of tag 264
       |  and 265.
 
-7.1.  Tag Equivalence
+7.1.  Tag Content Equivalence
 
-   A tag or simple value definition MAY declare Tag Equivalence to some
-   existing structure, under some conditions defined by that definition.
-   This, in effect, extends all existing tag definitions that accept the
-   named structure to accept the newly defined item under the conditions
-   given for the Tag Equivalence.
+   A tag or simple value definition MAY declare Tag Content Equivalence
+   to some existing structure, under some conditions defined by that
+   definition.  This, in effect, extends all existing tag definitions
+   that accept the named structure to accept the newly defined item
+   under the conditions given for the Tag Content Equivalence.
 
-   A number of limitations apply to Tag Equivalence, which therefore
-   should be applied deliberately and sparingly:
+   A number of limitations apply to Tag Content Equivalence, which
+   therefore should be applied deliberately and sparingly:
 
-   *  Tag Equivalence is a new concept, which may not be implemented by
-      an existing generic decoder.  A generic decoder not implementing
-      tag equivalence might raise tag validity errors where Tag
-      Equivalence says there should be none.
+   *  Tag Content Equivalence is a new concept, which may not be
+      implemented by an existing generic decoder.  A generic decoder not
+      implementing tag equivalence might raise tag validity errors where
+      Tag Content Equivalence says there should be none.
 
-   *  A CBOR protocol MAY specify the use of Tag Equivalence,
+   *  A CBOR protocol MAY specify the use of Tag Content Equivalence,
       effectively limiting the protocol's full use to those generic
       encoders that implement it.  Existing CBOR protocols that do not
-      address Tag Equivalence implicitly have a new variant that allows
-      Tag Equivalence (e.g., to support Packed CBOR with an existing
-      protocol).  A CBOR protocol that does address Tag Equivalence MAY
-      be explicit about what kinds of Tag Equivalence it supports (e.g.,
-      only the reference tags employed by Packed CBOR and certain table
-      setup tags).
+      address Tag Content Equivalence implicitly have a new variant that
+      allows Tag Content Equivalence (e.g., to support Packed CBOR with
+      an existing protocol).  A CBOR protocol that does address Tag
+      Content Equivalence MAY be explicit about what kinds of Tag
+      Content Equivalence it supports (e.g., only the reference tags
+      employed by Packed CBOR and certain table setup tags).
 
 
 
@@ -1234,21 +1234,22 @@ Bormann & Gütschow        Expires 14 June 2026                 [Page 22]
 Internet-Draft                 Packed CBOR                 December 2025
 
 
-   *  There is currently no way to express Tag Equivalence in CDDL.  For
-      Packed CBOR, CDDL would typically be used to describe the unpacked
-      CBOR represented by it; further restricting the Packed CBOR is
-      likely to lead to interoperability problems.  (Note that, by
-      definition, there is no need to describe Tag Equivalence on the
-      receptacle [outer tag] side; only for the item that declares Tag
-      Equivalence.)
+   *  There is currently no way to express Tag Content Equivalence in
+      CDDL.  For Packed CBOR, CDDL would typically be used to describe
+      the unpacked CBOR represented by it; further restricting the
+      Packed CBOR is likely to lead to interoperability problems.  (Note
+      that, by definition, there is no need to describe Tag Equivalence
+      on the receptacle [outer tag] side; only for the item that
+      declares Tag Content Equivalence.)
 
    *  The registry "CBOR Tags" [IANA.cbor-tags] currently does not have
       a way to record any equivalence claimed for a tag.  A convention
-      would be to alert to Tag Equivalence in the "Semantics (short
-      form)" field of the registry.
+      would be to alert to Tag Content Equivalence in the "Semantics
+      (short form)" field of the registry.
       // Needs to be done for the tag registrations here.
 
-7.2.  Tag Equivalence of Packed CBOR Tags and Simple Values
+7.2.  Tag Content Equivalence of Tags and Simple Values Defined in
+      Packed CBOR
 
    The reference data items (tags and simple values) in this
    specification declare their equivalence to the unpacked shared items
@@ -1281,7 +1282,6 @@ Internet-Draft                 Packed CBOR                 December 2025
    +----------------------+-----------------------------+--------------+
    |                  105 | concatenation item (text    | Packed       |
    |                      | string, byte string, array, | CBOR: ijoin  |
-   |                      | or map)                     | function     |
 
 
 
@@ -1290,6 +1290,7 @@ Bormann & Gütschow        Expires 14 June 2026                 [Page 23]
 Internet-Draft                 Packed CBOR                 December 2025
 
 
+   |                      | or map)                     | function     |
    +----------------------+-----------------------------+--------------+
    |                  106 | array of concatenation item | Packed       |
    |                      | (text string, byte string,  | CBOR: join   |
@@ -1335,7 +1336,6 @@ Internet-Draft                 Packed CBOR                 December 2025
 
    In the registry "CBOR Simple Values" [IANA.cbor-simple-values], IANA
    is requested to allocate the simple values defined in Table 5.
-
 
 
 
