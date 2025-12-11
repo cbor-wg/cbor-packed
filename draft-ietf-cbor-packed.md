@@ -1032,48 +1032,48 @@ They could not simply declare that they are equivalent to tags 4 and 5
 as a tag requiring a fractional value may have no way to handle the
 extended range of tag 264 and 265.
 
-Tag Equivalence
+Tag Content Equivalence
 ---------------
 
-A tag or simple value definition MAY declare Tag Equivalence to some existing
+A tag or simple value definition MAY declare Tag Content Equivalence to some existing
 structure, under some conditions defined by that definition.
 This, in effect, extends all existing tag definitions that accept the
 named structure to accept the newly defined item under the conditions
-given for the Tag Equivalence.
+given for the Tag Content Equivalence.
 
-A number of limitations apply to Tag Equivalence, which therefore
+A number of limitations apply to Tag Content Equivalence, which therefore
 should be applied deliberately and sparingly:
 
-* Tag Equivalence is a new concept, which may not be implemented by an
+* Tag Content Equivalence is a new concept, which may not be implemented by an
   existing generic decoder.  A generic decoder not implementing tag
-  equivalence might raise tag validity errors where Tag Equivalence
+  equivalence might raise tag validity errors where Tag Content Equivalence
   says there should be none.
 
-* A CBOR protocol MAY specify the use of Tag Equivalence, effectively
+* A CBOR protocol MAY specify the use of Tag Content Equivalence, effectively
   limiting the protocol's full use to those generic encoders that implement it.
-  Existing CBOR protocols that do not address Tag Equivalence
-  implicitly have a new variant that allows Tag Equivalence
+  Existing CBOR protocols that do not address Tag Content Equivalence
+  implicitly have a new variant that allows Tag Content Equivalence
   (e.g., to support Packed CBOR with an existing protocol).
-  A CBOR protocol that does address Tag Equivalence MAY be explicit
-  about what kinds of Tag Equivalence it supports (e.g., only the
+  A CBOR protocol that does address Tag Content Equivalence MAY be explicit
+  about what kinds of Tag Content Equivalence it supports (e.g., only the
   reference tags employed by Packed CBOR and certain table setup tags).
 
-* There is currently no way to express Tag Equivalence in CDDL.
+* There is currently no way to express Tag Content Equivalence in CDDL.
   For Packed CBOR, CDDL would typically be used to describe the
   unpacked CBOR represented by it; further restricting the Packed CBOR
   is likely to lead to interoperability problems.
   (Note that, by definition, there is no need to describe Tag
   Equivalence on the receptacle \[outer tag] side; only for the item that declares
-  Tag Equivalence.)
+  Tag Content Equivalence.)
 
 * The registry "{{cbor-tags (CBOR Tags)<IANA.cbor-tags}}" {{IANA.cbor-tags}}
   currently does not have a way to record any equivalence claimed
-  for a tag.  A convention would be to alert to Tag Equivalence in the
+  for a tag.  A convention would be to alert to Tag Content Equivalence in the
   "Semantics (short form)" field of the registry.[^todo]
 
 [^todo]: Needs to be done for the tag registrations here.
 
-Tag Equivalence of Packed CBOR Tags and Simple Values
+Tag Content Equivalence of Tags and Simple Values Defined in Packed CBOR
 -------------------------------
 
 The reference data items (tags and simple values) in this
