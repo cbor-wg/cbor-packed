@@ -970,7 +970,7 @@ interpretations at different places in a system can lead to check/use
 vulnerabilities.
 
 
-Tag Validity: Tag Equivalence Principle
+Tag Validity: Equivalence Principle
 ===================================
 
 In {{Section 5.3.2 of RFC8949@-bis}}, the validity of tags is defined in terms
@@ -989,7 +989,8 @@ item.
 But in any case, a tag definition can only specify validity based on
 the structure of its tag content.
 
-In Packed CBOR, a reference data item might be "standing in" for the actual
+In Packed CBOR, a reference data item (represented as a tag or a
+simple value) might be "standing in" for the actual
 tag content of an outer tag, or for a structural component of that.
 In this case, the formal structure of the outer tag's content before
 unpacking usually no longer fulfills the validity conditions of the
@@ -998,22 +999,23 @@ outer tag.
 The underlying problem is not unique to Packed CBOR.
 For instance, {{-array}} describes tags 64..87 that "stand in" for CBOR
 arrays (the native form of which has major type 4).
-For the other tags defined in this specification, which require some
+For the other tags defined {{-array}}, which require some
 array structure of the tag content, a footnote was added:
 
 {:quote}
 >  \[...] The second element of the outer array in the data item is a
    native CBOR array (major type 4) or Typed Array (one of tag 64..87)
 
-The top-down approach to handle the "rendezvous" between the outer and
-inner tags does not support extensibility: any further Typed Array
+The top-down approach to handle the "rendezvous" between the outer tag and
+the tag content representation (e.g., using an inner tag) does not
+support extensibility: any further Typed Array
 tags being defined do not inherit the exception granted to tag number
 64..87; they would need to formally update all existing tag
 definitions that can accept typed arrays or be of limited use with
 these existing tags.
 
 Instead, the tag validity mechanism needs to be extended by a
-bottom-up component: A tag definition needs to be able to declare that
+bottom-up component: A tag (or simple value) definition needs to be able to declare that
 the tag can "stand in" for, (is, in terms of tag validity, equivalent
 to) some structure.
 
@@ -1033,11 +1035,10 @@ extended range of tag 264 and 265.
 Tag Equivalence
 ---------------
 
-A tag definition MAY declare Tag Equivalence to some existing
-structure for the tag, under some conditions defined by the new tag
-definition.
+A tag or simple value definition MAY declare Tag Equivalence to some existing
+structure, under some conditions defined by that definition.
 This, in effect, extends all existing tag definitions that accept the
-named structure to accept the newly defined tag under the conditions
+named structure to accept the newly defined item under the conditions
 given for the Tag Equivalence.
 
 A number of limitations apply to Tag Equivalence, which therefore
@@ -1062,7 +1063,7 @@ should be applied deliberately and sparingly:
   unpacked CBOR represented by it; further restricting the Packed CBOR
   is likely to lead to interoperability problems.
   (Note that, by definition, there is no need to describe Tag
-  Equivalence on the receptacle side; only for the tag that declares
+  Equivalence on the receptacle \[outer tag] side; only for the item that declares
   Tag Equivalence.)
 
 * The registry "{{cbor-tags (CBOR Tags)<IANA.cbor-tags}}" {{IANA.cbor-tags}}
@@ -1072,10 +1073,11 @@ should be applied deliberately and sparingly:
 
 [^todo]: Needs to be done for the tag registrations here.
 
-Tag Equivalence of Packed CBOR Tags
+Tag Equivalence of Packed CBOR Tags and Simple Values
 -------------------------------
 
-The reference data items in this specification declare their equivalence to
+The reference data items (tags and simple values) in this
+specification declare their equivalence to
 the unpacked shared items or function results they represent.
 
 The table setup tags 113 and 1113 declare their equivalence to the unpacked CBOR
