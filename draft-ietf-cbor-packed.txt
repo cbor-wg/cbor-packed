@@ -100,12 +100,12 @@ Copyright Notice
 Table of Contents
 
    1.  Introduction  . . . . . . . . . . . . . . . . . . . . . . . .   3
-     1.1.  Terminology and Conventions . . . . . . . . . . . . . . .   5
+     1.1.  Extensibility Approach  . . . . . . . . . . . . . . . . .   4
+     1.2.  Terminology and Conventions . . . . . . . . . . . . . . .   5
    2.  Packed CBOR . . . . . . . . . . . . . . . . . . . . . . . . .   7
-     2.1.  Packing Tables  . . . . . . . . . . . . . . . . . . . . .   7
+     2.1.  Packing Tables  . . . . . . . . . . . . . . . . . . . . .   8
      2.2.  Referencing Shared Items  . . . . . . . . . . . . . . . .   8
      2.3.  Referencing Argument Items  . . . . . . . . . . . . . . .   9
-     2.4.  Concatenation . . . . . . . . . . . . . . . . . . . . . .  11
 
 
 
@@ -114,27 +114,28 @@ Bormann & Gütschow        Expires 11 July 2026                  [Page 2]
 Internet-Draft                 Packed CBOR                  January 2026
 
 
-     2.5.  Discussion  . . . . . . . . . . . . . . . . . . . . . . .  12
-     2.6.  Allocation  . . . . . . . . . . . . . . . . . . . . . . .  13
-   3.  Table Setup . . . . . . . . . . . . . . . . . . . . . . . . .  14
-     3.1.  Basic Packed CBOR . . . . . . . . . . . . . . . . . . . .  16
-   4.  Function Tags . . . . . . . . . . . . . . . . . . . . . . . .  17
-     4.1.  Join Function Tags  . . . . . . . . . . . . . . . . . . .  17
-     4.2.  Record Function Tag . . . . . . . . . . . . . . . . . . .  18
-   5.  Integration Tags  . . . . . . . . . . . . . . . . . . . . . .  19
-     5.1.  Splicing Integration Tag  . . . . . . . . . . . . . . . .  20
-   6.  Additional Stand-in Items . . . . . . . . . . . . . . . . . .  20
-   7.  Tag Validity: Equivalence Principle . . . . . . . . . . . . .  21
-     7.1.  Tag Content Equivalence . . . . . . . . . . . . . . . . .  22
+     2.4.  Concatenation . . . . . . . . . . . . . . . . . . . . . .  12
+     2.5.  Discussion  . . . . . . . . . . . . . . . . . . . . . . .  13
+     2.6.  Allocation  . . . . . . . . . . . . . . . . . . . . . . .  14
+   3.  Table Setup . . . . . . . . . . . . . . . . . . . . . . . . .  15
+     3.1.  Basic Packed CBOR . . . . . . . . . . . . . . . . . . . .  17
+   4.  Function Tags . . . . . . . . . . . . . . . . . . . . . . . .  18
+     4.1.  Join Function Tags  . . . . . . . . . . . . . . . . . . .  18
+     4.2.  Record Function Tag . . . . . . . . . . . . . . . . . . .  19
+   5.  Integration Tags  . . . . . . . . . . . . . . . . . . . . . .  20
+     5.1.  Splicing Integration Tag  . . . . . . . . . . . . . . . .  21
+   6.  Additional Stand-in Items . . . . . . . . . . . . . . . . . .  21
+   7.  Tag Validity: Equivalence Principle . . . . . . . . . . . . .  22
+     7.1.  Tag Content Equivalence . . . . . . . . . . . . . . . . .  23
      7.2.  Tag Content Equivalence of Tags and Simple Values Defined
-           in Packed CBOR  . . . . . . . . . . . . . . . . . . . . .  23
-   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  23
-     8.1.  CBOR Tags Registry  . . . . . . . . . . . . . . . . . . .  23
-     8.2.  CBOR Simple Values Registry . . . . . . . . . . . . . . .  24
+           in Packed CBOR  . . . . . . . . . . . . . . . . . . . . .  24
+   8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  24
+     8.1.  CBOR Tags Registry  . . . . . . . . . . . . . . . . . . .  24
+     8.2.  CBOR Simple Values Registry . . . . . . . . . . . . . . .  25
    9.  Security Considerations . . . . . . . . . . . . . . . . . . .  25
-   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  25
-     10.1.  Normative References . . . . . . . . . . . . . . . . . .  25
-     10.2.  Informative References . . . . . . . . . . . . . . . . .  26
+   10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  26
+     10.1.  Normative References . . . . . . . . . . . . . . . . . .  26
+     10.2.  Informative References . . . . . . . . . . . . . . . . .  27
    Appendix A.  Examples . . . . . . . . . . . . . . . . . . . . . .  28
    List of Figures . . . . . . . . . . . . . . . . . . . . . . . . .  34
    List of Tables  . . . . . . . . . . . . . . . . . . . . . . . . .  34
@@ -161,7 +162,6 @@ Internet-Draft                 Packed CBOR                  January 2026
    data item into a Packed CBOR data item that is almost as easy to
    consume as the original CBOR data item.  A separate decompression
    step is therefore often not required at the recipient.
-
 
 
 
@@ -199,22 +199,22 @@ Internet-Draft                 Packed CBOR                  January 2026
    A specific application protocol that employs Packed CBOR might employ
    both kinds of optimization or limit its use to item sharing only.
 
+1.1.  Extensibility Approach
+
    Packed CBOR is defined in two main parts:
 
-   *  Referencing packing tables (Section 2), which is intended to be
-      the stable, common component of all uses of Packed CBOR, and
+   *  Data items for referencing packing tables (Section 2), the set of
+      which defined here which is intended to be the stable, common
+      component of all uses of Packed CBOR, and
 
-   *  setting up packing tables (Section 3), which carries the main
-      extension point, populated in this document by two table setup
-      tags.
-
-   Sections 4, 5, and 6 provide additional extension points, each of
-   which is populated by one or more extensions in this document or
-   elsewhere.  These extensions can be selected by an application
-   protocol that makes use of Packed CBOR.
-
-
-
+   *  Mechanisms for setting up packing tables (Section 3), which
+      carries the main extension point, populated in this document by
+      two table setup tags.  Such setup information is usually conveyed
+      in a tag and then applies to the content of the tag.  Setup
+      information can also be contained in environmental information
+      that applies to an encoded CBOR data item, e.g., a media type can
+      set up a static dictionary that applies to CBOR data items in
+      representations that are of that media type.
 
 
 
@@ -226,7 +226,39 @@ Bormann & Gütschow        Expires 11 July 2026                  [Page 4]
 Internet-Draft                 Packed CBOR                  January 2026
 
 
-1.1.  Terminology and Conventions
+   Sections 4, 5, and 6 provide additional extension points, each of
+   which is populated by one or more extensions in this document or
+   elsewhere.  These extensions can be selected by an application
+   protocol that makes use of Packed CBOR.
+
+   Beyond the extensibility approach shown in the present document, new
+   CBOR tags (or media types etc.) could also be defined such that they
+   (1) modify (or completely swap out) the way the referencing data
+   items (simple values and tags) defined in this document operate and/
+   or (2) define new referencing data items.  (From the point of view of
+   the present specification, these tags or media types then act as
+   setup tags setting up tables that control subtrees with semantics
+   different from the present specification; from the point of view of
+   the specification defining these tags or media types this simply
+   initiates the use of the referencing data items for their specific
+   purposes.)  An example for this is not shown in the present document
+   so that there is a coherent interpretation of the referencing data
+   items defined here; such new definitions of referencing data items
+   probably should specify how they interact with parts of Packed CBOR
+   that they do not replace.
+
+   An unpacker can only carry out the tags (and the environmental
+   information) that it knows how to interpret.  An unpacker that
+   encounters tags that are unknown to it can simply make these tags
+   available to the application, which then can abort processing if
+   unknown (or unimplemented) tags are found, or if their interpretation
+   would require functionality of the unpacker that is not available.
+   As a shortcut, the application might also provide the unpacker with a
+   list of tags that the application can process, allowing the unpacker
+   to abort processing when a tag unknown to it and not on this list is
+   encountered.
+
+1.2.  Terminology and Conventions
 
    The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT",
    "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and
@@ -242,6 +274,14 @@ Internet-Draft                 Packed CBOR                  January 2026
       (_packed CBOR_).
 
    Packed reference:  A shared item reference or an argument reference,
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                  [Page 5]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
+
       expressed by a reference data item.
 
    Reference data item:  A data item (tag or simple value) that serves
@@ -274,14 +314,6 @@ Internet-Draft                 Packed CBOR                  January 2026
       procedure to integrate the shared item into the reference site.
 
    Stand-in item:  A data item (a tag or a simple value) defined by an
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                  [Page 5]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
       application protocol to stand in for a more complex data item.
       Stand-in items are fundamentally independent of Packed CBOR but
       can be employed by the application protocol as part of a Packed
@@ -296,6 +328,15 @@ Internet-Draft                 Packed CBOR                  January 2026
    Reconstruction:  The result of applying a packed reference in the
       context of given packing tables; we speak of the _reconstruction
       of a packed reference_ as that result.
+
+
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                  [Page 6]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
 
    The definitions of [STD94] apply.  Specifically: The term "byte" is
    used in its now customary sense as a synonym for "octet"; "byte
@@ -328,16 +369,6 @@ Internet-Draft                 Packed CBOR                  January 2026
    Appendix G of [RFC8610]
    // ➔ possibly update to [I-D.ietf-cbor-edn-literals]).
 
-
-
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                  [Page 6]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
 2.  Packed CBOR
 
    This section describes the packing tables, their structure, and how
@@ -352,6 +383,16 @@ Internet-Draft                 Packed CBOR                  January 2026
    creating a precise specification while the quantitative allocation
    discussion is ongoing.  They will be replaced by specific chosen
    numbers when the present specification is finalized (Section 2.6).
+
+
+
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                  [Page 7]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
 
 2.1.  Packing Tables
 
@@ -384,16 +425,6 @@ Internet-Draft                 Packed CBOR                  January 2026
    is unpopulated in (e.g., outside the size of) the table in use, this
    MAY be treated as an error by the unpacker and abort the unpacking.
 
-
-
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                  [Page 7]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
    Alternatively, the unpacker MAY provide an implementation specific
    value, enclosed in the tag 1112, to the application and leave the
    error handling to the application.  In the simplest case, this could
@@ -408,6 +439,16 @@ Internet-Draft                 Packed CBOR                  January 2026
 2.2.  Referencing Shared Items
 
    Shared items are stored in the shared item table of the active set.
+
+
+
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                  [Page 8]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
 
    The shared data items are referenced by using the reference data
    items in Table 1.  The table index (an unsigned integer) is derived
@@ -441,15 +482,6 @@ Internet-Draft                 Packed CBOR                  January 2026
    grow to very large (or very negative) values, there is no practical
    limit to how many shared items might be used in a Packed CBOR item.
 
-
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                  [Page 8]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
    Note that the semantics of Tag 6 depend on its tag content: An
    integer turns the tag into a shared item reference, whereas an array
    of an integer and a data item turns it into an argument reference
@@ -463,6 +495,16 @@ Internet-Draft                 Packed CBOR                  January 2026
    The argument table serves as a common table that can be used for
    argument references, i.e., for concatenation as well as references
    involving a function tag.
+
+
+
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                  [Page 9]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
 
    When referencing an argument, a distinction is made between straight
    and inverted references; if no function tag is involved, a straight
@@ -493,19 +535,6 @@ Internet-Draft                 Packed CBOR                  January 2026
    Argument data items are referenced by using the reference data items
    in Table 2 and Table 3.
 
-
-
-
-
-
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                  [Page 9]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
    For tags 256-B-C to 255 included, the table index (an unsigned
    integer) is derived from the tag number.  For tag 6, the table index
    is derived from the integer N in the first element of the tag content
@@ -523,6 +552,15 @@ Internet-Draft                 Packed CBOR                  January 2026
    be involved to supply a function to be used in resolving the
    reference.  It is crucial not to confuse reference tag and, if
    present, function tag.
+
+
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                 [Page 10]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
 
    A straight reference uses the argument as the provisional left-hand
    side and the rump data item as the provisional right-hand side.  An
@@ -554,14 +592,6 @@ Internet-Draft                 Packed CBOR                  January 2026
    tag number supplied.  If that definition does not define an unpacking
    function, the result of the unpacking is not valid.
 
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                 [Page 10]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
    If no function tag was given, the reference is replaced by the final
    left-hand side "concatenated" with the final right-hand side, where
    concatenation is defined as in Section 2.4.
@@ -580,6 +610,13 @@ Internet-Draft                 Packed CBOR                  January 2026
    integers can grow to very large (or very negative) values, there is
    no practical limit to how many argument items might be used in a
    Packed CBOR item.)
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                 [Page 11]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
 
 2.4.  Concatenation
 
@@ -610,14 +647,6 @@ Internet-Draft                 Packed CBOR                  January 2026
       |     *  Special casing the member value undefined makes it
       |        impossible to use this construct for updating maps by
       |        insertion of or replacement with actual undefined member
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                 [Page 11]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
       |        values; undefined as a member value on the left-hand-side
       |        map stays untouched though.  This exception is similar to
       |        the one JSON Merge Patch [RFC7396] makes for null values,
@@ -632,6 +661,18 @@ Internet-Draft                 Packed CBOR                  January 2026
       unwrapped rump data item; this way a single argument table entry
       can be used to build both byte and text strings, depending on what
       type of rump is being used.
+
+
+
+
+
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                 [Page 12]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
 
    *  If one side is one of the string types, and the other side is an
       array, the result of the concatenation is equivalent to the
@@ -666,14 +707,6 @@ Internet-Draft                 Packed CBOR                  January 2026
       |     *  the decoder can decode and unpack the packed item,
       |        presenting an unpacked data item to the application.  In
       |        this case, the onus of dealing with loops is on the
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                 [Page 12]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
       |        decoder.  (This strategy generally has the highest memory
       |        consumption, but also the simplest interface to the
       |        application.)  Besides avoiding getting stuck in a
@@ -686,6 +719,17 @@ Internet-Draft                 Packed CBOR                  January 2026
       |        application, as is the entire onus of dealing with Packed
       |        CBOR.
       |  
+
+
+
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                 [Page 13]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
+
       |     *  hybrid models are possible, for instance: The decoder
       |        builds a data item tree directly from the Packed CBOR as
       |        if it were oblivious, but also provides accessors that
@@ -722,14 +766,6 @@ Internet-Draft                 Packed CBOR                  January 2026
    CBOR resources to Packed CBOR than previous drafts of this document
    were.
 
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                 [Page 13]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
    A is the number of 1+0 simple values allocated to shared item
    references.  During early development of CBOR, when the bit
    allocation and thus the ranges of simple values were originally
@@ -739,6 +775,16 @@ Internet-Draft                 Packed CBOR                  January 2026
    undefined being originally assigned to 24..27 (after the introduction
    of indefinite length encoding, 20..23).  No further allocation has
    been performed in this space in the 12 years since.
+
+
+
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                 [Page 14]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
 
    Given that indefinite length encoding effectively took away 4
    possible 1+0 simple values, it appears conservative to reduce A to
@@ -776,16 +822,6 @@ Internet-Draft                 Packed CBOR                  January 2026
       are defined in such a way that an unpacker can at least recognize
       if this is the case.
 
-
-
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                 [Page 14]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
    *  By one or more _table-building_ tags enclosing the packed content.
       Each tag is usually defined to build an augmented table by adding
       to the packing tables that already apply to the tag, and to apply
@@ -798,6 +834,14 @@ Internet-Draft                 Packed CBOR                  January 2026
       Note that it may be useful to leave a particular efficiency tier
       alone and only prepend to a higher tier; e.g., a tag could insert
       shared items at table index 16 and shift anything that was already
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                 [Page 15]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
+
       there further along in the array while leaving index 0 to 15
       alone.  Explicit additions by tag can combine with application-
       environment supplied tables that apply to the entire CBOR data
@@ -834,14 +878,6 @@ Internet-Draft                 Packed CBOR                  January 2026
       |  references in a scenario with nested table setup tags could be
       |  described as follows:
       |  
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                 [Page 15]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
       |     *  When chasing a reference, go upward in the data item
       |        tree.
       |  
@@ -854,6 +890,14 @@ Internet-Draft                 Packed CBOR                  January 2026
       |        reference index), use the corresponding reference, and
       |        finish this algorithm.
       |  
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                 [Page 16]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
+
       |     *  Otherwise, subtract the width of the table entries added
       |        in the relevant table from the reference number and
       |        continue upwards (up into the media type, which can
@@ -890,14 +934,6 @@ Internet-Draft                 Packed CBOR                  January 2026
       and second element of the tag content are prepended individually
       to the tables for shared items and for arguments, respectively.
 
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                 [Page 16]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
    As discussed in the introduction to this section, references in the
    supplied new arrays use the new number space (where inherited items
    are shifted by the new items given), while the inherited items
@@ -907,6 +943,16 @@ Internet-Draft                 Packed CBOR                  January 2026
    The original CBOR data item can be reconstructed by recursively
    replacing shared item and argument references encountered in the rump
    by their reconstructions.
+
+
+
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                 [Page 17]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
 
 4.  Function Tags
 
@@ -945,15 +991,6 @@ Internet-Draft                 Packed CBOR                  January 2026
 
    A packed form of this using straight references could be:
 
-
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                 [Page 17]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
    113([[106("packed.example")],
      [224(["https://", "/foo.html"]),
       224(["coap://", "/bar.cbor"]),
@@ -963,6 +1000,15 @@ Internet-Draft                 Packed CBOR                  January 2026
    Tag 105 ('i') defines the "ijoin" unpacking function, which is
    exactly like that of tag 106, except that the left-hand side and
    right-hand side are interchanged ('i').
+
+
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                 [Page 18]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
 
    A packed form of the first example using inverted references and the
    ijoin tag could be:
@@ -1003,13 +1049,6 @@ Internet-Draft                 Packed CBOR                  January 2026
 
    The value item array MUST NOT be longer than the key item array.
 
-
-
-Bormann & Gütschow        Expires 11 July 2026                 [Page 18]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
    The value item array MAY be shorter than the key item array, in which
    case the one or more unmatched value items towards the end are
    treated as _absent_. Additionally, value items that are the CBOR
@@ -1018,6 +1057,14 @@ Internet-Draft                 Packed CBOR                  January 2026
    included in the resulting map.
 
    For an example, we assume this unpacked data item:
+
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                 [Page 19]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
 
    [{"key0": false, "key1": "value 1", "key2": 2},
     {"key0": true, "key1": "value -1", "key2": -2},
@@ -1050,22 +1097,6 @@ Internet-Draft                 Packed CBOR                  January 2026
    // additional complexity, and an explicit decision should be made
    // whether this functionality is included.
 
-
-
-
-
-
-
-
-
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                 [Page 19]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
    Integration tags fulfill a similar purpose for shared item references
    as function tags do for argument references.  An integration tag can
    be used as an element of a shared item table, supplying extended
@@ -1082,6 +1113,14 @@ Internet-Draft                 Packed CBOR                  January 2026
    whether a tag in a shared item table position is an integration tag
    or is intended to be shared literally.  (The set of integration tags
    in use can also be defined as part of the table setup mechanism.)
+
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                 [Page 20]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
 
    The present specification defines one integration tag.
 
@@ -1114,14 +1153,6 @@ Internet-Draft                 Packed CBOR                  January 2026
    Examples would be tags such as 21 to 23 (base64url, base64, uppercase
    hex: Section 3.4.5.2 of RFC 8949 [STD94]) or 108 (lowercase hex:
    Section 2.1 of [I-D.bormann-cbor-notable-tags]), which stand for text
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                 [Page 20]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
    string items but internally employ more compact byte string
    representations that may also be more natural as application data
    items.
@@ -1134,6 +1165,18 @@ Internet-Draft                 Packed CBOR                  January 2026
    about which stand-in items are provided for; otherwise, inconsistent
    interpretations at different places in a system can lead to check/use
    vulnerabilities.
+
+
+
+
+
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                 [Page 21]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
 
 7.  Tag Validity: Equivalence Principle
 
@@ -1170,14 +1213,6 @@ Internet-Draft                 Packed CBOR                  January 2026
    The top-down approach to handle the "rendezvous" between the outer
    tag and the tag content representation (e.g., using an inner tag)
    does not support extensibility: any further Typed Array tags being
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                 [Page 21]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
    defined do not inherit the exception granted to tag number 64..87;
    they would need to formally update all existing tag definitions that
    can accept typed arrays or be of limited use with these existing
@@ -1190,6 +1225,14 @@ Internet-Draft                 Packed CBOR                  January 2026
 
    E.g., tag 64..87 could have declared their equivalence to the CBOR
    major type 4 arrays they stand in for.
+
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                 [Page 22]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
 
       |  Note that not all domain extensions to tags can be addressed
       |  using the equivalence principle: E.g., on a data model level,
@@ -1226,14 +1269,6 @@ Internet-Draft                 Packed CBOR                  January 2026
       Content Equivalence it supports (e.g., only the reference tags
       employed by Packed CBOR and certain table setup tags).
 
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                 [Page 22]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
    *  There is currently no way to express Tag Content Equivalence in
       CDDL.  For Packed CBOR, CDDL would typically be used to describe
       the unpacked CBOR represented by it; further restricting the
@@ -1247,6 +1282,13 @@ Internet-Draft                 Packed CBOR                  January 2026
       would be to alert to Tag Content Equivalence in the "Semantics
       (short form)" field of the registry.
       // Needs to be done for the tag registrations here.
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                 [Page 23]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
 
 7.2.  Tag Content Equivalence of Tags and Simple Values Defined in
       Packed CBOR
@@ -1282,14 +1324,6 @@ Internet-Draft                 Packed CBOR                  January 2026
    +----------------------+-----------------------------+--------------+
    |                  105 | concatenation item (text    | Packed       |
    |                      | string, byte string, array, | CBOR: ijoin  |
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                 [Page 23]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
    |                      | or map)                     | function     |
    +----------------------+-----------------------------+--------------+
    |                  106 | array of concatenation item | Packed       |
@@ -1304,6 +1338,14 @@ Internet-Draft                 Packed CBOR                  January 2026
    |                      |                             | CBOR:        |
    |                      |                             | record       |
    |                      |                             | function     |
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                 [Page 24]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
+
    +----------------------+-----------------------------+--------------+
    | (256-B-C)..(256-B-1) | function tag or             | Packed       |
    |                      | concatenation item (text    | CBOR:        |
@@ -1337,15 +1379,6 @@ Internet-Draft                 Packed CBOR                  January 2026
    In the registry "CBOR Simple Values" [IANA.cbor-simple-values], IANA
    is requested to allocate the simple values defined in Table 5.
 
-
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                 [Page 24]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
                     +==========+=====================+
                     |    Value | Semantics           |
                     +==========+=====================+
@@ -1360,6 +1393,14 @@ Internet-Draft                 Packed CBOR                  January 2026
 
    Loops in the Packed CBOR can be used as a denial of service attack
    unless mitigated, see Section 2.5.
+
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                 [Page 25]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
 
    As the unpacking is deterministic, packed forms can be used as
    signing inputs when deterministically encoded [I-D.ietf-cbor-cde].
@@ -1393,15 +1434,6 @@ Internet-Draft                 Packed CBOR                  January 2026
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
 
-
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                 [Page 25]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
               Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
               May 2017, <https://www.rfc-editor.org/info/rfc8174>.
@@ -1417,6 +1449,14 @@ Internet-Draft                 Packed CBOR                  January 2026
               IANA, "Concise Binary Object Representation (CBOR) Simple
               Values",
               <https://www.iana.org/assignments/cbor-simple-values>.
+
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                 [Page 26]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
 
    [IANA.cbor-tags]
               IANA, "Concise Binary Object Representation (CBOR) Tags",
@@ -1450,14 +1490,6 @@ Internet-Draft                 Packed CBOR                  January 2026
               <https://datatracker.ietf.org/doc/html/draft-amsuess-cbor-
               packed-by-reference-04>.
 
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                 [Page 26]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
    [I-D.bormann-cbor-notable-tags]
               Bormann, C., "Notable CBOR Tags", Work in Progress,
               Internet-Draft, draft-bormann-cbor-notable-tags-13, 20
@@ -1474,6 +1506,14 @@ Internet-Draft                 Packed CBOR                  January 2026
               Lenders, M. S., Bormann, C., Schmidt, T. C., and M.
               Wählisch, "A Concise Binary Object Representation (CBOR)
               of DNS Messages", Work in Progress, Internet-Draft, draft-
+
+
+
+Bormann & Gütschow        Expires 11 July 2026                 [Page 27]
+
+Internet-Draft                 Packed CBOR                  January 2026
+
+
               lenders-dns-cbor-15, 20 October 2025,
               <https://datatracker.ietf.org/doc/html/draft-lenders-dns-
               cbor-15>.
@@ -1506,14 +1546,6 @@ Internet-Draft                 Packed CBOR                  January 2026
 
    [STD63]    Internet Standard 63,
               <https://www.rfc-editor.org/info/std63>.
-
-
-
-Bormann & Gütschow        Expires 11 July 2026                 [Page 27]
-
-Internet-Draft                 Packed CBOR                  January 2026
-
-
               At the time of writing, this STD comprises the following:
 
               Yergeau, F., "UTF-8, a transformation format of ISO
@@ -1530,38 +1562,6 @@ Appendix A.  Examples
    The (JSON-compatible) CBOR data structure depicted in Figure 2, 400
    bytes of binary CBOR, could be packed into the CBOR data item
    depicted in Figure 3, 308 bytes, only employing item sharing.  With
-   support for argument sharing and the record function tag 114, the
-   data item can be packed into 298 bytes as depicted in Figure 4.  Note
-   that this particular example does not lend itself to prefix
-   compression, so it uses the simple common-table setup form (tag 113).
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -1569,6 +1569,11 @@ Bormann & Gütschow        Expires 11 July 2026                 [Page 28]
 
 Internet-Draft                 Packed CBOR                  January 2026
 
+
+   support for argument sharing and the record function tag 114, the
+   data item can be packed into 298 bytes as depicted in Figure 4.  Note
+   that this particular example does not lend itself to prefix
+   compression, so it uses the simple common-table setup form (tag 113).
 
    { "store": {
        "book": [
@@ -1603,11 +1608,6 @@ Internet-Draft                 Packed CBOR                  January 2026
    }
 
             Figure 2: Example original CBOR data item, 400 bytes
-
-
-
-
-
 
 
 
