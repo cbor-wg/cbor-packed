@@ -5,8 +5,8 @@
 Network Working Group                                         C. Bormann
 Internet-Draft                                    Universität Bremen TZI
 Intended status: Standards Track                             M. Gütschow
-Expires: 13 June 2026                                         TU Dresden
-                                                        10 December 2025
+Expires: 11 July 2026                                         TU Dresden
+                                                          7 January 2026
 
 
                               Packed CBOR
@@ -53,9 +53,9 @@ About This Document
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                  [Page 1]
+Bormann & Gütschow        Expires 11 July 2026                  [Page 1]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
    Discussion of this document takes place on the CBOR Working Group
@@ -81,11 +81,11 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 13 June 2026.
+   This Internet-Draft will expire on 11 July 2026.
 
 Copyright Notice
 
-   Copyright (c) 2025 IETF Trust and the persons identified as the
+   Copyright (c) 2026 IETF Trust and the persons identified as the
    document authors.  All rights reserved.
 
    This document is subject to BCP 78 and the IETF Trust's Legal
@@ -109,9 +109,9 @@ Table of Contents
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                  [Page 2]
+Bormann & Gütschow        Expires 11 July 2026                  [Page 2]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
      2.4.  Concatenation . . . . . . . . . . . . . . . . . . . . . .  12
@@ -125,9 +125,10 @@ Internet-Draft                 Packed CBOR                 December 2025
    5.  Integration Tags  . . . . . . . . . . . . . . . . . . . . . .  20
      5.1.  Splicing Integration Tag  . . . . . . . . . . . . . . . .  21
    6.  Additional Stand-in Items . . . . . . . . . . . . . . . . . .  21
-   7.  Tag Validity: Tag Equivalence Principle . . . . . . . . . . .  22
-     7.1.  Tag Equivalence . . . . . . . . . . . . . . . . . . . . .  23
-     7.2.  Tag Equivalence of Packed CBOR Tags . . . . . . . . . . .  24
+   7.  Tag Validity: Equivalence Principle . . . . . . . . . . . . .  22
+     7.1.  Tag Content Equivalence . . . . . . . . . . . . . . . . .  23
+     7.2.  Tag Content Equivalence of Tags and Simple Values Defined
+           in Packed CBOR  . . . . . . . . . . . . . . . . . . . . .  24
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  24
      8.1.  CBOR Tags Registry  . . . . . . . . . . . . . . . . . . .  24
      8.2.  CBOR Simple Values Registry . . . . . . . . . . . . . . .  25
@@ -164,10 +165,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-
-Bormann & Gütschow        Expires 13 June 2026                  [Page 3]
+Bormann & Gütschow        Expires 11 July 2026                  [Page 3]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
    This document defines the Packed CBOR format by specifying the
@@ -221,9 +221,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                  [Page 4]
+Bormann & Gütschow        Expires 11 July 2026                  [Page 4]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
    Sections 4, 5, and 6 provide additional extension points, each of
@@ -277,9 +277,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                  [Page 5]
+Bormann & Gütschow        Expires 11 July 2026                  [Page 5]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
       expressed by a reference data item.
@@ -333,9 +333,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                  [Page 6]
+Bormann & Gütschow        Expires 11 July 2026                  [Page 6]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
    The definitions of [STD94] apply.  Specifically: The term "byte" is
@@ -389,9 +389,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                  [Page 7]
+Bormann & Gütschow        Expires 11 July 2026                  [Page 7]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
 2.1.  Packing Tables
@@ -445,9 +445,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                  [Page 8]
+Bormann & Gütschow        Expires 11 July 2026                  [Page 8]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
    The shared data items are referenced by using the reference data
@@ -501,9 +501,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                  [Page 9]
+Bormann & Gütschow        Expires 11 July 2026                  [Page 9]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
    When referencing an argument, a distinction is made between straight
@@ -557,9 +557,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 10]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 10]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
    A straight reference uses the argument as the provisional left-hand
@@ -613,9 +613,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 11]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 11]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
 2.4.  Concatenation
@@ -669,9 +669,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 12]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 12]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
    *  If one side is one of the string types, and the other side is an
@@ -725,9 +725,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 13]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 13]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
       |     *  hybrid models are possible, for instance: The decoder
@@ -781,9 +781,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 14]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 14]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
    Given that indefinite length encoding effectively took away 4
@@ -837,9 +837,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 15]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 15]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
       there further along in the array while leaving index 0 to 15
@@ -893,9 +893,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 16]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 16]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
       |     *  Otherwise, subtract the width of the table entries added
@@ -949,9 +949,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 17]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 17]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
 4.  Function Tags
@@ -1005,9 +1005,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 18]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 18]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
    A packed form of the first example using inverted references and the
@@ -1061,9 +1061,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 19]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 19]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
    [{"key0": false, "key1": "value 1", "key2": 2},
@@ -1117,9 +1117,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 20]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 20]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
    The present specification defines one integration tag.
@@ -1173,12 +1173,12 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 21]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 21]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
-7.  Tag Validity: Tag Equivalence Principle
+7.  Tag Validity: Equivalence Principle
 
    In Section 5.3.2 of RFC 8949 [STD94], the validity of tags is defined
    in terms of type and value of their tag content.  The CBOR Tag
@@ -1194,33 +1194,34 @@ Internet-Draft                 Packed CBOR                 December 2025
    definition can only specify validity based on the structure of its
    tag content.
 
-   In Packed CBOR, a reference data item might be "standing in" for the
-   actual tag content of an outer tag, or for a structural component of
-   that.  In this case, the formal structure of the outer tag's content
-   before unpacking usually no longer fulfills the validity conditions
-   of the outer tag.
+   In Packed CBOR, a reference data item (represented as a tag or a
+   simple value) might be "standing in" for the actual tag content of an
+   outer tag, or for a structural component of that.  In this case, the
+   formal structure of the outer tag's content before unpacking usually
+   no longer fulfills the validity conditions of the outer tag.
 
    The underlying problem is not unique to Packed CBOR.  For instance,
    [RFC8746] describes tags 64..87 that "stand in" for CBOR arrays (the
    native form of which has major type 4).  For the other tags defined
-   in this specification, which require some array structure of the tag
-   content, a footnote was added:
+   [RFC8746], which require some array structure of the tag content, a
+   footnote was added:
 
    |  [...] The second element of the outer array in the data item is a
    |  native CBOR array (major type 4) or Typed Array (one of tag
    |  64..87)
 
    The top-down approach to handle the "rendezvous" between the outer
-   and inner tags does not support extensibility: any further Typed
-   Array tags being defined do not inherit the exception granted to tag
-   number 64..87; they would need to formally update all existing tag
-   definitions that can accept typed arrays or be of limited use with
-   these existing tags.
+   tag and the tag content representation (e.g., using an inner tag)
+   does not support extensibility: any further Typed Array tags being
+   defined do not inherit the exception granted to tag number 64..87;
+   they would need to formally update all existing tag definitions that
+   can accept typed arrays or be of limited use with these existing
+   tags.
 
    Instead, the tag validity mechanism needs to be extended by a bottom-
-   up component: A tag definition needs to be able to declare that the
-   tag can "stand in" for, (is, in terms of tag validity, equivalent to)
-   some structure.
+   up component: A tag (or simple value) definition needs to be able to
+   declare that the tag can "stand in" for, (is, in terms of tag
+   validity, equivalent to) some structure.
 
    E.g., tag 64..87 could have declared their equivalence to the CBOR
    major type 4 arrays they stand in for.
@@ -1228,10 +1229,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-
-Bormann & Gütschow        Expires 13 June 2026                 [Page 22]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 22]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
       |  Note that not all domain extensions to tags can be addressed
@@ -1243,58 +1243,59 @@ Internet-Draft                 Packed CBOR                 December 2025
       |  value may have no way to handle the extended range of tag 264
       |  and 265.
 
-7.1.  Tag Equivalence
+7.1.  Tag Content Equivalence
 
-   A tag definition MAY declare Tag Equivalence to some existing
-   structure for the tag, under some conditions defined by the new tag
+   A tag or simple value definition MAY declare Tag Content Equivalence
+   to some existing structure, under some conditions defined by that
    definition.  This, in effect, extends all existing tag definitions
-   that accept the named structure to accept the newly defined tag under
-   the conditions given for the Tag Equivalence.
+   that accept the named structure to accept the newly defined item
+   under the conditions given for the Tag Content Equivalence.
 
-   A number of limitations apply to Tag Equivalence, which therefore
-   should be applied deliberately and sparingly:
+   A number of limitations apply to Tag Content Equivalence, which
+   therefore should be applied deliberately and sparingly:
 
-   *  Tag Equivalence is a new concept, which may not be implemented by
-      an existing generic decoder.  A generic decoder not implementing
-      tag equivalence might raise tag validity errors where Tag
-      Equivalence says there should be none.
+   *  Tag Content Equivalence is a new concept, which may not be
+      implemented by an existing generic decoder.  A generic decoder not
+      implementing tag equivalence might raise tag validity errors where
+      Tag Content Equivalence says there should be none.
 
-   *  A CBOR protocol MAY specify the use of Tag Equivalence,
+   *  A CBOR protocol MAY specify the use of Tag Content Equivalence,
       effectively limiting the protocol's full use to those generic
       encoders that implement it.  Existing CBOR protocols that do not
-      address Tag Equivalence implicitly have a new variant that allows
-      Tag Equivalence (e.g., to support Packed CBOR with an existing
-      protocol).  A CBOR protocol that does address Tag Equivalence MAY
-      be explicit about what kinds of Tag Equivalence it supports (e.g.,
-      only the reference tags employed by Packed CBOR and certain table
-      setup tags).
+      address Tag Content Equivalence implicitly have a new variant that
+      allows Tag Content Equivalence (e.g., to support Packed CBOR with
+      an existing protocol).  A CBOR protocol that does address Tag
+      Content Equivalence MAY be explicit about what kinds of Tag
+      Content Equivalence it supports (e.g., only the reference tags
+      employed by Packed CBOR and certain table setup tags).
 
-   *  There is currently no way to express Tag Equivalence in CDDL.  For
-      Packed CBOR, CDDL would typically be used to describe the unpacked
-      CBOR represented by it; further restricting the Packed CBOR is
-      likely to lead to interoperability problems.  (Note that, by
-      definition, there is no need to describe Tag Equivalence on the
-      receptacle side; only for the tag that declares Tag Equivalence.)
+   *  There is currently no way to express Tag Content Equivalence in
+      CDDL.  For Packed CBOR, CDDL would typically be used to describe
+      the unpacked CBOR represented by it; further restricting the
+      Packed CBOR is likely to lead to interoperability problems.  (Note
+      that, by definition, there is no need to describe Tag Equivalence
+      on the receptacle [outer tag] side; only for the item that
+      declares Tag Content Equivalence.)
 
    *  The registry "CBOR Tags" [IANA.cbor-tags] currently does not have
       a way to record any equivalence claimed for a tag.  A convention
-      would be to alert to Tag Equivalence in the "Semantics (short
-      form)" field of the registry.
+      would be to alert to Tag Content Equivalence in the "Semantics
+      (short form)" field of the registry.
       // Needs to be done for the tag registrations here.
 
 
 
-
-Bormann & Gütschow        Expires 13 June 2026                 [Page 23]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 23]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
-7.2.  Tag Equivalence of Packed CBOR Tags
+7.2.  Tag Content Equivalence of Tags and Simple Values Defined in
+      Packed CBOR
 
-   The reference data items in this specification declare their
-   equivalence to the unpacked shared items or function results they
-   represent.
+   The reference data items (tags and simple values) in this
+   specification declare their equivalence to the unpacked shared items
+   or function results they represent.
 
    The table setup tags 113 and 1113 declare their equivalence to the
    unpacked CBOR data item represented by them.
@@ -1337,15 +1338,15 @@ Internet-Draft                 Packed CBOR                 December 2025
    |                      |                             | CBOR:        |
    |                      |                             | record       |
    |                      |                             | function     |
-   +----------------------+-----------------------------+--------------+
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 24]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 24]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
+   +----------------------+-----------------------------+--------------+
    | (256-B-C)..(256-B-1) | function tag or             | Packed       |
    |                      | concatenation item (text    | CBOR:        |
    |                      | string, byte string, array, | inverted     |
@@ -1396,10 +1397,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-
-Bormann & Gütschow        Expires 13 June 2026                 [Page 25]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 25]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
    As the unpacking is deterministic, packed forms can be used as
@@ -1453,9 +1453,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 26]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 26]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
    [IANA.cbor-tags]
@@ -1509,9 +1509,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 27]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 27]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
               lenders-dns-cbor-15, 20 October 2025,
@@ -1565,9 +1565,9 @@ Appendix A.  Examples
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 28]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 28]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
    support for argument sharing and the record function tag 114, the
@@ -1621,9 +1621,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 29]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 29]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
    113([["price", "category", "author", "title", "fiction", 8.95,
@@ -1677,9 +1677,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 30]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 30]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
    {
@@ -1733,9 +1733,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 31]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 31]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
          ],
@@ -1789,9 +1789,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 32]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 32]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
          ]
@@ -1845,9 +1845,9 @@ Internet-Draft                 Packed CBOR                 December 2025
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 33]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 33]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
    1113([/shared/["name", "@type", "links", "href", "mediaType",
@@ -1901,9 +1901,9 @@ List of Tables
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 34]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 34]
 
-Internet-Draft                 Packed CBOR                 December 2025
+Internet-Draft                 Packed CBOR                  January 2026
 
 
    Table 2:   Straight Referencing (e.g., Prefix) Arguments
@@ -1957,4 +1957,4 @@ Authors' Addresses
 
 
 
-Bormann & Gütschow        Expires 13 June 2026                 [Page 35]
+Bormann & Gütschow        Expires 11 July 2026                 [Page 35]

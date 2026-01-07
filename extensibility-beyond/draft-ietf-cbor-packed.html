@@ -41,12 +41,12 @@ align yet.
     Python 3.12.12
     ConfigArgParse 1.7
     google-i18n-address 3.1.1
-    intervaltree 3.1.0
+    intervaltree 3.2.1
     Jinja2 3.1.6
-    lxml 5.3.1
-    platformdirs 4.5.0
+    lxml 6.0.2
+    platformdirs 4.5.1
     pycountry 24.6.1
-    PyYAML 6.0.2
+    PyYAML 6.0.3
     requests 2.32.5
     wcwidth 0.2.14
 -->
@@ -1067,11 +1067,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Packed CBOR</td>
-<td class="right">December 2025</td>
+<td class="right">January 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bormann &amp; Gütschow</td>
-<td class="center">Expires 13 June 2026</td>
+<td class="center">Expires 11 July 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1084,12 +1084,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-cbor-packed-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2025-12-10" class="published">10 December 2025</time>
+<time datetime="2026-01-07" class="published">7 January 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-06-13">13 June 2026</time></dd>
+<dd class="expires"><time datetime="2026-07-11">11 July 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1165,7 +1165,7 @@ align yet.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 13 June 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 11 July 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1174,7 +1174,7 @@ align yet.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
 <a href="#name-copyright-notice" class="section-name selfRef">Copyright Notice</a>
         </h2>
 <p id="section-boilerplate.2-1">
-            Copyright (c) 2025 IETF Trust and the persons identified as the
+            Copyright (c) 2026 IETF Trust and the persons identified as the
             document authors. All rights reserved.<a href="#section-boilerplate.2-1" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.2-2">
             This document is subject to BCP 78 and the IETF Trust's Legal
@@ -1259,13 +1259,13 @@ align yet.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
             <p id="section-toc.1-1.6.1"><a href="#section-6" class="auto internal xref">6</a>.  <a href="#name-additional-stand-in-items" class="internal xref">Additional Stand-in Items</a></p>
 </li>
           <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7">
-            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-tag-validity-tag-equivalenc" class="internal xref">Tag Validity: Tag Equivalence Principle</a></p>
+            <p id="section-toc.1-1.7.1"><a href="#section-7" class="auto internal xref">7</a>.  <a href="#name-tag-validity-equivalence-pr" class="internal xref">Tag Validity: Equivalence Principle</a></p>
 <ul class="compact toc ulBare ulEmpty">
 <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.1">
-                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-tag-equivalence" class="internal xref">Tag Equivalence</a></p>
+                <p id="section-toc.1-1.7.2.1.1"><a href="#section-7.1" class="auto internal xref">7.1</a>.  <a href="#name-tag-content-equivalence" class="internal xref">Tag Content Equivalence</a></p>
 </li>
               <li class="compact toc ulBare ulEmpty" id="section-toc.1-1.7.2.2">
-                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-tag-equivalence-of-packed-c" class="internal xref">Tag Equivalence of Packed CBOR Tags</a></p>
+                <p id="section-toc.1-1.7.2.2.1"><a href="#section-7.2" class="auto internal xref">7.2</a>.  <a href="#name-tag-content-equivalence-of-" class="internal xref">Tag Content Equivalence of Tags and Simple Values Defined in Packed CBOR</a></p>
 </li>
             </ul>
 </li>
@@ -2342,10 +2342,10 @@ interpretations at different places in a system can lead to check/use
 vulnerabilities.<a href="#section-6-3" class="pilcrow">¶</a></p>
 </section>
 </div>
-<div id="sec-tag-validity-tag-equivalence-principle">
+<div id="sec-tag-validity-equivalence-principle">
 <section id="section-7">
-      <h2 id="name-tag-validity-tag-equivalenc">
-<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-tag-validity-tag-equivalenc" class="section-name selfRef">Tag Validity: Tag Equivalence Principle</a>
+      <h2 id="name-tag-validity-equivalence-pr">
+<a href="#section-7" class="section-number selfRef">7. </a><a href="#name-tag-validity-equivalence-pr" class="section-name selfRef">Tag Validity: Equivalence Principle</a>
       </h2>
 <p id="section-7-1">In Section <a href="https://rfc-editor.org/rfc/rfc8949#section-5.3.2" class="relref">5.3.2</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>, the validity of tags is defined in terms
 of type and value of their tag content.
@@ -2360,7 +2360,8 @@ The description of a tag might add further constraints for the data
 item.
 But in any case, a tag definition can only specify validity based on
 the structure of its tag content.<a href="#section-7-2" class="pilcrow">¶</a></p>
-<p id="section-7-3">In Packed CBOR, a reference data item might be "standing in" for the actual
+<p id="section-7-3">In Packed CBOR, a reference data item (represented as a tag or a
+simple value) might be "standing in" for the actual
 tag content of an outer tag, or for a structural component of that.
 In this case, the formal structure of the outer tag's content before
 unpacking usually no longer fulfills the validity conditions of the
@@ -2368,20 +2369,21 @@ outer tag.<a href="#section-7-3" class="pilcrow">¶</a></p>
 <p id="section-7-4">The underlying problem is not unique to Packed CBOR.
 For instance, <span>[<a href="#RFC8746" class="cite xref">RFC8746</a>]</span> describes tags 64..87 that "stand in" for CBOR
 arrays (the native form of which has major type 4).
-For the other tags defined in this specification, which require some
+For the other tags defined <span>[<a href="#RFC8746" class="cite xref">RFC8746</a>]</span>, which require some
 array structure of the tag content, a footnote was added:<a href="#section-7-4" class="pilcrow">¶</a></p>
 <blockquote id="section-7-5">
         <p id="section-7-5.1">[...] The second element of the outer array in the data item is a
    native CBOR array (major type 4) or Typed Array (one of tag 64..87)<a href="#section-7-5.1" class="pilcrow">¶</a></p>
 </blockquote>
-<p id="section-7-6">The top-down approach to handle the "rendezvous" between the outer and
-inner tags does not support extensibility: any further Typed Array
+<p id="section-7-6">The top-down approach to handle the "rendezvous" between the outer tag and
+the tag content representation (e.g., using an inner tag) does not
+support extensibility: any further Typed Array
 tags being defined do not inherit the exception granted to tag number
 64..87; they would need to formally update all existing tag
 definitions that can accept typed arrays or be of limited use with
 these existing tags.<a href="#section-7-6" class="pilcrow">¶</a></p>
 <p id="section-7-7">Instead, the tag validity mechanism needs to be extended by a
-bottom-up component: A tag definition needs to be able to declare that
+bottom-up component: A tag (or simple value) definition needs to be able to declare that
 the tag can "stand in" for, (is, in terms of tag validity, equivalent
 to) some structure.<a href="#section-7-7" class="pilcrow">¶</a></p>
 <p id="section-7-8">E.g., tag 64..87 could have declared their equivalence to the CBOR major
@@ -2395,60 +2397,60 @@ They could not simply declare that they are equivalent to tags 4 and 5
 as a tag requiring a fractional value may have no way to handle the
 extended range of tag 264 and 265.<a href="#section-7-9.1" class="pilcrow">¶</a></p>
 </aside>
-<div id="sec-tag-equivalence">
+<div id="sec-tag-content-equivalence">
 <section id="section-7.1">
-        <h3 id="name-tag-equivalence">
-<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-tag-equivalence" class="section-name selfRef">Tag Equivalence</a>
+        <h3 id="name-tag-content-equivalence">
+<a href="#section-7.1" class="section-number selfRef">7.1. </a><a href="#name-tag-content-equivalence" class="section-name selfRef">Tag Content Equivalence</a>
         </h3>
-<p id="section-7.1-1">A tag definition <span class="bcp14">MAY</span> declare Tag Equivalence to some existing
-structure for the tag, under some conditions defined by the new tag
-definition.
+<p id="section-7.1-1">A tag or simple value definition <span class="bcp14">MAY</span> declare Tag Content Equivalence to some existing
+structure, under some conditions defined by that definition.
 This, in effect, extends all existing tag definitions that accept the
-named structure to accept the newly defined tag under the conditions
-given for the Tag Equivalence.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
-<p id="section-7.1-2">A number of limitations apply to Tag Equivalence, which therefore
+named structure to accept the newly defined item under the conditions
+given for the Tag Content Equivalence.<a href="#section-7.1-1" class="pilcrow">¶</a></p>
+<p id="section-7.1-2">A number of limitations apply to Tag Content Equivalence, which therefore
 should be applied deliberately and sparingly:<a href="#section-7.1-2" class="pilcrow">¶</a></p>
 <ul class="normal">
 <li class="normal" id="section-7.1-3.1">
-            <p id="section-7.1-3.1.1">Tag Equivalence is a new concept, which may not be implemented by an
+            <p id="section-7.1-3.1.1">Tag Content Equivalence is a new concept, which may not be implemented by an
 existing generic decoder.  A generic decoder not implementing tag
-equivalence might raise tag validity errors where Tag Equivalence
+equivalence might raise tag validity errors where Tag Content Equivalence
 says there should be none.<a href="#section-7.1-3.1.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.1-3.2">
-            <p id="section-7.1-3.2.1">A CBOR protocol <span class="bcp14">MAY</span> specify the use of Tag Equivalence, effectively
+            <p id="section-7.1-3.2.1">A CBOR protocol <span class="bcp14">MAY</span> specify the use of Tag Content Equivalence, effectively
 limiting the protocol's full use to those generic encoders that implement it.
-Existing CBOR protocols that do not address Tag Equivalence
-implicitly have a new variant that allows Tag Equivalence
+Existing CBOR protocols that do not address Tag Content Equivalence
+implicitly have a new variant that allows Tag Content Equivalence
 (e.g., to support Packed CBOR with an existing protocol).
-A CBOR protocol that does address Tag Equivalence <span class="bcp14">MAY</span> be explicit
-about what kinds of Tag Equivalence it supports (e.g., only the
+A CBOR protocol that does address Tag Content Equivalence <span class="bcp14">MAY</span> be explicit
+about what kinds of Tag Content Equivalence it supports (e.g., only the
 reference tags employed by Packed CBOR and certain table setup tags).<a href="#section-7.1-3.2.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.1-3.3">
-            <p id="section-7.1-3.3.1">There is currently no way to express Tag Equivalence in CDDL.
+            <p id="section-7.1-3.3.1">There is currently no way to express Tag Content Equivalence in CDDL.
 For Packed CBOR, CDDL would typically be used to describe the
 unpacked CBOR represented by it; further restricting the Packed CBOR
 is likely to lead to interoperability problems.
 (Note that, by definition, there is no need to describe Tag
-Equivalence on the receptacle side; only for the tag that declares
-Tag Equivalence.)<a href="#section-7.1-3.3.1" class="pilcrow">¶</a></p>
+Equivalence on the receptacle [outer tag] side; only for the item that declares
+Tag Content Equivalence.)<a href="#section-7.1-3.3.1" class="pilcrow">¶</a></p>
 </li>
           <li class="normal" id="section-7.1-3.4">
             <p id="section-7.1-3.4.1">The registry "<a href="https://www.iana.org/assignments/cbor-tags#cbor-tags" class="relref">CBOR Tags</a>" <span>[<a href="#IANA.cbor-tags" class="cite xref">IANA.cbor-tags</a>]</span>
 currently does not have a way to record any equivalence claimed
-for a tag.  A convention would be to alert to Tag Equivalence in the
+for a tag.  A convention would be to alert to Tag Content Equivalence in the
 "Semantics (short form)" field of the registry.<span class="cref" id="todo">Needs to be done for the tag registrations here.</span><a href="#section-7.1-3.4.1" class="pilcrow">¶</a></p>
 </li>
         </ul>
 </section>
 </div>
-<div id="sec-tag-equivalence-of-packed-cbor-tags">
+<div id="sec-tag-content-equivalence-of-tags-and-simple-values-defined-in-packed-cbor">
 <section id="section-7.2">
-        <h3 id="name-tag-equivalence-of-packed-c">
-<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-tag-equivalence-of-packed-c" class="section-name selfRef">Tag Equivalence of Packed CBOR Tags</a>
+        <h3 id="name-tag-content-equivalence-of-">
+<a href="#section-7.2" class="section-number selfRef">7.2. </a><a href="#name-tag-content-equivalence-of-" class="section-name selfRef">Tag Content Equivalence of Tags and Simple Values Defined in Packed CBOR</a>
         </h3>
-<p id="section-7.2-1">The reference data items in this specification declare their equivalence to
+<p id="section-7.2-1">The reference data items (tags and simple values) in this
+specification declare their equivalence to
 the unpacked shared items or function results they represent.<a href="#section-7.2-1" class="pilcrow">¶</a></p>
 <p id="section-7.2-2">The table setup tags 113 and 1113 declare their equivalence to the unpacked CBOR
 data item represented by them.<a href="#section-7.2-2" class="pilcrow">¶</a></p>
