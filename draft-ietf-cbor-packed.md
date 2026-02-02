@@ -1097,17 +1097,17 @@ is the present document, i.e., RFCXXXX.
 In the registry "{{cbor-tags (CBOR Tags)<IANA.cbor-tags}}" {{IANA.cbor-tags}},
 IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 
-|      Tag | Data Item                                                                    | Semantics                             |
-|        6 | int (for shared); \[int, any] (for argument)                                 | Packed CBOR: shared/argument          |
-|      105 | concatenation item (text string, byte string, array, or map)                 | Packed CBOR: ijoin function           |
-|      106 | array of concatenation item (text string, byte string, array, or map)        | Packed CBOR: join function            |
-|      113 | array (shared-and-argument-items, rump)                                      | Packed CBOR: table setup              |
-|      114 | array                                                                        | Packed CBOR: record function          |
-| 136..143 | function tag or concatenation item (text string, byte string, array, or map) | Packed CBOR: inverted                 |
-| 128..135 | any                                                                          | Packed CBOR: straight                 |
-|     1112 | any                                                                          | Packed CBOR: reference error          |
-|     1113 | array (shared-items, argument-items, rump)                                   | Packed CBOR: table setup              |
-|     1115 | any                                                                          | Packed CBOR: splicing integration tag |
+|      Tag | Data Item                                                                    | Semantics                                            |
+|        6 | int (for shared); \[int, any] (for argument)                                 | Reference Data Item (Packed CBOR: shared/argument)   |
+|      105 | concatenation item (text string, byte string, array, or map)                 | Packed CBOR: ijoin function                          |
+|      106 | array of concatenation item (text string, byte string, array, or map)        | Packed CBOR: join function                           |
+|      113 | array (shared-and-argument-items, rump)                                      | Packed CBOR: table setup                             |
+|      114 | array                                                                        | Packed CBOR: record function                         |
+| 128..135 | any                                                                          | Reference Data Item (Packed CBOR: straight argument) |
+| 136..143 | function tag or concatenation item (text string, byte string, array, or map) | Reference Data Item (Packed CBOR: inverted argument) |
+|     1112 | any                                                                          | Packed CBOR: reference error                         |
+|     1113 | array (shared-items, argument-items, rump)                                   | Packed CBOR: table setup                             |
+|     1115 | any                                                                          | Packed CBOR: splicing integration tag                |
 {: #tab-tag-values cols='r l l' title="Values for Tag Numbers"}
 
 
@@ -1116,9 +1116,9 @@ IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 In the registry "{{simple (CBOR Simple Values)<IANA.cbor-simple-values}}" {{IANA.cbor-simple-values}},
 IANA is requested to allocate the simple values defined in {{tab-simple-values}}.
 
-| Value | Semantics           |
-|-------+---------------------|
-| 0..15 | Packed CBOR: shared |
+| Value | Semantics                                 |
+|-------+-------------------------------------------|
+| 0..15 | Reference Data Item (Packed CBOR: shared) |
 {: #tab-simple-values cols='r l' title="Simple Values"}
 
 Security Considerations
