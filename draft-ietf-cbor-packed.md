@@ -105,15 +105,11 @@ informative:
 
 [^status]:
     (This cref will be removed by the RFC editor:)\\
-    The present revision -18 is a work-in-progress release in
+    The upcoming revision -19 is a work-in-progress release in
     preparation for another cbor-packed side meeting.
-    The wording of the present revision continues to make use of
-    the tunables A/B/C to be set to specific numbers before completing
-    the Packed CBOR specification; not all the examples may fully
-    align yet.
-    Specifically, the new text about using the reference data item
-    allocations for other mechanisms than the cbor-packed one defined
-    here should enable us to revert to A=16.
+    This revision resolves the use of the tunables A/B/C by setting
+    A=16, B=8, and C=8, and choosing requested simple values and tag
+    numbers, in preparation for early allocation.
 
 --- middle
 
@@ -315,18 +311,6 @@ conjunction with {{Appendix G of -cddl}} [^update] {{!I-D.ietf-cbor-edn-literals
 This section describes the packing tables, their structure, and how
 they are referenced.
 
-[^resolve]
-
-[^resolve]: To be resolved before publication:
-
-To enable discussion of CBOR resources allocated to Packed CBOR, the
-packed references are described in terms of three specification
-parameters: `A`, `B`, and `C`.
-These specification parameters enable creating a precise specification
-while the quantitative allocation discussion is ongoing.
-They will be replaced by specific chosen numbers when the present
-specification is finalized ({{sec-allocation}}).
-
 ## Packing Tables
 
 At any point within a data item making use of Packed CBOR, there is an
@@ -384,16 +368,14 @@ provided as the content of tag 6. When reconstructing the original data item, su
 reference is replaced by the referenced data item, which is then
 recursively unpacked.
 
-| Reference              | Table Index  |
-| Simple value 0..(A-1)  | 0..(A-1)     |
-| Tag 6(N) (unsigned integer N ≥ 0) | A + 2×N      |
-| Tag 6(N) (negative integer N < 0) | A − 2×N − 1  |
+| Reference                         | Table Index  |
+| Simple value 0..15                | 0..15        |
+| Tag 6(N) (unsigned integer N ≥ 0) | 16 + 2×N     |
+| Tag 6(N) (negative integer N < 0) | 16 − 2×N − 1 |
 {: #tab-shared title="Referencing Shared Values"}
 
-[^A16]: assuming `A=16`
 
-
-As examples, [^A16],
+As examples,
 the first 22 elements of the shared item table are referenced by
 `simple(0)`, `simple(1)`, ... `simple(15)`, `6(0)`, `6(-1)`, `6(1)`,
 `6(-2)`, `6(2)`, `6(-3)`.
@@ -401,11 +383,8 @@ the first 22 elements of the shared item table are referenced by
 table index values — "zigzag encoding" — makes systematic use of
 shorter integer encodings first.)
 
-<!-- (+ 512 -24 -24)464 -->
-<!-- (+ 131072 -512 )130560 -->
-
 Taking into account the encoding of these referring data items, there
-are A one-byte references, 48 two-byte references, 464 three-byte
+are 16 one-byte references, 48 two-byte references, 464 three-byte
 references, 130560 four-byte references, etc.
 As CBOR integers can grow to very large (or very negative) values,
 there is no practical limit to how many shared items might be used in
@@ -432,22 +411,24 @@ reference combines a prefix out of the argument table with the rump
 data item, and an inverted reference combines a rump data item with a
 suffix out of the argument table.
 
-| Straight Reference        | Table Index |
-|---------------------------|-------------|
-| Tag (256-`B`)..255(rump)  | 0..(B-1)    |
-| Tag 6(\[unsigned integer N, rump]) (N ≥ 0) | B + N       |
+| Straight Reference                         | Table Index |
+|--------------------------------------------+-------------|
+| Tag 128..135(rump)                         | 0..7        |
+| Tag 6(\[unsigned integer N, rump]) (N ≥ 0) | 8 + N       |
 {: #tab-straight cols='l r' title="Straight Referencing (e.g., Prefix) Arguments"}
 
-| Inverted Reference                   | Table Index |
-|--------------------------------------|-------------|
-| Tag (256-`B`-`C`)..(256-`B`-1)(rump) | 0..(C-1)    |
-| Tag 6(\[negative integer N, rump]) (N < 0) | C - N - 1   |
+| Inverted Reference                         | Table Index |
+|--------------------------------------------+-------------|
+| Tag 136..143(rump)                         | 0..7        |
+| Tag 6(\[negative integer N, rump]) (N < 0) | 8 - N - 1   |
 {: #tab-inverted cols='l r' title="Inverted Referencing (e.g., Suffix) Arguments"}
 
 Argument data items are referenced by using the reference data items
 in {{tab-straight}} and {{tab-inverted}}.
 
-For tags 256-`B`-`C` to 255 included, the table index (an unsigned integer) is derived from the tag number.
+For the 16 tags 128 to 143 included, the table index (an unsigned
+integer) is derived from the tag number, together with the information
+if the reference is straight or inverted.
 For tag 6, the table index is derived from the integer N
 in the first element of the tag content (unsigned integer for
 straight, negative integer for inverted references).
@@ -499,23 +480,20 @@ If no function tag was given, the reference is replaced by the
 final left-hand side "concatenated" with the final right-hand side, where
 concatenation is defined as in {{sec-concatenation}}.
 
-As a contrived (but short) example [^B32], if the argument table is
+As a contrived (but short) example, if the argument table is
 `["foobar", h'666f6f62', "fo"]`, each of the following straight (prefix)
-references will unpack to `"foobart"`: `224("t")`, `225("art")`,
-`226("obart")` (the byte string h'666f6f62' == 'foob' is concatenated
+references will unpack to `"foobart"`: `128("t")`, `129("art")`,
+`130("obart")` (the byte string h'666f6f62' == 'foob' is concatenated
 into a text string, and the last example is not an optimization).
-
-[^B32]: assuming `B=32`
 
 <!-- 2<sup>28</sup>2<sup>12</sup>+2<sup>5</sup>+2<sup>0</sup> -->
 
 <!-- (- 65536 256)65280 -->
 
-Taking into account the encoding, there are `B` two-byte references,
+Taking into account the encoding, there are 8 two-byte references,
 24 three-byte references, 224 four-byte references, 65280 five-byte
 references, etc.
-The numbers for inverted (suffix) references are the same, except that
-there are `C` two-byte references.
+The numbers for inverted (suffix) references are the same.
 (As CBOR integers can grow to very large (or very negative) values,
 there is no practical limit to how many argument items might be used in
 a Packed CBOR item.)
@@ -623,17 +601,11 @@ symbolic links) is applied to any reference chase.
 {:aside}
 > NOTE:
 The present specification does nothing to help with the packing of CBOR
-sequences {{-seq}}; maybe such a specification should be added.
+sequences {{-seq}}; possibly the integration tag 1115 could be used in a
+top-level position to express CBOR sequence semantics via a packed array.
 
 ## Allocation
 {:removeinrfc}
-
-[^resolve]
-
-To enable discussion of CBOR resources (tags and simple values)
-allocated to Packed CBOR, the representation of packed references is
-described in terms of three specification parameters: `A`, `B`, and
-`C`.
 
 These specification parameters allow the current specification to be precise
 while the quantitative allocation discussion is ongoing.
@@ -643,8 +615,11 @@ specification is finalized.
 The sense of the WG has been to be more conservative in allocating
 CBOR resources to Packed CBOR than previous drafts of this document
 were.
+In addition, {{sec-extensibility-approach}} provides a liberal way to use the allocations
+for reference data items in packed items that use different unpacking
+mechanisms from the ones described in this document.
 
-`A` is the number of 1+0 simple values allocated to shared item
+16 1+0 simple values are allocated to shared item
 references.
 During early development of CBOR, when the bit allocation and thus the
 ranges of simple values were originally defined, a range of 16
@@ -653,28 +628,20 @@ The allocations for 1+0 simple values were therefore performed from
 the top of the range down, i.e., with the block of
 false/true/null/undefined being originally assigned to 24..27 (after
 the introduction of indefinite length encoding, 20..23).
-No further allocation has been performed in this space in the 12 years
+No further allocation has been performed in this range in the 12 years
 since.
 
-Given that indefinite length encoding effectively took away 4 possible
-1+0 simple values, it appears conservative to reduce `A` to `A=12`.
-
-`B` is the number of 1+1 tags allocated to straight argument
-references, and `C` is the number of 1+1 tags allocated to inverted
+8 1+1 tags are allocated to straight argument
+references, and 8 further 1+1 tags allocated to inverted
 argument references.
-A rationale for choosing `C` < `B` might be that straight (prefix)
-packing might be more likely than inverted (suffix) packing, hence the
-choices of previous drafts were comparable to setting `B=32` and `C=8`.
 
-This draft proposes to conservatively set `B=8`, but to stay at `C=8`,
-as inverted references seem to occur more often than previously
-thought.
-
+A single 1+0 tag is allocated to data item references beyond the
+above, with the tag content deciding which of the above reference
+mechanisms is to be used.
 
 Note the nature of Packed CBOR means that all these allocations can be
 used for pretty much unlimited purposes by simply defining another
 table setup mechanism (media type or table-building tag).
-
 
 
 # Table Setup
@@ -845,9 +812,9 @@ A packed form of this using straight references could be:
 
 ~~~ cbor-diag
 113([[106("packed.example")],
-  [224(["https://", "/foo.html"]),
-   224(["coap://", "/bar.cbor"]),
-   224(["mailto:support@", ""])]
+  [128(["https://", "/foo.html"]),
+   128(["coap://", "/bar.cbor"]),
+   128(["mailto:support@", ""])]
 ])
 ~~~
 
@@ -859,9 +826,9 @@ A packed form of the first example using inverted references and the ijoin tag c
 
 ~~~ cbor-diag
 113([["packed.example"],
-  [216(105(["https://", "/foo.html"])),
-   216(105(["coap://", "/bar.cbor"])),
-   216("mailto:support@")]
+  [136(105(["https://", "/foo.html"])),
+   136(105(["coap://", "/bar.cbor"])),
+   136("mailto:support@")]
 ])
 ~~~
 
@@ -870,9 +837,9 @@ from the same place could be:
 
 ~~~ cbor-diag
 113([[105(["coaps://[2001:db8::1]/s/", ".senml"])],
-  [224("temp-freezer"),
-   224("temp-fridge"),
-   224("temp-ambient")]
+  [128("temp-freezer"),
+   128("temp-fridge"),
+   128("temp-ambient")]
 ])
 ~~~
 
@@ -914,9 +881,9 @@ A straightforward packed form of this using the record function tag could be:
 
 ~~~ cbor-diag
 113([[114(["key0", "key1", "key2"])],
-  [224([false, "value 1", 2]),
-   224([true, "value -1", -2]),
-   224([undefined, "", 0])]
+  [128([false, "value 1", 2]),
+   128([true, "value -1", -2]),
+   128([undefined, "", 0])]
 ])
 ~~~
 
@@ -925,22 +892,14 @@ A slightly more concise packed form can be achieved by manipulating the key item
 
 ~~~ cbor-diag
 113([[114(["key1", "key2", "key0"])],
-  [224(["value 1", 2, false]),
-   224(["value -1", -2, true]),
-   224(["", 0])]
+  [128(["value 1", 2, false]),
+   128(["value -1", -2, true]),
+   128(["", 0])]
 ])
 ~~~
 
 
 # Integration Tags
-
-[^for-discussion]: This new text addresses discussion during the
-    2025-06-11 CBOR WG interim.
-    It provides additional functionality, but can cause additional
-    complexity, and an explicit decision should be made whether this
-    functionality is included.
-
-[^for-discussion]
 
 Integration tags fulfill a similar purpose for shared item references as
 function tags do for argument references.
@@ -1138,17 +1097,17 @@ is the present document, i.e., RFCXXXX.
 In the registry "{{cbor-tags (CBOR Tags)<IANA.cbor-tags}}" {{IANA.cbor-tags}},
 IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 
-|                        Tag | Data Item                                                                    | Semantics                    |
-|                          6 | int (for shared); \[int, any] (for argument)                                 | Packed CBOR: shared/argument |
-|                        105 | concatenation item (text string, byte string, array, or map)                 | Packed CBOR: ijoin function  |
-|                        106 | array of concatenation item (text string, byte string, array, or map)        | Packed CBOR: join function   |
-|                        113 | array (shared-and-argument-items, rump)                                      | Packed CBOR: table setup     |
-|                        114 | array                                                                        | Packed CBOR: record function |
-| (256-`B`-`C`)..(256-`B`-1) | function tag or concatenation item (text string, byte string, array, or map) | Packed CBOR: inverted        |
-|             (256-`B`)..255 | any                                                                          | Packed CBOR: straight        |
-|                       1112 | any                                                                          | Packed CBOR: reference error |
-|                       1113 | array (shared-items, argument-items, rump)                                   | Packed CBOR: table setup     |
-|                       1115 | any                                                                          | Packed CBOR: splicing integration tag |
+|      Tag | Data Item                                                                    | Semantics                                                |
+|        6 | int (for shared); \[int, any] (for argument)                                 | Reference Data Item (for Packed CBOR: shared/argument)   |
+|      105 | concatenation item (text string, byte string, array, or map)                 | Packed CBOR: ijoin function                              |
+|      106 | array of concatenation item (text string, byte string, array, or map)        | Packed CBOR: join function                               |
+|      113 | array (shared-and-argument-items, rump)                                      | Packed CBOR: table setup                                 |
+|      114 | array                                                                        | Packed CBOR: record function                             |
+| 128..135 | any                                                                          | Reference Data Item (for Packed CBOR: straight argument) |
+| 136..143 | function tag or concatenation item (text string, byte string, array, or map) | Reference Data Item (for Packed CBOR: inverted argument) |
+|     1112 | any                                                                          | Packed CBOR: reference error                             |
+|     1113 | array (shared-items, argument-items, rump)                                   | Packed CBOR: table setup                                 |
+|     1115 | any                                                                          | Packed CBOR: splicing integration tag                    |
 {: #tab-tag-values cols='r l l' title="Values for Tag Numbers"}
 
 
@@ -1157,9 +1116,9 @@ IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 In the registry "{{simple (CBOR Simple Values)<IANA.cbor-simple-values}}" {{IANA.cbor-simple-values}},
 IANA is requested to allocate the simple values defined in {{tab-simple-values}}.
 
-| Value    | Semantics           |
-|----------|---------------------|
-| 0..(A-1) | Packed CBOR: shared |
+| Value | Semantics                                     |
+|-------|-----------------------------------------------|
+| 0..15 | Reference Data Item (for Packed CBOR: shared) |
 {: #tab-simple-values cols='r l' title="Simple Values"}
 
 Security Considerations
@@ -1193,9 +1152,6 @@ environment.
 
 Examples
 ========
-
-[^resolve] align reference items with the final settings of the
-parameters `A`, `B`, `C`.  In particular, check the byte numbers...
 
 The (JSON-compatible) CBOR data structure depicted in {{fig-example-in}},
 400 bytes of binary CBOR, could be packed into the CBOR data item depicted
@@ -1270,13 +1226,13 @@ sharing only, 308 bytes"}
     /  1        2         3    /
      {"store": {
        "book": [
-           224(["reference", "Nigel Rees",
+           128(["reference", "Nigel Rees",
               "Sayings of the Century", simple(3)]),
-           224([simple(2), "Evelyn Waugh",
+           128([simple(2), "Evelyn Waugh",
               "Sword of Honour", 12.99]),
-           224([simple(2), "Herman Melville",
+           128([simple(2), "Herman Melville",
               "Moby Dick", simple(3), "0-553-21311-3"]),
-           224([simple(2), "J. R. R. Tolkien",
+           128([simple(2), "J. R. R. Tolkien",
                "The Lord of the Rings", 22.99, "0-395-19395-8"])],
        "bicycle": {"color": "red", simple(1): 19.95}}}])
 ~~~
@@ -1423,30 +1379,30 @@ item, 1210 bytes"}
          /  5               6               7 /
     "number"}}, ["Property"], "writable", "valueType", "type"],
                /   8            9           10           11 /
-   /argument/ ["http://192.168.1.10", 224("3:8445/wot/thing"),
-              / 224                   225 /
-   225("/MyLED/"), 226("rgbValue"), "rgbValue",
-     / 226             227           228     /
+   /argument/ ["http://192.168.1.10", 128("3:8445/wot/thing"),
+              / 128                   129 /
+   129("/MyLED/"), 130("rgbValue"), "rgbValue",
+     / 130             131           132     /
    {simple(6): simple(7), simple(9): true, simple(1): simple(8)}],
-     / 229 /
+     / 133 /
    /rump/ {simple(0): "MyLED",
            "interactions": [
-   229({simple(2): [{simple(3): 227("Red"), simple(4): simple(5)}],
-    simple(0): 228("Red")}),
-   229({simple(2): [{simple(3): 227("Green"), simple(4): simple(5)}],
-    simple(0): 228("Green")}),
-   229({simple(2): [{simple(3): 227("Blue"), simple(4): simple(5)}],
-    simple(0): 228("Blue")}),
-   229({simple(2): [{simple(3): 227("White"), simple(4): simple(5)}],
+   133({simple(2): [{simple(3): 131("Red"), simple(4): simple(5)}],
+    simple(0): 132("Red")}),
+   133({simple(2): [{simple(3): 131("Green"), simple(4): simple(5)}],
+    simple(0): 132("Green")}),
+   133({simple(2): [{simple(3): 131("Blue"), simple(4): simple(5)}],
+    simple(0): 132("Blue")}),
+   133({simple(2): [{simple(3): 131("White"), simple(4): simple(5)}],
     simple(0): "rgbValueWhite"}),
-   {simple(2): [{simple(3): 226("ledOnOff"), simple(4): simple(5)}],
+   {simple(2): [{simple(3): 130("ledOnOff"), simple(4): simple(5)}],
     simple(6): {simple(10): {simple(11): "boolean"}}, simple(0):
     "ledOnOff", simple(9): true, simple(1): simple(8)},
-   {simple(2): [{simple(3): 226("colorTemperatureChanged"),
+   {simple(2): [{simple(3): 130("colorTemperatureChanged"),
     simple(4): simple(5)}], simple(6): simple(7), simple(0):
     "colorTemperatureChanged", simple(1): ["Event"]}],
-     simple(1): "Lamp", "id": "0", "base": 225(""),
-     "@context": 224("2:8444/wot/w3c-wot-td-context.jsonld")}])
+     simple(1): "Lamp", "id": "0", "base": 129(""),
+     "@context": 128("2:8444/wot/w3c-wot-td-context.jsonld")}])
 ~~~
 {: #fig-example-out2 title="Example packed CBOR data item, 507 bytes"}
 
