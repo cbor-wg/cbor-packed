@@ -1117,7 +1117,7 @@ In the registry "{{simple (CBOR Simple Values)<IANA.cbor-simple-values}}" {{IANA
 IANA is requested to allocate the simple values defined in {{tab-simple-values}}.
 
 | Value | Semantics                                     |
-|-------+-----------------------------------------------|
+|-------|-----------------------------------------------|
 | 0..15 | Reference Data Item (for Packed CBOR: shared) |
 {: #tab-simple-values cols='r l' title="Simple Values"}
 
