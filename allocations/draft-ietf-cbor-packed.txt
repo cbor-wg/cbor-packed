@@ -1317,11 +1317,11 @@ Internet-Draft                 Packed CBOR                 February 2026
     |          |                               | function            |
     +----------+-------------------------------+---------------------+
     | 128..135 | any                           | Reference Data Item |
-    |          |                               | (Packed CBOR:       |
+    |          |                               | (for Packed CBOR:   |
     |          |                               | straight argument)  |
     +----------+-------------------------------+---------------------+
     | 136..143 | function tag or concatenation | Reference Data Item |
-    |          | item (text string, byte       | (Packed CBOR:       |
+    |          | item (text string, byte       | (for Packed CBOR:   |
     |          | string, array, or map)        | inverted argument)  |
     +----------+-------------------------------+---------------------+
     |     1112 | any                           | Packed CBOR:        |
@@ -1351,11 +1351,11 @@ Internet-Draft                 Packed CBOR                 February 2026
    In the registry "CBOR Simple Values" [IANA.cbor-simple-values], IANA
    is requested to allocate the simple values defined in Table 5.
 
-           +=======+===========================================+
-           | Value | Semantics                                 |
-           +=======+===========================================+
-           | 0..15 | Reference Data Item (Packed CBOR: shared) |
-           +-------+-------------------------------------------+
+         +=======+===============================================+
+         | Value | Semantics                                     |
+         +=======+===============================================+
+         | 0..15 | Reference Data Item (for Packed CBOR: shared) |
+         +-------+-----------------------------------------------+
 
                            Table 5: Simple Values
 
