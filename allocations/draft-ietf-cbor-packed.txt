@@ -1295,47 +1295,47 @@ Internet-Draft                 Packed CBOR                 February 2026
    In the registry "CBOR Tags" [IANA.cbor-tags], IANA is requested to
    allocate the tags defined in Table 4.
 
-     +==========+===============================+====================+
-     |      Tag | Data Item                     | Semantics          |
-     +==========+===============================+====================+
-     |        6 | int (for shared); [int, any]  | Reference Data     |
-     |          | (for argument)                | Item (Packed CBOR: |
-     |          |                               | shared/argument)   |
-     +----------+-------------------------------+--------------------+
-     |      105 | concatenation item (text      | Packed CBOR: ijoin |
-     |          | string, byte string, array,   | function           |
-     |          | or map)                       |                    |
-     +----------+-------------------------------+--------------------+
-     |      106 | array of concatenation item   | Packed CBOR: join  |
-     |          | (text string, byte string,    | function           |
-     |          | array, or map)                |                    |
-     +----------+-------------------------------+--------------------+
-     |      113 | array (shared-and-argument-   | Packed CBOR: table |
-     |          | items, rump)                  | setup              |
-     +----------+-------------------------------+--------------------+
-     |      114 | array                         | Packed CBOR:       |
-     |          |                               | record function    |
-     +----------+-------------------------------+--------------------+
-     | 128..135 | any                           | Reference Data     |
-     |          |                               | Item (Packed CBOR: |
-     |          |                               | straight argument) |
-     +----------+-------------------------------+--------------------+
-     | 136..143 | function tag or concatenation | Reference Data     |
-     |          | item (text string, byte       | Item (Packed CBOR: |
-     |          | string, array, or map)        | inverted argument) |
-     +----------+-------------------------------+--------------------+
-     |     1112 | any                           | Packed CBOR:       |
-     |          |                               | reference error    |
-     +----------+-------------------------------+--------------------+
-     |     1113 | array (shared-items,          | Packed CBOR: table |
-     |          | argument-items, rump)         | setup              |
-     +----------+-------------------------------+--------------------+
-     |     1115 | any                           | Packed CBOR:       |
-     |          |                               | splicing           |
-     |          |                               | integration tag    |
-     +----------+-------------------------------+--------------------+
+    +==========+===============================+=====================+
+    |      Tag | Data Item                     | Semantics           |
+    +==========+===============================+=====================+
+    |        6 | int (for shared); [int, any]  | Reference Data Item |
+    |          | (for argument)                | (for Packed CBOR:   |
+    |          |                               | shared/argument)    |
+    +----------+-------------------------------+---------------------+
+    |      105 | concatenation item (text      | Packed CBOR: ijoin  |
+    |          | string, byte string, array,   | function            |
+    |          | or map)                       |                     |
+    +----------+-------------------------------+---------------------+
+    |      106 | array of concatenation item   | Packed CBOR: join   |
+    |          | (text string, byte string,    | function            |
+    |          | array, or map)                |                     |
+    +----------+-------------------------------+---------------------+
+    |      113 | array (shared-and-argument-   | Packed CBOR: table  |
+    |          | items, rump)                  | setup               |
+    +----------+-------------------------------+---------------------+
+    |      114 | array                         | Packed CBOR: record |
+    |          |                               | function            |
+    +----------+-------------------------------+---------------------+
+    | 128..135 | any                           | Reference Data Item |
+    |          |                               | (Packed CBOR:       |
+    |          |                               | straight argument)  |
+    +----------+-------------------------------+---------------------+
+    | 136..143 | function tag or concatenation | Reference Data Item |
+    |          | item (text string, byte       | (Packed CBOR:       |
+    |          | string, array, or map)        | inverted argument)  |
+    +----------+-------------------------------+---------------------+
+    |     1112 | any                           | Packed CBOR:        |
+    |          |                               | reference error     |
+    +----------+-------------------------------+---------------------+
+    |     1113 | array (shared-items,          | Packed CBOR: table  |
+    |          | argument-items, rump)         | setup               |
+    +----------+-------------------------------+---------------------+
+    |     1115 | any                           | Packed CBOR:        |
+    |          |                               | splicing            |
+    |          |                               | integration tag     |
+    +----------+-------------------------------+---------------------+
 
-                      Table 4: Values for Tag Numbers
+                     Table 4: Values for Tag Numbers
 
 
 
