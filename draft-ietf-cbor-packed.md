@@ -1098,7 +1098,7 @@ In the registry "{{cbor-tags (CBOR Tags)<IANA.cbor-tags}}" {{IANA.cbor-tags}},
 IANA is requested to allocate the tags defined in {{tab-tag-values}}.
 
 |      Tag | Data Item                                                                    | Semantics                                            |
-|        6 | int (for shared); \[int, any] (for argument)                                 | Reference Data Item (Packed CBOR: shared/argument)   |
+|        6 | int (for shared); \[int, any] (for argument)                                 | Reference Data Item (for Packed CBOR: shared/argument)   |
 |      105 | concatenation item (text string, byte string, array, or map)                 | Packed CBOR: ijoin function                          |
 |      106 | array of concatenation item (text string, byte string, array, or map)        | Packed CBOR: join function                           |
 |      113 | array (shared-and-argument-items, rump)                                      | Packed CBOR: table setup                             |
