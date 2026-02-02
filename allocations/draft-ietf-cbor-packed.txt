@@ -5,8 +5,8 @@
 Network Working Group                                         C. Bormann
 Internet-Draft                                    Universität Bremen TZI
 Intended status: Standards Track                             M. Gütschow
-Expires: 5 August 2026                                        TU Dresden
-                                                         1 February 2026
+Expires: 6 August 2026                                        TU Dresden
+                                                         2 February 2026
 
 
                               Packed CBOR
@@ -53,7 +53,7 @@ About This Document
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                 [Page 1]
+Bormann & Gütschow        Expires 6 August 2026                 [Page 1]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -81,7 +81,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 5 August 2026.
+   This Internet-Draft will expire on 6 August 2026.
 
 Copyright Notice
 
@@ -109,7 +109,7 @@ Table of Contents
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                 [Page 2]
+Bormann & Gütschow        Expires 6 August 2026                 [Page 2]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -131,16 +131,16 @@ Internet-Draft                 Packed CBOR                 February 2026
            in Packed CBOR  . . . . . . . . . . . . . . . . . . . . .  23
    8.  IANA Considerations . . . . . . . . . . . . . . . . . . . . .  23
      8.1.  CBOR Tags Registry  . . . . . . . . . . . . . . . . . . .  24
-     8.2.  CBOR Simple Values Registry . . . . . . . . . . . . . . .  24
+     8.2.  CBOR Simple Values Registry . . . . . . . . . . . . . . .  25
    9.  Security Considerations . . . . . . . . . . . . . . . . . . .  25
    10. References  . . . . . . . . . . . . . . . . . . . . . . . . .  25
      10.1.  Normative References . . . . . . . . . . . . . . . . . .  25
      10.2.  Informative References . . . . . . . . . . . . . . . . .  26
    Appendix A.  Examples . . . . . . . . . . . . . . . . . . . . . .  28
-   List of Figures . . . . . . . . . . . . . . . . . . . . . . . . .  33
-   List of Tables  . . . . . . . . . . . . . . . . . . . . . . . . .  33
-   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  34
-   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  34
+   List of Figures . . . . . . . . . . . . . . . . . . . . . . . . .  34
+   List of Tables  . . . . . . . . . . . . . . . . . . . . . . . . .  34
+   Acknowledgements  . . . . . . . . . . . . . . . . . . . . . . . .  35
+   Authors' Addresses  . . . . . . . . . . . . . . . . . . . . . . .  35
 
 1.  Introduction
 
@@ -165,7 +165,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                 [Page 3]
+Bormann & Gütschow        Expires 6 August 2026                 [Page 3]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -221,7 +221,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                 [Page 4]
+Bormann & Gütschow        Expires 6 August 2026                 [Page 4]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -277,7 +277,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                 [Page 5]
+Bormann & Gütschow        Expires 6 August 2026                 [Page 5]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -333,7 +333,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                 [Page 6]
+Bormann & Gütschow        Expires 6 August 2026                 [Page 6]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -389,7 +389,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                 [Page 7]
+Bormann & Gütschow        Expires 6 August 2026                 [Page 7]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -445,7 +445,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                 [Page 8]
+Bormann & Gütschow        Expires 6 August 2026                 [Page 8]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -501,7 +501,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                 [Page 9]
+Bormann & Gütschow        Expires 6 August 2026                 [Page 9]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -557,7 +557,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 10]
+Bormann & Gütschow        Expires 6 August 2026                [Page 10]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -613,7 +613,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 11]
+Bormann & Gütschow        Expires 6 August 2026                [Page 11]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -669,7 +669,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 12]
+Bormann & Gütschow        Expires 6 August 2026                [Page 12]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -725,7 +725,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 13]
+Bormann & Gütschow        Expires 6 August 2026                [Page 13]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -781,7 +781,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 14]
+Bormann & Gütschow        Expires 6 August 2026                [Page 14]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -837,7 +837,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 15]
+Bormann & Gütschow        Expires 6 August 2026                [Page 15]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -893,7 +893,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 16]
+Bormann & Gütschow        Expires 6 August 2026                [Page 16]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -949,7 +949,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 17]
+Bormann & Gütschow        Expires 6 August 2026                [Page 17]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -1005,7 +1005,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 18]
+Bormann & Gütschow        Expires 6 August 2026                [Page 18]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -1061,7 +1061,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 19]
+Bormann & Gütschow        Expires 6 August 2026                [Page 19]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -1117,7 +1117,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 20]
+Bormann & Gütschow        Expires 6 August 2026                [Page 20]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -1173,7 +1173,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 21]
+Bormann & Gütschow        Expires 6 August 2026                [Page 21]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -1229,7 +1229,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 22]
+Bormann & Gütschow        Expires 6 August 2026                [Page 22]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -1285,7 +1285,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 23]
+Bormann & Gütschow        Expires 6 August 2026                [Page 23]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -1295,62 +1295,67 @@ Internet-Draft                 Packed CBOR                 February 2026
    In the registry "CBOR Tags" [IANA.cbor-tags], IANA is requested to
    allocate the tags defined in Table 4.
 
-   +==========+=====================================+=================+
-   |      Tag | Data Item                           | Semantics       |
-   +==========+=====================================+=================+
-   |        6 | int (for shared); [int, any] (for   | Packed CBOR:    |
-   |          | argument)                           | shared/argument |
-   +----------+-------------------------------------+-----------------+
-   |      105 | concatenation item (text string,    | Packed CBOR:    |
-   |          | byte string, array, or map)         | ijoin function  |
-   +----------+-------------------------------------+-----------------+
-   |      106 | array of concatenation item (text   | Packed CBOR:    |
-   |          | string, byte string, array, or map) | join function   |
-   +----------+-------------------------------------+-----------------+
-   |      113 | array (shared-and-argument-items,   | Packed CBOR:    |
-   |          | rump)                               | table setup     |
-   +----------+-------------------------------------+-----------------+
-   |      114 | array                               | Packed CBOR:    |
-   |          |                                     | record function |
-   +----------+-------------------------------------+-----------------+
-   | 136..143 | function tag or concatenation item  | Packed CBOR:    |
-   |          | (text string, byte string, array,   | inverted        |
-   |          | or map)                             |                 |
-   +----------+-------------------------------------+-----------------+
-   | 128..135 | any                                 | Packed CBOR:    |
-   |          |                                     | straight        |
-   +----------+-------------------------------------+-----------------+
-   |     1112 | any                                 | Packed CBOR:    |
-   |          |                                     | reference error |
-   +----------+-------------------------------------+-----------------+
-   |     1113 | array (shared-items, argument-      | Packed CBOR:    |
-   |          | items, rump)                        | table setup     |
-   +----------+-------------------------------------+-----------------+
-   |     1115 | any                                 | Packed CBOR:    |
-   |          |                                     | splicing        |
-   |          |                                     | integration tag |
-   +----------+-------------------------------------+-----------------+
+     +==========+===============================+====================+
+     |      Tag | Data Item                     | Semantics          |
+     +==========+===============================+====================+
+     |        6 | int (for shared); [int, any]  | Reference Data     |
+     |          | (for argument)                | Item (Packed CBOR: |
+     |          |                               | shared/argument)   |
+     +----------+-------------------------------+--------------------+
+     |      105 | concatenation item (text      | Packed CBOR: ijoin |
+     |          | string, byte string, array,   | function           |
+     |          | or map)                       |                    |
+     +----------+-------------------------------+--------------------+
+     |      106 | array of concatenation item   | Packed CBOR: join  |
+     |          | (text string, byte string,    | function           |
+     |          | array, or map)                |                    |
+     +----------+-------------------------------+--------------------+
+     |      113 | array (shared-and-argument-   | Packed CBOR: table |
+     |          | items, rump)                  | setup              |
+     +----------+-------------------------------+--------------------+
+     |      114 | array                         | Packed CBOR:       |
+     |          |                               | record function    |
+     +----------+-------------------------------+--------------------+
+     | 128..135 | any                           | Reference Data     |
+     |          |                               | Item (Packed CBOR: |
+     |          |                               | straight argument) |
+     +----------+-------------------------------+--------------------+
+     | 136..143 | function tag or concatenation | Reference Data     |
+     |          | item (text string, byte       | Item (Packed CBOR: |
+     |          | string, array, or map)        | inverted argument) |
+     +----------+-------------------------------+--------------------+
+     |     1112 | any                           | Packed CBOR:       |
+     |          |                               | reference error    |
+     +----------+-------------------------------+--------------------+
+     |     1113 | array (shared-items,          | Packed CBOR: table |
+     |          | argument-items, rump)         | setup              |
+     +----------+-------------------------------+--------------------+
+     |     1115 | any                           | Packed CBOR:       |
+     |          |                               | splicing           |
+     |          |                               | integration tag    |
+     +----------+-------------------------------+--------------------+
 
-                     Table 4: Values for Tag Numbers
+                      Table 4: Values for Tag Numbers
+
+
+
+
+
+Bormann & Gütschow        Expires 6 August 2026                [Page 24]
+
+Internet-Draft                 Packed CBOR                 February 2026
+
 
 8.2.  CBOR Simple Values Registry
 
    In the registry "CBOR Simple Values" [IANA.cbor-simple-values], IANA
    is requested to allocate the simple values defined in Table 5.
 
-
-
-
-Bormann & Gütschow        Expires 5 August 2026                [Page 24]
-
-Internet-Draft                 Packed CBOR                 February 2026
-
-
-                      +=======+=====================+
-                      | Value | Semantics           |
-                      +=======+=====================+
-                      | 0..15 | Packed CBOR: shared |
-                      +-------+---------------------+
+           +=======+===========================================+
+           | Value | Semantics                                 |
+           +=======+===========================================+
+           | 0..15 | Reference Data Item (Packed CBOR: shared) |
+           +-------+-------------------------------------------+
 
                            Table 5: Simple Values
 
@@ -1388,19 +1393,19 @@ Internet-Draft                 Packed CBOR                 February 2026
               <https://www.rfc-editor.org/info/bcp14>.
               At the time of writing, this BCP comprises the following:
 
+
+
+
+
+Bormann & Gütschow        Expires 6 August 2026                [Page 25]
+
+Internet-Draft                 Packed CBOR                 February 2026
+
+
               Bradner, S., "Key words for use in RFCs to Indicate
               Requirement Levels", BCP 14, RFC 2119,
               DOI 10.17487/RFC2119, March 1997,
               <https://www.rfc-editor.org/info/rfc2119>.
-
-
-
-
-
-Bormann & Gütschow        Expires 5 August 2026                [Page 25]
-
-Internet-Draft                 Packed CBOR                 February 2026
-
 
               Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
@@ -1443,20 +1448,22 @@ Internet-Draft                 Packed CBOR                 February 2026
               Registration of CBOR Tags 264 and 265,
               <http://peteroupc.github.io/CBOR/bigfrac.html>.
 
+
+
+
+
+
+Bormann & Gütschow        Expires 6 August 2026                [Page 26]
+
+Internet-Draft                 Packed CBOR                 February 2026
+
+
    [I-D.amsuess-cbor-packed-by-reference]
               Amsüss, C., "Packed CBOR: Table set up by reference", Work
               in Progress, Internet-Draft, draft-amsuess-cbor-packed-by-
               reference-04, 3 March 2025,
               <https://datatracker.ietf.org/doc/html/draft-amsuess-cbor-
               packed-by-reference-04>.
-
-
-
-
-Bormann & Gütschow        Expires 5 August 2026                [Page 26]
-
-Internet-Draft                 Packed CBOR                 February 2026
-
 
    [I-D.bormann-cbor-notable-tags]
               Bormann, C., "Notable CBOR Tags", Work in Progress,
@@ -1499,6 +1506,14 @@ Internet-Draft                 Packed CBOR                 February 2026
               Sequences", RFC 8742, DOI 10.17487/RFC8742, February 2020,
               <https://www.rfc-editor.org/rfc/rfc8742>.
 
+
+
+
+Bormann & Gütschow        Expires 6 August 2026                [Page 27]
+
+Internet-Draft                 Packed CBOR                 February 2026
+
+
    [RFC8746]  Bormann, C., Ed., "Concise Binary Object Representation
               (CBOR) Tags for Typed Arrays", RFC 8746,
               DOI 10.17487/RFC8746, February 2020,
@@ -1506,14 +1521,6 @@ Internet-Draft                 Packed CBOR                 February 2026
 
    [STD63]    Internet Standard 63,
               <https://www.rfc-editor.org/info/std63>.
-
-
-
-Bormann & Gütschow        Expires 5 August 2026                [Page 27]
-
-Internet-Draft                 Packed CBOR                 February 2026
-
-
               At the time of writing, this STD comprises the following:
 
               Yergeau, F., "UTF-8, a transformation format of ISO
@@ -1529,6 +1536,39 @@ Appendix A.  Examples
    data item can be packed into 298 bytes as depicted in Figure 4.  Note
    that this particular example does not lend itself to prefix
    compression, so it uses the simple common-table setup form (tag 113).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bormann & Gütschow        Expires 6 August 2026                [Page 28]
+
+Internet-Draft                 Packed CBOR                 February 2026
+
 
    { "store": {
        "book": [
@@ -1562,15 +1602,29 @@ Appendix A.  Examples
      }
    }
 
+            Figure 2: Example original CBOR data item, 400 bytes
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 28]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Bormann & Gütschow        Expires 6 August 2026                [Page 29]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
-
-            Figure 2: Example original CBOR data item, 400 bytes
 
    113([["price", "category", "author", "title", "fiction", 8.95,
                                                                 "isbn"],
@@ -1621,7 +1675,9 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 29]
+
+
+Bormann & Gütschow        Expires 6 August 2026                [Page 30]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -1677,7 +1733,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 30]
+Bormann & Gütschow        Expires 6 August 2026                [Page 31]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -1733,7 +1789,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 31]
+Bormann & Gütschow        Expires 6 August 2026                [Page 32]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -1789,7 +1845,7 @@ Internet-Draft                 Packed CBOR                 February 2026
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 32]
+Bormann & Gütschow        Expires 6 August 2026                [Page 33]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -1845,7 +1901,7 @@ List of Tables
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 33]
+Bormann & Gütschow        Expires 6 August 2026                [Page 34]
 
 Internet-Draft                 Packed CBOR                 February 2026
 
@@ -1901,4 +1957,4 @@ Authors' Addresses
 
 
 
-Bormann & Gütschow        Expires 5 August 2026                [Page 34]
+Bormann & Gütschow        Expires 6 August 2026                [Page 35]
