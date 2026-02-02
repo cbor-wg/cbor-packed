@@ -1864,13 +1864,13 @@ Internet-Draft                 Packed CBOR                 February 2026
         / 133 /
       /rump/ {simple(0): "MyLED",
               "interactions": [
-      229({simple(2): [{simple(3): 131("Red"), simple(4): simple(5)}],
+      133({simple(2): [{simple(3): 131("Red"), simple(4): simple(5)}],
        simple(0): 132("Red")}),
-      229({simple(2): [{simple(3): 131("Green"), simple(4): simple(5)}],
+      133({simple(2): [{simple(3): 131("Green"), simple(4): simple(5)}],
        simple(0): 132("Green")}),
-      229({simple(2): [{simple(3): 131("Blue"), simple(4): simple(5)}],
+      133({simple(2): [{simple(3): 131("Blue"), simple(4): simple(5)}],
        simple(0): 132("Blue")}),
-      229({simple(2): [{simple(3): 131("White"), simple(4): simple(5)}],
+      133({simple(2): [{simple(3): 131("White"), simple(4): simple(5)}],
        simple(0): "rgbValueWhite"}),
       {simple(2): [{simple(3): 130("ledOnOff"), simple(4): simple(5)}],
        simple(6): {simple(10): {simple(11): "boolean"}}, simple(0):
