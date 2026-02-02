@@ -25,15 +25,11 @@ CBOR data item into a Packed CBOR data item that is almost as easy to
 consume as the original CBOR data item.  A separate decompression
 step is therefore often not required at the recipient. 
        (This cref will be removed by the RFC editor:) 
-The present revision -18 is a work-in-progress release in
+The upcoming revision -19 is a work-in-progress release in
 preparation for another cbor-packed side meeting.
-The wording of the present revision continues to make use of
-the tunables A/B/C to be set to specific numbers before completing
-the Packed CBOR specification; not all the examples may fully
-align yet.
-Specifically, the new text about using the reference data item
-allocations for other mechanisms than the cbor-packed one defined
-here should enable us to revert to A=16. 
+This revision resolves the use of the tunables A/B/C by setting
+A=16, B=8, and C=8, and choosing requested simple values and tag
+numbers, in preparation for early allocation. 
     " name="description">
 <meta content="xml2rfc 3.31.0" name="generator">
 <meta content="Internet-Draft" name="keyword">
@@ -50,7 +46,7 @@ here should enable us to revert to A=16.
     pycountry 24.6.1
     PyYAML 6.0.3
     requests 2.32.5
-    wcwidth 0.2.14
+    wcwidth 0.3.0
 -->
 <link href="draft-ietf-cbor-packed.xml" rel="alternate" type="application/rfc+xml">
 <link href="#copyright" rel="license">
@@ -591,6 +587,7 @@ aside, blockquote {
 }
 blockquote {
   margin: 1em 0;
+  border-left: 2px var(--pilcrow-strong) solid;
 }
 cite {
   display: block;
@@ -661,7 +658,7 @@ a.pilcrow {
   }
 }
 @media not print {
-  :hover > a.pilcrow {
+  :hover > a.pilcrow, a.pilcrow:focus {
     opacity: 1;
   }
   a.pilcrow[href]:hover {
@@ -1069,11 +1066,11 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <thead><tr>
 <td class="left">Internet-Draft</td>
 <td class="center">Packed CBOR</td>
-<td class="right">January 2026</td>
+<td class="right">February 2026</td>
 </tr></thead>
 <tfoot><tr>
 <td class="left">Bormann &amp; Gütschow</td>
-<td class="center">Expires 11 July 2026</td>
+<td class="center">Expires 6 August 2026</td>
 <td class="right">[Page]</td>
 </tr></tfoot>
 </table>
@@ -1086,12 +1083,12 @@ svg :is([fill="white"], [fill^="#fff"]) {
 <dd class="internet-draft">draft-ietf-cbor-packed-latest</dd>
 <dt class="label-published">Published:</dt>
 <dd class="published">
-<time datetime="2026-01-07" class="published">7 January 2026</time>
+<time datetime="2026-02-02" class="published">2 February 2026</time>
     </dd>
 <dt class="label-intended-status">Intended Status:</dt>
 <dd class="intended-status">Standards Track</dd>
 <dt class="label-expires">Expires:</dt>
-<dd class="expires"><time datetime="2026-07-11">11 July 2026</time></dd>
+<dd class="expires"><time datetime="2026-08-06">6 August 2026</time></dd>
 <dt class="label-authors">Authors:</dt>
 <dd class="authors">
 <div class="author">
@@ -1125,15 +1122,11 @@ CBOR data item into a Packed CBOR data item that is almost as easy to
 consume as the original CBOR data item.  A separate decompression
 step is therefore often not required at the recipient.<a href="#section-abstract-3" class="pilcrow">¶</a></p>
 <p id="section-abstract-4"><span class="cref" id="status">(This cref will be removed by the RFC editor:)<br>
-The present revision -18 is a work-in-progress release in
+The upcoming revision -19 is a work-in-progress release in
 preparation for another cbor-packed side meeting.
-The wording of the present revision continues to make use of
-the tunables A/B/C to be set to specific numbers before completing
-the Packed CBOR specification; not all the examples may fully
-align yet.
-Specifically, the new text about using the reference data item
-allocations for other mechanisms than the cbor-packed one defined
-here should enable us to revert to A=16.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
+This revision resolves the use of the tunables A/B/C by setting
+A=16, B=8, and C=8, and choosing requested simple values and tag
+numbers, in preparation for early allocation.</span><a href="#section-abstract-4" class="pilcrow">¶</a></p>
 </section>
 <section class="note rfcEditorRemove" id="section-note.1">
       <h2 id="name-about-this-document">
@@ -1169,7 +1162,7 @@ here should enable us to revert to A=16.</span><a href="#section-abstract-4" cla
         time. It is inappropriate to use Internet-Drafts as reference
         material or to cite them other than as "work in progress."<a href="#section-boilerplate.1-3" class="pilcrow">¶</a></p>
 <p id="section-boilerplate.1-4">
-        This Internet-Draft will expire on 11 July 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
+        This Internet-Draft will expire on 6 August 2026.<a href="#section-boilerplate.1-4" class="pilcrow">¶</a></p>
 </section>
 </div>
 <div id="copyright">
@@ -1578,14 +1571,6 @@ conjunction with <span><a href="https://rfc-editor.org/rfc/rfc8610#appendix-G" c
       </h2>
 <p id="section-2-1">This section describes the packing tables, their structure, and how
 they are referenced.<a href="#section-2-1" class="pilcrow">¶</a></p>
-<p id="section-2-2"><span class="cref" id="resolve">To be resolved before publication:</span><a href="#section-2-2" class="pilcrow">¶</a></p>
-<p id="section-2-3">To enable discussion of CBOR resources allocated to Packed CBOR, the
-packed references are described in terms of three specification
-parameters: <code>A</code>, <code>B</code>, and <code>C</code>.
-These specification parameters enable creating a precise specification
-while the quantitative allocation discussion is ongoing.
-They will be replaced by specific chosen numbers when the present
-specification is finalized (<a href="#sec-allocation" class="auto internal xref">Section 2.6</a>).<a href="#section-2-3" class="pilcrow">¶</a></p>
 <div id="sec-packing-tables">
 <section id="section-2.1">
         <h3 id="name-packing-tables">
@@ -1660,21 +1645,21 @@ recursively unpacked.<a href="#section-2.2-2" class="pilcrow">¶</a></p>
           </thead>
           <tbody>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Simple value 0..(A-1)</td>
-              <td class="text-left" rowspan="1" colspan="1">0..(A-1)</td>
+              <td class="text-left" rowspan="1" colspan="1">Simple value 0..15</td>
+              <td class="text-left" rowspan="1" colspan="1">0..15</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Tag 6(N) (unsigned integer N ≥ 0)</td>
-              <td class="text-left" rowspan="1" colspan="1">A + 2×N</td>
+              <td class="text-left" rowspan="1" colspan="1">16 + 2×N</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Tag 6(N) (negative integer N &lt; 0)</td>
-              <td class="text-left" rowspan="1" colspan="1">A − 2×N − 1</td>
+              <td class="text-left" rowspan="1" colspan="1">16 − 2×N − 1</td>
             </tr>
           </tbody>
         </table>
 </div>
-<p id="section-2.2-4">As examples, <span class="cref" id="A16">assuming <code>A=16</code></span>,
+<p id="section-2.2-4">As examples,
 the first 22 elements of the shared item table are referenced by
 <code>simple(0)</code>, <code>simple(1)</code>, ... <code>simple(15)</code>, <code>6(0)</code>, <code>6(-1)</code>, <code>6(1)</code>,
 <code>6(-2)</code>, <code>6(2)</code>, <code>6(-3)</code>.
@@ -1682,7 +1667,7 @@ the first 22 elements of the shared item table are referenced by
 table index values — "zigzag encoding" — makes systematic use of
 shorter integer encodings first.)<a href="#section-2.2-4" class="pilcrow">¶</a></p>
 <p id="section-2.2-5">Taking into account the encoding of these referring data items, there
-are A one-byte references, 48 two-byte references, 464 three-byte
+are 16 one-byte references, 48 two-byte references, 464 three-byte
 references, 130560 four-byte references, etc.
 As CBOR integers can grow to very large (or very negative) values,
 there is no practical limit to how many shared items might be used in
@@ -1724,12 +1709,12 @@ suffix out of the argument table.<a href="#section-2.3-2" class="pilcrow">¶</a>
           </thead>
           <tbody>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Tag (256-<code>B</code>)..255(rump)</td>
-              <td class="text-right" rowspan="1" colspan="1">0..(B-1)</td>
+              <td class="text-left" rowspan="1" colspan="1">Tag 128..135(rump)</td>
+              <td class="text-right" rowspan="1" colspan="1">0..7</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Tag 6([unsigned integer N, rump]) (N ≥ 0)</td>
-              <td class="text-right" rowspan="1" colspan="1">B + N</td>
+              <td class="text-right" rowspan="1" colspan="1">8 + N</td>
             </tr>
           </tbody>
         </table>
@@ -1748,19 +1733,21 @@ suffix out of the argument table.<a href="#section-2.3-2" class="pilcrow">¶</a>
           </thead>
           <tbody>
             <tr>
-              <td class="text-left" rowspan="1" colspan="1">Tag (256-<code>B</code>-<code>C</code>)..(256-<code>B</code>-1)(rump)</td>
-              <td class="text-right" rowspan="1" colspan="1">0..(C-1)</td>
+              <td class="text-left" rowspan="1" colspan="1">Tag 136..143(rump)</td>
+              <td class="text-right" rowspan="1" colspan="1">0..7</td>
             </tr>
             <tr>
               <td class="text-left" rowspan="1" colspan="1">Tag 6([negative integer N, rump]) (N &lt; 0)</td>
-              <td class="text-right" rowspan="1" colspan="1">C - N - 1</td>
+              <td class="text-right" rowspan="1" colspan="1">8 - N - 1</td>
             </tr>
           </tbody>
         </table>
 </div>
 <p id="section-2.3-5">Argument data items are referenced by using the reference data items
 in <a href="#tab-straight" class="auto internal xref">Table 2</a> and <a href="#tab-inverted" class="auto internal xref">Table 3</a>.<a href="#section-2.3-5" class="pilcrow">¶</a></p>
-<p id="section-2.3-6">For tags 256-<code>B</code>-<code>C</code> to 255 included, the table index (an unsigned integer) is derived from the tag number.
+<p id="section-2.3-6">For the 16 tags 128 to 143 included, the table index (an unsigned
+integer) is derived from the tag number, together with the information
+if the reference is straight or inverted.
 For tag 6, the table index is derived from the integer N
 in the first element of the tag content (unsigned integer for
 straight, negative integer for inverted references).
@@ -1805,16 +1792,15 @@ of the unpacking is not valid.<a href="#section-2.3-12" class="pilcrow">¶</a></
 <p id="section-2.3-13">If no function tag was given, the reference is replaced by the
 final left-hand side "concatenated" with the final right-hand side, where
 concatenation is defined as in <a href="#sec-concatenation" class="auto internal xref">Section 2.4</a>.<a href="#section-2.3-13" class="pilcrow">¶</a></p>
-<p id="section-2.3-14">As a contrived (but short) example <span class="cref" id="B32">assuming <code>B=32</code></span>, if the argument table is
+<p id="section-2.3-14">As a contrived (but short) example, if the argument table is
 <code>["foobar", h'666f6f62', "fo"]</code>, each of the following straight (prefix)
-references will unpack to <code>"foobart"</code>: <code>224("t")</code>, <code>225("art")</code>,
-<code>226("obart")</code> (the byte string h'666f6f62' == 'foob' is concatenated
+references will unpack to <code>"foobart"</code>: <code>128("t")</code>, <code>129("art")</code>,
+<code>130("obart")</code> (the byte string h'666f6f62' == 'foob' is concatenated
 into a text string, and the last example is not an optimization).<a href="#section-2.3-14" class="pilcrow">¶</a></p>
-<p id="section-2.3-15">Taking into account the encoding, there are <code>B</code> two-byte references,
+<p id="section-2.3-15">Taking into account the encoding, there are 8 two-byte references,
 24 three-byte references, 224 four-byte references, 65280 five-byte
 references, etc.
-The numbers for inverted (suffix) references are the same, except that
-there are <code>C</code> two-byte references.
+The numbers for inverted (suffix) references are the same.
 (As CBOR integers can grow to very large (or very negative) values,
 there is no practical limit to how many argument items might be used in
 a Packed CBOR item.)<a href="#section-2.3-15" class="pilcrow">¶</a></p>
@@ -1944,7 +1930,8 @@ symbolic links) is applied to any reference chase.<a href="#section-2.5-3.3" cla
 <aside id="section-2.5-4">
           <p id="section-2.5-4.1">NOTE:
 The present specification does nothing to help with the packing of CBOR
-sequences <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span>; maybe such a specification should be added.<a href="#section-2.5-4.1" class="pilcrow">¶</a></p>
+sequences <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span>; possibly the integration tag 1115 could be used in a
+top-level position to express CBOR sequence semantics via a packed array.<a href="#section-2.5-4.1" class="pilcrow">¶</a></p>
 </aside>
 </section>
 </div>
@@ -1954,19 +1941,17 @@ sequences <span>[<a href="#RFC8742" class="cite xref">RFC8742</a>]</span>; maybe
 <a href="#section-2.6" class="section-number selfRef">2.6. </a><a href="#name-allocation" class="section-name selfRef">Allocation</a>
         </h3>
 <p id="section-2.6-1">This section is to be removed before publishing as an RFC.<a href="#section-2.6-1" class="pilcrow">¶</a></p>
-<p id="section-2.6-2"><span class="cref" id="resolve_1">To be resolved before publication:</span><a href="#section-2.6-2" class="pilcrow">¶</a></p>
-<p id="section-2.6-3">To enable discussion of CBOR resources (tags and simple values)
-allocated to Packed CBOR, the representation of packed references is
-described in terms of three specification parameters: <code>A</code>, <code>B</code>, and
-<code>C</code>.<a href="#section-2.6-3" class="pilcrow">¶</a></p>
-<p id="section-2.6-4">These specification parameters allow the current specification to be precise
+<p id="section-2.6-2">These specification parameters allow the current specification to be precise
 while the quantitative allocation discussion is ongoing.
 They will be replaced by specific chosen numbers when the present
-specification is finalized.<a href="#section-2.6-4" class="pilcrow">¶</a></p>
-<p id="section-2.6-5">The sense of the WG has been to be more conservative in allocating
+specification is finalized.<a href="#section-2.6-2" class="pilcrow">¶</a></p>
+<p id="section-2.6-3">The sense of the WG has been to be more conservative in allocating
 CBOR resources to Packed CBOR than previous drafts of this document
-were.<a href="#section-2.6-5" class="pilcrow">¶</a></p>
-<p id="section-2.6-6"><code>A</code> is the number of 1+0 simple values allocated to shared item
+were.
+In addition, <a href="#sec-extensibility-approach" class="auto internal xref">Section 1.1</a> provides a liberal way to use the allocations
+for reference data items in packed items that use different unpacking
+mechanisms from the ones described in this document.<a href="#section-2.6-3" class="pilcrow">¶</a></p>
+<p id="section-2.6-4">16 1+0 simple values are allocated to shared item
 references.
 During early development of CBOR, when the bit allocation and thus the
 ranges of simple values were originally defined, a range of 16
@@ -1975,22 +1960,17 @@ The allocations for 1+0 simple values were therefore performed from
 the top of the range down, i.e., with the block of
 false/true/null/undefined being originally assigned to 24..27 (after
 the introduction of indefinite length encoding, 20..23).
-No further allocation has been performed in this space in the 12 years
-since.<a href="#section-2.6-6" class="pilcrow">¶</a></p>
-<p id="section-2.6-7">Given that indefinite length encoding effectively took away 4 possible
-1+0 simple values, it appears conservative to reduce <code>A</code> to <code>A=12</code>.<a href="#section-2.6-7" class="pilcrow">¶</a></p>
-<p id="section-2.6-8"><code>B</code> is the number of 1+1 tags allocated to straight argument
-references, and <code>C</code> is the number of 1+1 tags allocated to inverted
-argument references.
-A rationale for choosing <code>C</code> &lt; <code>B</code> might be that straight (prefix)
-packing might be more likely than inverted (suffix) packing, hence the
-choices of previous drafts were comparable to setting <code>B=32</code> and <code>C=8</code>.<a href="#section-2.6-8" class="pilcrow">¶</a></p>
-<p id="section-2.6-9">This draft proposes to conservatively set <code>B=8</code>, but to stay at <code>C=8</code>,
-as inverted references seem to occur more often than previously
-thought.<a href="#section-2.6-9" class="pilcrow">¶</a></p>
-<p id="section-2.6-10">Note the nature of Packed CBOR means that all these allocations can be
+No further allocation has been performed in this range in the 12 years
+since.<a href="#section-2.6-4" class="pilcrow">¶</a></p>
+<p id="section-2.6-5">8 1+1 tags are allocated to straight argument
+references, and 8 further 1+1 tags allocated to inverted
+argument references.<a href="#section-2.6-5" class="pilcrow">¶</a></p>
+<p id="section-2.6-6">A single 1+0 tag is allocated to data item references beyond the
+above, with the tag content deciding which of the above reference
+mechanisms is to be used.<a href="#section-2.6-6" class="pilcrow">¶</a></p>
+<p id="section-2.6-7">Note the nature of Packed CBOR means that all these allocations can be
 used for pretty much unlimited purposes by simply defining another
-table setup mechanism (media type or table-building tag).<a href="#section-2.6-10" class="pilcrow">¶</a></p>
+table setup mechanism (media type or table-building tag).<a href="#section-2.6-7" class="pilcrow">¶</a></p>
 </section>
 </div>
 </section>
@@ -2183,9 +2163,9 @@ based on the type of the joiner
 <div class="lang-cbor-diag sourcecode" id="section-4.1-8">
 <pre>
 113([[106("packed.example")],
-  [224(["https://", "/foo.html"]),
-   224(["coap://", "/bar.cbor"]),
-   224(["mailto:support@", ""])]
+  [128(["https://", "/foo.html"]),
+   128(["coap://", "/bar.cbor"]),
+   128(["mailto:support@", ""])]
 ])
 </pre><a href="#section-4.1-8" class="pilcrow">¶</a>
 </div>
@@ -2196,9 +2176,9 @@ side are interchanged ('i').<a href="#section-4.1-9" class="pilcrow">¶</a></p>
 <div class="lang-cbor-diag sourcecode" id="section-4.1-11">
 <pre>
 113([["packed.example"],
-  [216(105(["https://", "/foo.html"])),
-   216(105(["coap://", "/bar.cbor"])),
-   216("mailto:support@")]
+  [136(105(["https://", "/foo.html"])),
+   136(105(["coap://", "/bar.cbor"])),
+   136("mailto:support@")]
 ])
 </pre><a href="#section-4.1-11" class="pilcrow">¶</a>
 </div>
@@ -2207,9 +2187,9 @@ from the same place could be:<a href="#section-4.1-12" class="pilcrow">¶</a></p
 <div class="lang-cbor-diag sourcecode" id="section-4.1-13">
 <pre>
 113([[105(["coaps://[2001:db8::1]/s/", ".senml"])],
-  [224("temp-freezer"),
-   224("temp-fridge"),
-   224("temp-ambient")]
+  [128("temp-freezer"),
+   128("temp-fridge"),
+   128("temp-ambient")]
 ])
 </pre><a href="#section-4.1-13" class="pilcrow">¶</a>
 </div>
@@ -2250,9 +2230,9 @@ Key items whose matching value items are absent are not included in the resultin
 <div class="lang-cbor-diag sourcecode" id="section-4.2-9">
 <pre>
 113([[114(["key0", "key1", "key2"])],
-  [224([false, "value 1", 2]),
-   224([true, "value -1", -2]),
-   224([undefined, "", 0])]
+  [128([false, "value 1", 2]),
+   128([true, "value -1", -2]),
+   128([undefined, "", 0])]
 ])
 </pre><a href="#section-4.2-9" class="pilcrow">¶</a>
 </div>
@@ -2261,9 +2241,9 @@ Key items whose matching value items are absent are not included in the resultin
 <div class="lang-cbor-diag sourcecode" id="section-4.2-11">
 <pre>
 113([[114(["key1", "key2", "key0"])],
-  [224(["value 1", 2, false]),
-   224(["value -1", -2, true]),
-   224(["", 0])]
+  [128(["value 1", 2, false]),
+   128(["value -1", -2, true]),
+   128(["", 0])]
 ])
 </pre><a href="#section-4.2-11" class="pilcrow">¶</a>
 </div>
@@ -2276,12 +2256,7 @@ Key items whose matching value items are absent are not included in the resultin
       <h2 id="name-integration-tags">
 <a href="#section-5" class="section-number selfRef">5. </a><a href="#name-integration-tags" class="section-name selfRef">Integration Tags</a>
       </h2>
-<p id="section-5-1"><span class="cref" id="for-discussion">This new text addresses discussion during the
-2025-06-11 CBOR WG interim.
-It provides additional functionality, but can cause additional
-complexity, and an explicit decision should be made whether this
-functionality is included.</span><a href="#section-5-1" class="pilcrow">¶</a></p>
-<p id="section-5-2">Integration tags fulfill a similar purpose for shared item references as
+<p id="section-5-1">Integration tags fulfill a similar purpose for shared item references as
 function tags do for argument references.
 An integration tag can be used as an element of a shared item table, supplying
 extended semantics on how to integrate its tag content into the context
@@ -2291,14 +2266,14 @@ integration tag.
 (Note that the generation of an integration tag can in turn be
 automatic in the table setup mechanism specified by an application environment (<a href="#sec-table-setup" class="auto internal xref">Section 3</a>)
 or a table setup tag, so the integration tag may never actually physically
-occur in the interchanged data.)<a href="#section-5-2" class="pilcrow">¶</a></p>
-<p id="section-5-3">Application protocol specifications need to be explicit about which
+occur in the interchanged data.)<a href="#section-5-1" class="pilcrow">¶</a></p>
+<p id="section-5-2">Application protocol specifications need to be explicit about which
 integration tags are in use; otherwise, the unpacker will not know
 whether a tag in a shared item table position is an integration tag or
 is intended to be shared literally.
 (The set of integration tags in use can also be defined as part of the
-table setup mechanism.)<a href="#section-5-3" class="pilcrow">¶</a></p>
-<p id="section-5-4">The present specification defines one integration tag.<a href="#section-5-4" class="pilcrow">¶</a></p>
+table setup mechanism.)<a href="#section-5-2" class="pilcrow">¶</a></p>
+<p id="section-5-3">The present specification defines one integration tag.<a href="#section-5-3" class="pilcrow">¶</a></p>
 <div id="splice">
 <section id="section-5.1">
         <h3 id="name-splicing-integration-tag">
@@ -2334,7 +2309,7 @@ such as strings or arrays, where the tag or simple value is defined to
 stand for a data item that can actually be used in the position of the stand-in
 item.
 Examples would be tags such as 21 to 23 (base64url, base64, uppercase
-hex: Section <a href="https://rfc-editor.org/rfc/rfc8949#section-3.4.5.2" class="relref">3.4.5.2</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>) or 108 (lowercase hex: <span><a href="https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-13#section-2.1" class="relref">Section 2.1</a> of [<a href="#I-D.bormann-cbor-notable-tags" class="cite xref">I-D.bormann-cbor-notable-tags</a>]</span>), which stand for
+hex: Section <a href="https://rfc-editor.org/rfc/rfc8949#section-3.4.5.2" class="relref">3.4.5.2</a> of RFC 8949 <span>[<a href="#STD94" class="cite xref">STD94</a>]</span>) or 108 (lowercase hex: <span><a href="https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-14#section-2.1" class="relref">Section 2.1</a> of [<a href="#I-D.bormann-cbor-notable-tags" class="cite xref">I-D.bormann-cbor-notable-tags</a>]</span>), which stand for
 text string items but internally employ more compact byte string
 representations that may also be more natural as application data items.<a href="#section-6-1" class="pilcrow">¶</a></p>
 <p id="section-6-2">These additional stand-in items are fundamentally independent of
@@ -2495,7 +2470,7 @@ IANA is requested to allocate the tags defined in <a href="#tab-tag-values" clas
             <tr>
               <td class="text-right" rowspan="1" colspan="1">6</td>
               <td class="text-left" rowspan="1" colspan="1">int (for shared); [int, any] (for argument)</td>
-              <td class="text-left" rowspan="1" colspan="1">Packed CBOR: shared/argument</td>
+              <td class="text-left" rowspan="1" colspan="1">Reference Data Item (for Packed CBOR: shared/argument)</td>
             </tr>
             <tr>
               <td class="text-right" rowspan="1" colspan="1">105</td>
@@ -2518,14 +2493,14 @@ IANA is requested to allocate the tags defined in <a href="#tab-tag-values" clas
               <td class="text-left" rowspan="1" colspan="1">Packed CBOR: record function</td>
             </tr>
             <tr>
-              <td class="text-right" rowspan="1" colspan="1">(256-<code>B</code>-<code>C</code>)..(256-<code>B</code>-1)</td>
-              <td class="text-left" rowspan="1" colspan="1">function tag or concatenation item (text string, byte string, array, or map)</td>
-              <td class="text-left" rowspan="1" colspan="1">Packed CBOR: inverted</td>
+              <td class="text-right" rowspan="1" colspan="1">128..135</td>
+              <td class="text-left" rowspan="1" colspan="1">any</td>
+              <td class="text-left" rowspan="1" colspan="1">Reference Data Item (for Packed CBOR: straight argument)</td>
             </tr>
             <tr>
-              <td class="text-right" rowspan="1" colspan="1">(256-<code>B</code>)..255</td>
-              <td class="text-left" rowspan="1" colspan="1">any</td>
-              <td class="text-left" rowspan="1" colspan="1">Packed CBOR: straight</td>
+              <td class="text-right" rowspan="1" colspan="1">136..143</td>
+              <td class="text-left" rowspan="1" colspan="1">function tag or concatenation item (text string, byte string, array, or map)</td>
+              <td class="text-left" rowspan="1" colspan="1">Reference Data Item (for Packed CBOR: inverted argument)</td>
             </tr>
             <tr>
               <td class="text-right" rowspan="1" colspan="1">1112</td>
@@ -2568,8 +2543,8 @@ IANA is requested to allocate the simple values defined in <a href="#tab-simple-
           </thead>
           <tbody>
             <tr>
-              <td class="text-right" rowspan="1" colspan="1">0..(A-1)</td>
-              <td class="text-left" rowspan="1" colspan="1">Packed CBOR: shared</td>
+              <td class="text-right" rowspan="1" colspan="1">0..15</td>
+              <td class="text-left" rowspan="1" colspan="1">Reference Data Item (for Packed CBOR: shared)</td>
             </tr>
           </tbody>
         </table>
@@ -2669,7 +2644,7 @@ environment.<a href="#section-9-4" class="pilcrow">¶</a></p>
 <dd class="break"></dd>
 <dt id="I-D.bormann-cbor-notable-tags">[I-D.bormann-cbor-notable-tags]</dt>
         <dd>
-<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"Notable CBOR Tags"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-bormann-cbor-notable-tags-13</span>, <time datetime="2025-07-20" class="refDate">20 July 2025</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-13">https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-13</a>&gt;</span>. </dd>
+<span class="refAuthor">Bormann, C.</span>, <span class="refTitle">"Notable CBOR Tags"</span>, <span class="refContent">Work in Progress</span>, <span class="seriesInfo">Internet-Draft, draft-bormann-cbor-notable-tags-14</span>, <time datetime="2026-01-19" class="refDate">19 January 2026</time>, <span>&lt;<a href="https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-14">https://datatracker.ietf.org/doc/html/draft-bormann-cbor-notable-tags-14</a>&gt;</span>. </dd>
 <dd class="break"></dd>
 <dt id="I-D.ietf-cbor-cde">[I-D.ietf-cbor-cde]</dt>
         <dd>
@@ -2721,18 +2696,16 @@ environment.<a href="#section-9-4" class="pilcrow">¶</a></p>
       <h2 id="name-examples">
 <a href="#appendix-A" class="section-number selfRef">Appendix A. </a><a href="#name-examples" class="section-name selfRef">Examples</a>
       </h2>
-<p id="appendix-A-1"><span class="cref" id="resolve_2">To be resolved before publication:</span> align reference items with the final settings of the
-parameters <code>A</code>, <code>B</code>, <code>C</code>.  In particular, check the byte numbers...<a href="#appendix-A-1" class="pilcrow">¶</a></p>
-<p id="appendix-A-2">The (JSON-compatible) CBOR data structure depicted in <a href="#fig-example-in" class="auto internal xref">Figure 2</a>,
+<p id="appendix-A-1">The (JSON-compatible) CBOR data structure depicted in <a href="#fig-example-in" class="auto internal xref">Figure 2</a>,
 400 bytes of binary CBOR, could be packed into the CBOR data item depicted
 in <a href="#fig-example-out" class="auto internal xref">Figure 3</a>, 308 bytes, only employing item sharing.
 With support for argument sharing and the record function tag 114,
 the data item can be packed into 298 bytes as depicted in <a href="#fig-example-out-record" class="auto internal xref">Figure 4</a>.
 Note that this particular example does not lend itself to prefix compression,
-so it uses the simple common-table setup form (tag 113).<a href="#appendix-A-2" class="pilcrow">¶</a></p>
+so it uses the simple common-table setup form (tag 113).<a href="#appendix-A-1" class="pilcrow">¶</a></p>
 <span id="name-example-original-cbor-data-"></span><div id="fig-example-in">
 <figure id="figure-2">
-        <div class="lang-cbor-diag sourcecode" id="appendix-A-3.1">
+        <div class="lang-cbor-diag sourcecode" id="appendix-A-2.1">
 <pre>
 { "store": {
     "book": [
@@ -2773,7 +2746,7 @@ so it uses the simple common-table setup form (tag 113).<a href="#appendix-A-2" 
 </div>
 <span id="name-example-packed-cbor-data-it"></span><div id="fig-example-out">
 <figure id="figure-3">
-        <div class="lang-cbor-diag sourcecode" id="appendix-A-4.1">
+        <div class="lang-cbor-diag sourcecode" id="appendix-A-3.1">
 <pre>
 113([["price", "category", "author", "title", "fiction", 8.95,
                                                              "isbn"],
@@ -2799,7 +2772,7 @@ so it uses the simple common-table setup form (tag 113).<a href="#appendix-A-2" 
 </div>
 <span id="name-example-packed-cbor-data-ite"></span><div id="fig-example-out-record">
 <figure id="figure-4">
-        <div class="lang-cbor-diag sourcecode" id="appendix-A-5.1">
+        <div class="lang-cbor-diag sourcecode" id="appendix-A-4.1">
 <pre>
 113([[114(["category", "author",
            "title", simple(1), "isbn"]),
@@ -2808,13 +2781,13 @@ so it uses the simple common-table setup form (tag 113).<a href="#appendix-A-2" 
     /  1        2         3    /
      {"store": {
        "book": [
-           224(["reference", "Nigel Rees",
+           128(["reference", "Nigel Rees",
               "Sayings of the Century", simple(3)]),
-           224([simple(2), "Evelyn Waugh",
+           128([simple(2), "Evelyn Waugh",
               "Sword of Honour", 12.99]),
-           224([simple(2), "Herman Melville",
+           128([simple(2), "Herman Melville",
               "Moby Dick", simple(3), "0-553-21311-3"]),
-           224([simple(2), "J. R. R. Tolkien",
+           128([simple(2), "J. R. R. Tolkien",
                "The Lord of the Rings", 22.99, "0-395-19395-8"])],
        "bicycle": {"color": "red", simple(1): 19.95}}}])
 </pre>
@@ -2823,12 +2796,12 @@ so it uses the simple common-table setup form (tag 113).<a href="#appendix-A-2" 
 <a href="#name-example-packed-cbor-data-ite" class="selfRef">Example packed CBOR data item using item sharing and the record function tag, 302 bytes</a>
         </figcaption></figure>
 </div>
-<p id="appendix-A-6">The (JSON-compatible) CBOR data structure below has been packed with shared
+<p id="appendix-A-5">The (JSON-compatible) CBOR data structure below has been packed with shared
 item and (partial) prefix compression only and employs the split-table
-setup form (tag 1113).<a href="#appendix-A-6" class="pilcrow">¶</a></p>
+setup form (tag 1113).<a href="#appendix-A-5" class="pilcrow">¶</a></p>
 <span id="name-example-original-cbor-data-i"></span><div id="fig-example-in2">
 <figure id="figure-5">
-        <div class="breakable lang-cbor-diag sourcecode" id="appendix-A-7.1">
+        <div class="breakable lang-cbor-diag sourcecode" id="appendix-A-6.1">
 <pre>
 {
   "name": "MyLED",
@@ -2961,7 +2934,7 @@ setup form (tag 1113).<a href="#appendix-A-6" class="pilcrow">¶</a></p>
 </div>
 <span id="name-example-packed-cbor-data-item"></span><div id="fig-example-out2">
 <figure id="figure-6">
-        <div class="lang-cbor-diag sourcecode" id="appendix-A-8.1">
+        <div class="lang-cbor-diag sourcecode" id="appendix-A-7.1">
 <pre>
 1113([/shared/["name", "@type", "links", "href", "mediaType",
             /  0       1       2        3         4 /
@@ -2969,30 +2942,30 @@ setup form (tag 1113).<a href="#appendix-A-6" class="pilcrow">¶</a></p>
          /  5               6               7 /
     "number"}}, ["Property"], "writable", "valueType", "type"],
                /   8            9           10           11 /
-   /argument/ ["http://192.168.1.10", 224("3:8445/wot/thing"),
-              / 224                   225 /
-   225("/MyLED/"), 226("rgbValue"), "rgbValue",
-     / 226             227           228     /
+   /argument/ ["http://192.168.1.10", 128("3:8445/wot/thing"),
+              / 128                   129 /
+   129("/MyLED/"), 130("rgbValue"), "rgbValue",
+     / 130             131           132     /
    {simple(6): simple(7), simple(9): true, simple(1): simple(8)}],
-     / 229 /
+     / 133 /
    /rump/ {simple(0): "MyLED",
            "interactions": [
-   229({simple(2): [{simple(3): 227("Red"), simple(4): simple(5)}],
-    simple(0): 228("Red")}),
-   229({simple(2): [{simple(3): 227("Green"), simple(4): simple(5)}],
-    simple(0): 228("Green")}),
-   229({simple(2): [{simple(3): 227("Blue"), simple(4): simple(5)}],
-    simple(0): 228("Blue")}),
-   229({simple(2): [{simple(3): 227("White"), simple(4): simple(5)}],
+   133({simple(2): [{simple(3): 131("Red"), simple(4): simple(5)}],
+    simple(0): 132("Red")}),
+   133({simple(2): [{simple(3): 131("Green"), simple(4): simple(5)}],
+    simple(0): 132("Green")}),
+   133({simple(2): [{simple(3): 131("Blue"), simple(4): simple(5)}],
+    simple(0): 132("Blue")}),
+   133({simple(2): [{simple(3): 131("White"), simple(4): simple(5)}],
     simple(0): "rgbValueWhite"}),
-   {simple(2): [{simple(3): 226("ledOnOff"), simple(4): simple(5)}],
+   {simple(2): [{simple(3): 130("ledOnOff"), simple(4): simple(5)}],
     simple(6): {simple(10): {simple(11): "boolean"}}, simple(0):
     "ledOnOff", simple(9): true, simple(1): simple(8)},
-   {simple(2): [{simple(3): 226("colorTemperatureChanged"),
+   {simple(2): [{simple(3): 130("colorTemperatureChanged"),
     simple(4): simple(5)}], simple(6): simple(7), simple(0):
     "colorTemperatureChanged", simple(1): ["Event"]}],
-     simple(1): "Lamp", "id": "0", "base": 225(""),
-     "@context": 224("2:8444/wot/w3c-wot-td-context.jsonld")}])
+     simple(1): "Lamp", "id": "0", "base": 129(""),
+     "@context": 128("2:8444/wot/w3c-wot-td-context.jsonld")}])
 </pre>
 </div>
 <figcaption><a href="#figure-6" class="selfRef">Figure 6</a>:
